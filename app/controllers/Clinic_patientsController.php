@@ -142,6 +142,7 @@ class Clinic_patientsController extends SecureController
 			"emergency_contact_phone",
 			"document_type_catalog.type AS document_type_name",
 			"blood_type_catalog.type AS blood_type_name",
+			"clinic_patients.photo",
 		);
 		if ($value) {
 			$db->where($rec_id, urldecode($value)); //select record based on field name
@@ -248,7 +249,7 @@ class Clinic_patientsController extends SecureController
 
 			// Asignar al campo real de la tabla
 			$modeldata['photo'] = $photoData ?: null;
-			
+
 			if ($this->validated()) {
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if ($rec_id) {

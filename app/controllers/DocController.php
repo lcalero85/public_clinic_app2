@@ -34,6 +34,7 @@ class DocController extends SecureController
 			"doc.office_phone",
 			"doc.dni",
 			"doc.license_number",
+			"doc.status"
 		);
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
@@ -51,10 +52,12 @@ class DocController extends SecureController
 				doc.office_phone LIKE ? OR 
 				doc.license_number LIKE ? OR 
 				doc.dni LIKE ? OR 
+				doc.status LIKE ? OR 
 				doc.id_user LIKE ? 
 				
 			)";
 			$search_params = array(
+				"%$text%",
 				"%$text%",
 				"%$text%",
 				"%$text%",

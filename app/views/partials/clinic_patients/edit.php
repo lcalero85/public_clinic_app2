@@ -106,7 +106,6 @@ $redirect_to = $this->redirect_to;
                                             id="captureBtn">Capture Photo</button>
                                     </div>
                                 </div>
-
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">

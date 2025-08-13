@@ -134,6 +134,7 @@ $show_pagination = $this->show_pagination;
                                             <th class="td-phone_patient"> Phone </th>
                                             <th class="td-register_date"> Register</th>
                                             <th class="td-email"> Emails</th>
+                                            <th class="td-id_status">Status</th>
                                             <th class="td-photo"> Actions</th>
                                             <th class="td-btn"></th>
                                         </tr>
@@ -192,6 +193,41 @@ $show_pagination = $this->show_pagination;
                                                     </td>
                                                     <td class="td-email">
                                                         <?php echo $data['email']; ?>
+                                                    </td>
+                                                    <td class="td-id_status">
+                                                        <?php
+                                                        $options   = $comp_model->clinic_patients_id_status_option_list(); // lista de opciones
+                                                        $statusId  = $data['id_status'];
+                                                        $label     = 'Sin estado';
+
+                                                        if (!empty($statusId) && !empty($options)) {
+                                                            // Caso 1: ya viene como mapa id => label
+                                                            if (is_array($options) && isset($options[$statusId]) && !is_array($options[$statusId])) {
+                                                                $label = $options[$statusId];
+                                                            } else {
+                                                                // Caso 2: lista de arrays/objetos con value/label
+                                                                foreach ($options as $opt) {
+                                                                    // Arrays: ['value'=>..., 'label'=>...]
+                                                                    if (is_array($opt)) {
+                                                                        $val = $opt['value'] ?? null;
+                                                                        if ((string)$val === (string)$statusId) {
+                                                                            $label = $opt['label'] ?? $label;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                    // Objetos: ->value / ->label
+                                                                    elseif (is_object($opt)) {
+                                                                        if ((string)$opt->value === (string)$statusId) {
+                                                                            $label = $opt->label ?? $label;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        echo htmlspecialchars($label);
+                                                        ?>
                                                     </td>
 
 

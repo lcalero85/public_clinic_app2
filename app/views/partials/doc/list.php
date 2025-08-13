@@ -141,6 +141,7 @@ $show_pagination = $this->show_pagination;
                                             <th class="td-birthdate"> Age</th>
                                             <th class="td-Speciality"> Speciality</th>
                                             <th class="td-register_date"># Contact Number</th>
+                                            <th class="td-register_date">Status</th>
                                             <th class="td-btn"></th>
                                         </tr>
                                     </thead>
@@ -212,6 +213,11 @@ $show_pagination = $this->show_pagination;
                                                       <td class="td-full_names">
                                                         <span>
                                                             <?php echo $data['office_phone']; ?>
+                                                        </span>
+                                                    </td>
+                                                     <td class="td-status">
+                                                        <span>
+                                                            <?php echo $data['status']; ?>
                                                         </span>
                                                     </td>
 

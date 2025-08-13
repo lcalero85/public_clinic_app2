@@ -37,7 +37,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_patient">Patient <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_patient">Patient Name <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -66,7 +66,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_doc">Doctor <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_doc">Assigned Doctor<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -95,7 +95,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="motive">Motive <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="motive">Reason for Appointment<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -108,7 +108,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="descritption">Symptoms Descritptions <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="descritption">Symptoms Descritption<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -121,7 +121,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_appointment_type">Appointment Type <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_appointment_type">Type of Appointment <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -150,7 +150,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="priority">Priority <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="priority">Appointment Priority<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -179,7 +179,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="reminder_preference">Reminder Preference <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="reminder_preference">Preferred Reminder Method<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -208,7 +208,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="follow_up_required">Follow Up Required <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="follow_up_required">Follow-Up Required<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -240,7 +240,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="appointment_date">Appointment Date <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="appointment_date">Date of Appointment<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="input-group">

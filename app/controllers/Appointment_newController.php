@@ -42,9 +42,9 @@ class Appointment_newController extends SecureController
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
 		if (!empty($request->search)) {
-    $text = trim($request->search);
+			$text = trim($request->search);
 
-    $search_condition = "
+			$search_condition = "
       (
         appointment_new.id_appointment LIKE ? OR
         appointment_new.id_patient LIKE ? OR
@@ -63,9 +63,9 @@ class Appointment_newController extends SecureController
       )
     ";
 
-    // Genera la cantidad exacta de parámetros según los "?" del string
-    $placeholders = substr_count($search_condition, '?');
-    $search_params = array_fill(0, $placeholders, "%{$text}%");
+			// Genera la cantidad exacta de parámetros según los "?" del string
+			$placeholders = substr_count($search_condition, '?');
+			$search_params = array_fill(0, $placeholders, "%{$text}%");
 			//setting search conditions
 			$db->where($search_condition, $search_params);
 			//template to use when ajax search
@@ -181,29 +181,52 @@ class Appointment_newController extends SecureController
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("id_patient", "id_doc", "motive", "descritption", "historial", "appointment_date", "register_date", "id_user", "id_status_appointment");
+			$fields = $this->fields = array(
+				"id_patient",
+				"id_doc",
+				"motive",
+				"descritption",
+				"appointment_date",
+				"register_date",
+				"id_user",
+				"id_appointment_type",
+				"id_status_appointment",
+				"priority",
+				"reminder_preference",
+				"follow_up_required",
+			);
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'id_patient' => 'required',
 				'id_doc' => 'required',
 				'motive' => 'required',
 				'descritption' => 'required',
-				'historial' => 'required',
 				'appointment_date' => 'required',
+				'id_status_appointment' => '',
+				'id_appointment_type'=> 'required',
+				'priority'=> 'required',
+				'reminder_preference'=> 'required',
+				'follow_up_required'=> 'required',
+
 			);
 			$this->sanitize_array = array(
 				'id_patient' => 'sanitize_string',
 				'id_doc' => 'sanitize_string',
 				'motive' => 'sanitize_string',
 				'descritption' => 'sanitize_string',
-				'historial' => 'sanitize_string',
 				'appointment_date' => 'sanitize_string',
+				'id_status_appointment' => 'sanitize_string',
+				'id_appointment_type' => 'sanitize_string',
+				'priority'=> 'sanitize_string',
+				'reminder_preference'=> 'sanitize_string',
+				'follow_up_required'=> 'sanitize_string',
+
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$modeldata['register_date'] = datetime_now();
 			$modeldata['id_user'] = USER_ID;
-			$modeldata['id_status_appointment'] = "5";
+			$modeldata['id_status_appointment'] = "1";
 			if ($this->validated()) {
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if ($rec_id) {

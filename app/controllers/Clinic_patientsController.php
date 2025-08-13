@@ -34,6 +34,7 @@ class Clinic_patientsController extends SecureController
 			"clinic_patients.document_number",
 			"clinic_patients.age",
 			"clinic_patients.birthdate",
+		
 		);
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record

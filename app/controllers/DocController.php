@@ -135,7 +135,8 @@ class DocController extends SecureController
 			"doc.work_email",
 			"doc.years_experience",
 			"doc.dni",
-			"doc.status"
+			"doc.status",
+			"doc.photo",
 
 
 			
@@ -198,7 +199,8 @@ class DocController extends SecureController
 				"work_email",
 				"working_hours",
 				"status",
-				"dni"
+				"dni",
+				"photo",
 			);
 
 			$postdata = $this->format_request_data($formdata);
@@ -219,6 +221,7 @@ class DocController extends SecureController
 				'working_hours' => 'required',
 				'status' => 'required',
 				'dni' => 'required',
+				'photo' => '',
 
 
 			);
@@ -240,12 +243,27 @@ class DocController extends SecureController
 				'working_hours' => 'sanitize_string',
 				'status' => 'sanitize_string',
 				'dni' => 'sanitize_string',
+				'photo' => '',
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$modeldata['register_date'] = datetime_now();
 			$modeldata['update_date'] = datetime_now();
 			$modeldata['id_user'] = USER_ID;
+            // --- Foto: archivo O webcam O nada (NULL) ---
+			$photoData = null;
+
+			if (!empty($_FILES['photo_file']['tmp_name'])) {
+				// 1) Imagen desde el selector de archivos
+				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+			} elseif (!empty($_POST['photo_webcam'])) {
+				// 2) Imagen tomada con webcam (dataURL base64)
+				$base64 = $_POST['photo_webcam'];
+				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+			}
+
+			// Asignar al campo real de la tabla
+			$modeldata['photo'] = $photoData ?: null;
 			if ($this->validated()) {
 				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 				if ($rec_id) {
@@ -274,7 +292,7 @@ class DocController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id", "full_names", "address", "birthdate", "gender", "Speciality", "register_date", "update_date", "id_user", "dni",'office_phone','work_email','status');
+		$fields = $this->fields = array("id", "full_names", "address", "birthdate", "gender", "Speciality", "register_date", "update_date", "id_user", "dni",'office_phone','work_email','status','photo');
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
@@ -287,6 +305,7 @@ class DocController extends SecureController
 				'office_phone' => 'required',
 				'work_email'=> 'required',
 				'status'=> 'required',
+				'photo' => '',
 
 			);
 			$this->sanitize_array = array(
@@ -299,6 +318,7 @@ class DocController extends SecureController
 				'office_phone' => 'sanitize_string',
 				'work_email' => 'sanitize_string',
 				'status' => 'sanitize_string',
+				'photo' => '',
 
 
 			);
@@ -306,6 +326,20 @@ class DocController extends SecureController
 			$modeldata['register_date'] = datetime_now();
 			$modeldata['update_date'] = datetime_now();
 			$modeldata['id_user'] = USER_ID;
+                 // --- Foto: archivo O webcam O nada (NULL) ---
+			$photoData = null;
+
+			if (!empty($_FILES['photo_file']['tmp_name'])) {
+				// 1) Imagen desde el selector de archivos
+				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+			} elseif (!empty($_POST['photo_webcam'])) {
+				// 2) Imagen tomada con webcam (dataURL base64)
+				$base64 = $_POST['photo_webcam'];
+				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+			}
+
+			// Asignar al campo real de la tabla
+			$modeldata['photo'] = $photoData ?: null;
 			if ($this->validated()) {
 				$db->where("doc.id", $rec_id);
 				;

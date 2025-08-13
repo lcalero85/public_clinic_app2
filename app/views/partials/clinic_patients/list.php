@@ -32,7 +32,7 @@ $show_pagination = $this->show_pagination;
     data-page-url="<?php print_link($current_page); ?>">
     <?php
     if ($show_header == true) {
-        ?>
+    ?>
         <div class="bg-light p-3 mb-3">
             <div class="container-fluid">
                 <div class="row ">
@@ -62,13 +62,13 @@ $show_pagination = $this->show_pagination;
                             <!-- Page bread crumbs components-->
                             <?php
                             if (!empty($field_name) || !empty($_GET['search'])) {
-                                ?>
+                            ?>
                                 <hr class="sm d-block d-sm-none" />
                                 <nav class="page-header-breadcrumbs mt-2" aria-label="breadcrumb">
                                     <ul class="breadcrumb m-0 p-1">
                                         <?php
                                         if (!empty($field_name)) {
-                                            ?>
+                                        ?>
                                             <li class="breadcrumb-item">
                                                 <a class="text-decoration-none" href="<?php print_link('clinic_patients'); ?>">
                                                     <i class="fa fa-angle-left"></i>
@@ -80,12 +80,12 @@ $show_pagination = $this->show_pagination;
                                             <li class="breadcrumb-item active text-capitalize font-weight-bold">
                                                 <?php echo (get_value("label") ? get_value("label") : make_readable(urldecode($field_value))); ?>
                                             </li>
-                                            <?php
+                                        <?php
                                         }
                                         ?>
                                         <?php
                                         if (get_value("search")) {
-                                            ?>
+                                        ?>
                                             <li class="breadcrumb-item">
                                                 <a class="text-decoration-none" href="<?php print_link('clinic_patients'); ?>">
                                                     <i class="fa fa-angle-left"></i>
@@ -97,13 +97,13 @@ $show_pagination = $this->show_pagination;
                                             <li class="breadcrumb-item active text-capitalize font-weight-bold">
                                                 <?php echo get_value("search"); ?>
                                             </li>
-                                            <?php
+                                        <?php
                                         }
                                         ?>
                                     </ul>
                                 </nav>
                                 <!--End of Page bread crumbs components-->
-                                <?php
+                            <?php
                             }
                             ?>
                         </div>
@@ -111,7 +111,7 @@ $show_pagination = $this->show_pagination;
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
     ?>
     <div class="">
@@ -140,7 +140,7 @@ $show_pagination = $this->show_pagination;
                                     </thead>
                                     <?php
                                     if (!empty($records)) {
-                                        ?>
+                                    ?>
                                         <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
                                             <!--record-->
                                             <?php
@@ -148,10 +148,9 @@ $show_pagination = $this->show_pagination;
                                             foreach ($records as $data) {
                                                 $rec_id = (!empty($data['id_patient']) ? urlencode($data['id_patient']) : null);
                                                 $counter++;
-                                                ?>
+                                            ?>
                                                 <tr>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
-
                                                     <td class="td-full_names">
                                                         <?php echo $data['full_names']; ?>
                                                     </td>
@@ -219,32 +218,32 @@ $show_pagination = $this->show_pagination;
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                             <!--endrecord-->
                                         </tbody>
                                         <tbody class="search-data" id="search-data-<?php echo $page_element_id; ?>"></tbody>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                 </table>
                                 <?php
                                 if (empty($records)) {
-                                    ?>
+                                ?>
                                     <h4 class="bg-light text-center border-top text-muted animated bounce  p-3">
                                         <i class="fa fa-ban"></i> No record found
                                     </h4>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </div>
                             <?php
                             if ($show_footer && !empty($records)) {
-                                ?>
+                            ?>
                                 <div class=" border-top mt-2">
                                     <div class="row justify-content-center">
-                                        
+
                                         <div class="col">
                                             <?php
                                             if ($show_pagination == true) {
@@ -262,7 +261,7 @@ $show_pagination = $this->show_pagination;
                                         </div>
                                     </div>
                                 </div>
-                                <?php
+                            <?php
                             }
                             ?>
                         </div>

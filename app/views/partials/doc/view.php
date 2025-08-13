@@ -58,6 +58,29 @@ $show_export_btn = $this->show_export_btn;
                                     <!-- Table Body Start -->
 
                                     <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
+                                     <tr class="td-photo">
+                                            <th class="title"> Photo: </th>
+                                            <td class="value">
+                                                <?php if (!empty($data['photo'])):
+                                                    $mime = 'image/jpeg';
+                                                    if (function_exists('finfo_open')) {
+                                                        $fi = finfo_open(FILEINFO_MIME_TYPE);
+                                                        if ($fi) {
+                                                            $det = finfo_buffer($fi, $data['photo']);
+                                                            if ($det)
+                                                                $mime = $det;
+                                                            finfo_close($fi);
+                                                        }
+                                                    }
+                                                    $base64 = base64_encode($data['photo']);
+                                                    ?>
+                                                    <img src="data:<?= $mime ?>;base64,<?= $base64 ?>" alt="Patient photo"
+                                                        class="patient-photo" loading="lazy">
+                                                <?php else: ?>
+                                                    <span class="no-photo-msg">Patient photo not available</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
                                         <tr class="td-full_names">
                                             <th class="title"> Full Names: </th>
                                             <td class="value">

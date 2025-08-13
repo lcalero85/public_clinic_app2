@@ -1,0 +1,2 @@
+Timestamp,Action,TableName,RecordID,SqlQuery,UserID,ServerIP,RequestUrl,RequestData,RequestCompleted,RequestMsg
+"2025-08-12 18:53:35",userlogin,users,,"SELECT   * FROM users WHERE  user_name = ?  OR email = ?  LIMIT 1",1,::1,index/login/,"{""username"":""juanp10"",""password"":""$2y$10$lsH0i8jgF5Vauv27XhKgR.FpCkjreUdxzqg2qAbrGOUbX2Izh.fLW""}",true,

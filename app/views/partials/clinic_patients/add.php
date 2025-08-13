@@ -10,7 +10,31 @@ $redirect_to = $this->redirect_to;
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .custom-file {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
 
+    .custom-file input[type="file"] {
+        display: none;
+        /* Oculta el control nativo */
+    }
+
+    .custom-file-label {
+        display: inline-block;
+        background-color: #ffffffff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .custom-file-label:hover {
+        background-color: #fdfdfdff;
+    }
+</style>
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="add" data-display-type=""
     data-page-url="<?php print_link($current_page); ?>">
     <?php if ($show_header == true) { ?>
@@ -50,8 +74,18 @@ $redirect_to = $this->redirect_to;
                                     <label for="photo" class="control-label">Patient Photo</label>
                                     <div>
 
-                                        <input type="file" name="photo_file" id="photo_file" accept="image/*"
-                                            class="photo_file" onchange="previewImage(this)">
+                                        <div class="custom-file">
+                                            <input type="file" name="photo_file" id="photo_file" accept="image/*"
+                                                class="photo_file" onchange="previewImage(this)">
+                                            <label for="photo_file" class="custom-file-label">Select file</label>
+                                        </div>
+
+                                        <script>
+                                            document.getElementById('photo_file').addEventListener('change', function(e) {
+                                                const fileName = e.target.files[0]?.name || "Select file";
+                                                e.target.nextElementSibling.textContent = fileName;
+                                            });
+                                        </script>
                                         <span id="file-name-label" style="margin-left: 10px; color: #555;">No file
                                             chosen</span>
 
@@ -110,13 +144,13 @@ $redirect_to = $this->redirect_to;
                                                     $value = $option['value'];
                                                     $label = $option['label'];
                                                     $checked = $this->set_field_checked('gender', $value, "");
-                                                    ?>
+                                            ?>
                                                     <label class="custom-control custom-radio custom-control-inline">
                                                         <input id="ctrl-gender" class="custom-control-input" <?php echo $checked ?> value="<?php echo $value ?>" type="radio" required
                                                             name="gender" />
                                                         <span class="custom-control-label"><?php echo $label ?></span>
                                                     </label>
-                                                <?php }
+                                            <?php }
                                             } ?>
                                         </div>
                                     </div>
@@ -387,8 +421,8 @@ $redirect_to = $this->redirect_to;
     const captureBtn = document.getElementById('captureBtn');
 
     /* Etiquetas para mostrar nombre/estado del “archivo” */
-    const fileBox = document.getElementById('filebox-photo');   // opcional (wrapper estilizado)
-    const fileBoxNameEl = document.getElementById('filebox-name');    // opcional (texto dentro del wrapper)
+    const fileBox = document.getElementById('filebox-photo'); // opcional (wrapper estilizado)
+    const fileBoxNameEl = document.getElementById('filebox-name'); // opcional (texto dentro del wrapper)
     const fileNameAltEl = document.getElementById('file-name-label'); // alterno (span simple)
 
     let webcamStream = null;
@@ -401,9 +435,11 @@ $redirect_to = $this->redirect_to;
             fileBox.classList.toggle('has-file', !!hasFile);
         }
     }
+
     function clearPreview() {
         if (previewBox) previewBox.innerHTML = '';
     }
+
     function stopWebcam() {
         if (webcamStream) {
             webcamStream.getTracks().forEach(t => t.stop());
@@ -451,7 +487,9 @@ $redirect_to = $this->redirect_to;
             alert('Camera not accessible on this device.');
             return;
         }
-        navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
             .then(stream => {
                 webcamStream = stream;
                 if (videoEl) {

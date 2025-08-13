@@ -3,7 +3,7 @@
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 ini_set('display_errors', 0);
 
-define("DEFAULT_TIMEZONE", "America/El_Salvador"); // set php date functions timezone
+define("DEFAULT_TIMEZONE", ""); // set php date functions timezone
 define("DEVELOPMENT_MODE" , true);// set to false when in production
 
 // return full path of application directory

@@ -650,7 +650,7 @@ body.light-theme .footer{
 
 /* Hover del botón */
 .file-upload::-webkit-file-upload-button:hover {
-    background-color: #0056b3;
+    background-color: #ffffff;
 }
 /* Control de altura para input tipo file */
 input.photo_file {
@@ -668,13 +668,13 @@ input.photo_file {
 /* Hover */
 input.photo_file:hover {
     background-color: #eef5ff;
-    border-color: #007bff;
+    border-color: #f9fbfc;
 }
 
 /* Focus */
 input.photo_file:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #f6f6f7;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
 }
 

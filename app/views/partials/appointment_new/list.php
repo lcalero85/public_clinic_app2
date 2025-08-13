@@ -129,7 +129,7 @@ $show_pagination = $this->show_pagination;
                                             <th class="td-id_doc">Attending Physician</th>
                                             <th style="width:col-md-7;" class="td-motive"> Reason & Details</th>
                                             <th class="td-appointment_date">Appointment Date</th>
-                                            <th class="td-id_status_appointment"> Status </th>
+                                            <th class="td-id_status_appointment">Appointment Status</th>
                                              <th class="td-id_status_appointment">Actions </th>
                                             <th class="td-btn"></th>
                                         </tr>

@@ -319,4 +319,59 @@ public function doc_status_enum_options(){
 }
 
 
+public function appointment_new_priority_option_list(){
+    $db = $this->GetModel();
+    $enum_values = array();
+    $query = "SHOW COLUMNS FROM appointment_new LIKE 'priority'";
+    $result = $db->rawQueryOne($query);
+
+    if($result && isset($result['Type'])){
+        // Extraer los valores del enum
+        preg_match("/^enum\(\'(.*)\'\)$/", $result['Type'], $matches);
+        if(!empty($matches[1])){
+            $vals = explode("','", $matches[1]);
+            foreach($vals as $val){
+                $enum_values[] = array(
+                    'value' => $val,
+                    'label' => ucfirst($val) // capitaliza la primera letra
+                );
+            }
+        }
+    }
+    return $enum_values;
+}
+
+public function appointment_new_reminder_preference_option_list(){
+    $db = $this->GetModel();
+    $enum_values = array();
+    $query = "SHOW COLUMNS FROM appointment_new LIKE 'reminder_preference'";
+    $result = $db->rawQueryOne($query);
+
+    if($result && isset($result['Type'])){
+        // Extraer valores del enum
+        preg_match("/^enum\(\'(.*)\'\)$/", $result['Type'], $matches);
+        if(!empty($matches[1])){
+            $vals = explode("','", $matches[1]);
+            foreach($vals as $val){
+                $enum_values[] = array(
+                    'value' => $val,
+                    'label' => ucfirst($val)
+                );
+            }
+        }
+    }
+    return $enum_values;
+}
+public function appointment_new_id_appointment_type_option_list(){
+    $db = $this->GetModel();
+    $sql = "SELECT id_appointment_type AS value, name AS label 
+            FROM appointment_types 
+            WHERE status = 1 
+            ORDER BY name ASC";
+    $result = $db->rawQuery($sql);
+    return $result;
+}
+
+
+
 }

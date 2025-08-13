@@ -22,6 +22,10 @@ $show_header = $this->show_header;
 $show_footer = $this->show_footer;
 $show_pagination = $this->show_pagination;
 ?>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <?php
     if( $show_header == true ){
@@ -108,9 +112,8 @@ $show_pagination = $this->show_pagination;
                                     <table class="table  table-striped table-sm text-left">
                                         <thead class="table-header bg-light">
                                             <tr>
-                                                <th class="td-sno">#</th>
-                                                <th  class="td-id_appointment"> Id</th>
-                                                <th  class="td-id_patient"> Patient</th>
+                                                <th class="td-sno">Appointment No.</th>
+                                                <th  class="td-id_patient">Patient</th>
                                                 <th  class="td-id_doc"> Doctor</th>
                                                 <th  class="td-motive"> Motive</th>
                                                 <th  class="td-descritption"> Description</th>
@@ -133,12 +136,14 @@ $show_pagination = $this->show_pagination;
                                             ?>
                                             <tr>
                                                 <th class="td-sno"><?php echo $counter; ?></th>
-                                                <td class="td-id_appointment"> <?php echo $data['id_appointment']; ?></td>
-                                                <td class="td-id_patient">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/appointments/clinic_patients/id_patient/" . urlencode($data['id_patient'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['clinic_patients_full_names'] ?>
-                                                    </a>
-                                                </td>
+                                                 <td class="td-clinic_patients_full_names">
+                                                        <span>
+                                                            <?php echo $data['clinic_patients_full_names']; ?>
+                                                        </span>
+                                                    </td>
+
+
+
                                                 <td class="td-id_doc">
                                                     <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/appointments/doc/id/" . urlencode($data['id_doc'])) ?>">
                                                         <i class="fa fa-eye"></i> <?php echo $data['doc_full_names'] ?>

@@ -604,3 +604,103 @@ body.light-theme .footer{
     line-height: 1.5;
     min-height: 40px;
 }
+
+/* Estilo visual mejorado para el selector de archivo */
+.file-upload {
+    display: block;
+    height: 60px; 
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 2px solid #0f7f74;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Hover */
+.file-upload:hover {
+    background-color: #eef5ff;
+    border-color: #0f7f74;
+}
+
+/* Focus */
+.file-upload:focus {
+    border-color: #0f7f74;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+/* Botón de subir archivo nativo */
+.file-upload::-webkit-file-upload-button {
+    background-color: #0f7f74;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    margin-right: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+/* Hover del botón */
+.file-upload::-webkit-file-upload-button:hover {
+    background-color: #0056b3;
+}
+/* Control de altura para input tipo file */
+input.photo_file {
+    height: 60px; /* Puedes ajustar este valor */
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.2;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #495057;
+    transition: all 0.3s ease;
+}
+
+/* Hover */
+input.photo_file:hover {
+    background-color: #eef5ff;
+    border-color: #007bff;
+}
+
+/* Focus */
+input.photo_file:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.photo_file_custom {
+    display: none;
+}
+
+.custom-file-label {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-label:hover {
+    background-color: #0056b3;
+}
+
+#custom-file-name {
+    margin-left: 15px;
+    font-size: 14px;
+    color: #333;
+}
+
+

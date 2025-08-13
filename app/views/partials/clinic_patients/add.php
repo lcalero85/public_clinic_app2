@@ -25,6 +25,16 @@ $redirect_to = $this->redirect_to;
         </div>
     <?php } ?>
 
+    <script>
+        function updateFileName(input) {
+            const label = document.getElementById("custom-file-name");
+            if (input.files.length > 0) {
+                label.textContent = input.files[0].name;
+            } else {
+                label.textContent = "No file chosen";
+            }
+        }
+    </script>
     <div>
         <div class="container">
             <div class="row">
@@ -35,8 +45,30 @@ $redirect_to = $this->redirect_to;
                             class="form page-form form-horizontal needs-validation"
                             action="<?php print_link("clinic_patients/add?csrf_token=$csrf_token") ?>" method="post">
                             <div>
+                                <!-- Photo Upload / Webcam Capture -->
+                                <div class="form-group">
+                                    <label for="photo" class="control-label">Patient Photo</label>
+                                    <div>
+
+                                        <input type="file" name="photo_file" id="photo_file" accept="image/*"
+                                            class="photo_file" onchange="previewImage(this)">
+                                        <span id="file-name-label" style="margin-left: 10px; color: #555;">No file
+                                            chosen</span>
+
+                                        <div id="photo-preview" class="mt-2"></div>
+                                        <button type="button" onclick="startCamera()"
+                                            class="btn btn-sm btn-info mt-2">Use Webcam</button>
+                                        <video id="webcam" autoplay style="display:none;" width="300"></video>
+                                        <canvas id="snapshot" style="display:none;"></canvas>
+                                        <input type="hidden" name="photo_webcam" id="photo_webcam" />
+                                        <button type="button" onclick="capturePhoto()"
+                                            class="btn btn-sm btn-success mt-2" style="display:none;"
+                                            id="captureBtn">Capture Photo</button>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <div class="row">
+
                                         <div class="col-sm-4">
                                             <label class="control-label" for="full_names">Full Names <span
                                                     class="text-danger">*</span></label>
@@ -111,7 +143,7 @@ $redirect_to = $this->redirect_to;
                                     </div>
                                 </div>
 
-                               
+
 
                                 <div class="form-group">
                                     <div class="row">
@@ -207,22 +239,22 @@ $redirect_to = $this->redirect_to;
                                         <div class="col-sm-8">
                                             <input id="ctrl-manager"
                                                 value="<?php echo $this->set_field_value('manager', ""); ?>" type="text"
-                                                placeholder="Enter Emergency Contact Name" maxlength="100" required name="manager"
-                                                class="form-control" />
+                                                placeholder="Enter Emergency Contact Name" maxlength="100" required
+                                                name="manager" class="form-control" />
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="phone_patient">Emergency Contact Phone <span
-                                                    class="text-danger">*</span></label>
+                                            <label class="control-label" for="phone_patient">Emergency Contact Phone
+                                                <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <input id="ctrl-emergency_contact_phone"
                                                 value="<?php echo $this->set_field_value('emergency_contact_phone', ""); ?>"
-                                                type="text" placeholder="Enter Emergency Contact Phone" maxlength="20" required
-                                                name="emergency_contact_phone" class="form-control" />
+                                                type="text" placeholder="Enter Emergency Contact Phone" maxlength="20"
+                                                required name="emergency_contact_phone" class="form-control" />
                                         </div>
                                     </div>
                                 </div>
@@ -285,7 +317,7 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
-                                 <div class="form-group ">
+                                <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <label class="control-label" for="occupation">Occupation <span
@@ -301,16 +333,15 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
-                                  <div class="form-group">
+                                <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <label class="control-label" for="allergies">Allergies
                                                 Observations <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
-                                            <textarea placeholder="Enter Allergies"
-                                                id="ctrl-allergies" required maxlength="255" rows="5"
-                                                name="allergies"
+                                            <textarea placeholder="Enter Allergies" id="ctrl-allergies" required
+                                                maxlength="255" rows="5" name="allergies"
                                                 class="form-control"><?php echo $this->set_field_value('allergies', ""); ?></textarea>
                                         </div>
                                     </div>
@@ -345,3 +376,137 @@ $redirect_to = $this->redirect_to;
         </div>
     </div>
 </section>
+<script>
+    /* ---------- Cache de elementos ---------- */
+    const form = document.getElementById('clinic-patients-add-form');
+    const fileInput = document.getElementById('photo_file');
+    const webcamHidden = document.getElementById('photo_webcam');
+    const previewBox = document.getElementById('photo-preview');
+    const videoEl = document.getElementById('webcam');
+    const canvasEl = document.getElementById('snapshot');
+    const captureBtn = document.getElementById('captureBtn');
+
+    /* Etiquetas para mostrar nombre/estado del “archivo” */
+    const fileBox = document.getElementById('filebox-photo');   // opcional (wrapper estilizado)
+    const fileBoxNameEl = document.getElementById('filebox-name');    // opcional (texto dentro del wrapper)
+    const fileNameAltEl = document.getElementById('file-name-label'); // alterno (span simple)
+
+    let webcamStream = null;
+
+    /* ---------- Utilidades UI ---------- */
+    function setFileNameLabel(text, hasFile = false) {
+        if (fileBoxNameEl) fileBoxNameEl.textContent = text;
+        if (fileNameAltEl) fileNameAltEl.textContent = text;
+        if (fileBox) {
+            fileBox.classList.toggle('has-file', !!hasFile);
+        }
+    }
+    function clearPreview() {
+        if (previewBox) previewBox.innerHTML = '';
+    }
+    function stopWebcam() {
+        if (webcamStream) {
+            webcamStream.getTracks().forEach(t => t.stop());
+            webcamStream = null;
+        }
+        if (videoEl) {
+            videoEl.style.display = 'none';
+        }
+        if (captureBtn) {
+            captureBtn.style.display = 'none';
+        }
+    }
+
+    /* ---------- Vista previa desde archivo ---------- */
+    function previewSelectedFile(input) {
+        clearPreview();
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                previewBox.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="img-thumbnail">';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    /* ---------- Eventos: elegir archivo ---------- */
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            // Si elige archivo, limpiar webcam
+            if (fileInput.files.length > 0) {
+                webcamHidden.value = '';
+                setFileNameLabel(fileInput.files[0].name, true);
+                previewSelectedFile(fileInput);
+                stopWebcam();
+            } else {
+                setFileNameLabel('No file chosen', false);
+                clearPreview();
+            }
+        });
+    }
+
+    /* ---------- Iniciar webcam ---------- */
+    function startCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert('Camera not accessible on this device.');
+            return;
+        }
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                webcamStream = stream;
+                if (videoEl) {
+                    videoEl.srcObject = stream;
+                    videoEl.style.display = 'block';
+                }
+                if (captureBtn) captureBtn.style.display = 'inline-block';
+                // Si inicia webcam, limpiar archivo seleccionado
+                if (fileInput) fileInput.value = '';
+                setFileNameLabel('No file chosen', false);
+            })
+            .catch(() => alert('Camera not accessible.'));
+    }
+
+    /* ---------- Capturar foto desde webcam ---------- */
+    function capturePhoto() {
+        if (!videoEl || !canvasEl) return;
+        const ctx = canvasEl.getContext('2d');
+        canvasEl.width = videoEl.videoWidth;
+        canvasEl.height = videoEl.videoHeight;
+        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+
+        const dataUrl = canvasEl.toDataURL('image/png');
+        // Guardar en hidden
+        if (webcamHidden) webcamHidden.value = dataUrl;
+
+        // Vista previa
+        if (previewBox) {
+            previewBox.innerHTML = '<img src="' + dataUrl + '" alt="Preview" class="img-thumbnail">';
+        }
+
+        // Limpiar archivo si hubiese y mostrar estado
+        if (fileInput) fileInput.value = '';
+        setFileNameLabel('Captured Photo (webcam)', true);
+
+        // Parar cámara
+        stopWebcam();
+    }
+
+    /* Exponer funciones si los botones usan onClick en HTML */
+    window.startCamera = startCamera;
+    window.capturePhoto = capturePhoto;
+
+    /* ---------- Validación al enviar: archivo O webcam O nada ---------- */
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+            const hasWebcam = webcamHidden && webcamHidden.value.trim() !== '';
+
+            if (hasFile && hasWebcam) {
+                e.preventDefault();
+                alert('Please choose either a file OR take a photo, not both.');
+                return false;
+            }
+            // Si ninguno, se permite: el backend debe guardar NULL en photo.
+        });
+    }
+</script>

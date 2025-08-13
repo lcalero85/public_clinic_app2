@@ -25,7 +25,7 @@ $redirect_to = $this->redirect_to;
     .custom-file-label {
         display: inline-block;
         background-color: #ffffffff;
-        color: white;
+        color: navy;
         padding: 8px 15px;
         border-radius: 4px;
         cursor: pointer;

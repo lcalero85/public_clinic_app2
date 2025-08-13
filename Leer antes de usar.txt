@@ -1,0 +1,29 @@
+Gracias por usar esta aplicacion 
+
+Pasos para configurar la base datos 
+
+1-Exporta la base de datos en myadmin o crea la base con el nombre clinicdb y en la consola sql de myadmin copia el 
+contenido del archivo y ejecutas la operaciòn 
+
+
+
+Nota : Se cuenta con un archivo config para estipular configuraciones como opciones de correo y otras  favor revisar estructura de archivos
+
+
+Usuarios para usar la aplicacion por primera vez , luego puedes crear mas con el rol de admin
+
+Passwords
+---------------
+
+Admin 
+user_name :juanp10
+password: 12345678a
+
+Assistant 
+user_name : rikicastro10
+password :12345678a
+
+Doctor
+user_name : margomes
+password : 12345678a
+

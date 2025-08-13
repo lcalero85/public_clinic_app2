@@ -1,0 +1,602 @@
+/* ============================
+   Custom Corporate Styles
+   MyClinicSystem v1.3
+   ============================ */
+
+/* === Font & Base === */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+    background-color: #fdfdfd;
+    font-size: 15px;
+    color: #212529;
+}
+
+/* === Heading Styles === */
+h1, h2, h3, h4 {
+    color: #0d47a1;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+/* === Welcome Header === */
+.page-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* === Buttons === */
+.btn-primary {
+    background-color: #5576c4;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 8px 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	margin-left: 7px;
+    margin-top: 5px; /* útil si se acomodan en móvil */
+}
+
+.btn-primary:hover {
+    background-color: #1976d2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: scale(1.02);
+}
+
+.btn-primary i {
+    color: #ffffff;
+}
+
+/* === Dashboard Cards === */
+.record-count {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    height: 120px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    color: #0d47a1;
+}
+
+.record-count:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.record-count .value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #0d47a1;
+}
+
+/* === Footer Links === */
+footer a {
+    color: #546e7a;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #0d47a1;
+}
+/* ======= Login Page Styling ======= */
+.login-page {
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* Inputs */
+.input-group-text {
+    background-color: #e3f2fd;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #0d47a1;
+    box-shadow: 0 0 0 0.2rem rgba(13, 71, 161, 0.1);
+}
+
+/* Login Button */
+.btn-login {
+    background-color: #0d47a1;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #1565c0;
+    transform: scale(1.02);
+}
+
+/* Register Button */
+.btn-outline-primary {
+    border-radius: 6px;
+}
+/* ======= Login Layout with Image ======= */
+.login-page {
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+}
+
+.login-image {
+    max-width: 340px;
+}
+
+@media (max-width: 768px) {
+    .login-image {
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .login-card {
+        margin-top: 20px;
+    }
+}
+/* Mejora de formulario de ingreso de pacientes */
+.page-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    padding: 30px;
+}
+
+/* Etiquetas alineadas y modernas */
+.form-group label.control-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Inputs con estilo más limpio */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #d1d1d1;
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+}
+
+/* Botón principal estilizado */
+.form-submit-btn-holder .btn-primary {
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: bold;
+    background-color: #3498db;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.form-submit-btn-holder .btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Espaciado vertical uniforme */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Espaciado entre campos */
+.page-form .form-group .form-control,
+.page-form .form-group textarea {
+    margin-top: 5px;
+}
+
+/* Mejora el dropzone */
+.dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.dropzone:hover {
+    border-color: #3498db;
+}
+
+/* Radios alineados correctamente */
+.custom-control-inline {
+    margin-right: 15px;
+}
+
+
+
+/* ======= Paleta y tipografía hospitalaria ======= */
+:root{
+  --clinic-bg: #f5faf8;
+  --clinic-surface: #ffffff;
+  --clinic-accent: #18a999;      /* verde suave clínico */
+  --clinic-accent-2: #0f7f74;
+  --clinic-text: #1f2937;
+  --clinic-muted: #6b7280;
+  --clinic-row: #f8fbfa;
+  --clinic-sep: #e8f2ef;
+}
+
+.page .record-title{
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: var(--clinic-text);
+  margin: 0;
+}
+
+.card.page-content{
+  border: 1px solid var(--clinic-sep);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(2, 43, 34, 0.06);
+  background: var(--clinic-surface);
+  overflow: hidden;
+}
+
+/* ======= Tabla ficha paciente ======= */
+table.patient-view{
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table.patient-view tr{
+  transition: background .2s ease;
+}
+
+table.patient-view tr:nth-child(odd){
+  background: var(--clinic-row);
+}
+
+table.patient-view th.title{
+  width: 28%;
+  min-width: 220px;
+  background: var(--clinic-bg);
+  color: var(--clinic-muted);
+  text-transform: none;           /* más limpio que uppercase */
+  font-weight: 600;
+  border-right: 1px solid var(--clinic-sep);
+  vertical-align: middle;
+}
+
+table.patient-view td.value{
+  color: var(--clinic-text);
+  font-weight: 500;
+}
+
+table.patient-view th.title,
+table.patient-view td.value{
+  padding: 14px 18px !important;
+}
+
+/* Enlaces de teléfono y correo dentro de valores */
+table.patient-view td.value a{
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(0,0,0,.15);
+}
+table.patient-view td.value a:hover{
+  border-bottom-color: var(--clinic-accent);
+}
+
+/* Badges/chips (por si los usas para alergias, estado, etc.) */
+.badge, .badge.rounded-pill{
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+.badge.bg-success{ background: #10b981 !important; }
+.badge.bg-secondary{ background: #94a3b8 !important; }
+.badge.bg-danger{ background: #ef4444 !important; }
+.badge.bg-info{ background: #22c55e !important; }
+
+/* Cabecera gris clara */
+.bg-light.p-3.mb-3{
+  background: linear-gradient(180deg, var(--clinic-bg), #fff) !important;
+  border: 1px solid var(--clinic-sep);
+  border-radius: 14px;
+}
+
+/* Barra de acciones (Export / Edit / Delete) */
+.page .p-3.d-flex{
+  border-top: 1px solid var(--clinic-sep);
+  background: #fff;
+}
+.export-btn-holder .btn{
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+}
+.export-btn-holder .btn:hover{
+  background: var(--clinic-accent-2);
+  border-color: var(--clinic-accent-2);
+}
+
+/* Botones pequeños mejorados */
+.btn.btn-sm{
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+/* Responsive: apretar un poco en pantallas chicas */
+@media (max-width: 768px){
+  table.patient-view th.title{
+    width: 42%;
+    min-width: 160px;
+  }
+  .card.page-content{
+    border-radius: 12px;
+  }
+}
+
+
+
+/* ======= LIST: tabla de pacientes ======= */
+.patient-list{
+  border: 1px solid var(--clinic-sep);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.patient-list thead th{
+  background: linear-gradient(180deg, var(--clinic-bg), #fff);
+  color: var(--clinic-muted);
+  font-weight: 700;
+  letter-spacing: .2px;
+  border-bottom: 1px solid var(--clinic-sep) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.patient-list.sticky-head thead th{
+  position: sticky;
+  top: 0; /* se fija al top del contenedor */
+}
+
+.patient-list tbody tr{
+  transition: background .18s ease, transform .05s ease;
+}
+.patient-list tbody tr:hover{
+  background: #f2fbf8;
+}
+
+.patient-list td, 
+.patient-list th{
+  padding: 12px 14px !important;
+  vertical-align: middle !important;
+  border-top: 1px solid #f1f5f4 !important;
+}
+
+/* Texto largo recortado con puntos suspensivos */
+.text-clip{
+  max-width: 260px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 992px){
+  .text-clip{ max-width: 180px; }
+}
+
+/* Botón agregar nuevo con acento clínico */
+.btn-add{
+  border-radius: 12px;
+  padding: 8px 14px;
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+  box-shadow: 0 2px 10px rgba(9, 120, 107, .25);
+}
+.btn-add:hover{
+  background: var(--clinic-accent-2);
+  border-color: var(--clinic-accent-2);
+}
+
+/* Buscador */
+.clinic-search .form-control{
+  border-radius: 12px 0 0 12px;
+  border: 1px solid var(--clinic-sep);
+}
+.clinic-search .btn{
+  border-radius: 0 12px 12px 0;
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+}
+.clinic-search .btn:hover{
+  background: var(--clinic-accent-2);
+  border-color: var(--clinic-accent-2);
+}
+
+/* Dropdown de acciones en cada fila */
+.page-list-action .btn.btn-sm,
+.page-list-action .btn{
+  border-radius: 10px;
+  padding: 6px 10px;
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+}
+.page-list-action .btn:hover{
+  background: var(--clinic-accent-2);
+  border-color: var(--clinic-accent-2);
+}
+.page-list-action .dropdown-menu{
+  border-radius: 12px;
+  border: 1px solid var(--clinic-sep);
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+/* Encabezado de página */
+.bg-light.p-3.mb-3{
+  background: linear-gradient(180deg, var(--clinic-bg), #fff) !important;
+  border: 1px solid var(--clinic-sep);
+  border-radius: 14px;
+}
+
+/* Export bar (footer) */
+.border-top.mt-2{
+  border-top: 1px solid var(--clinic-sep) !important;
+}
+.export-btn-holder .btn{
+  border-radius: 10px;
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+}
+.export-btn-holder .btn:hover{
+  background: var(--clinic-accent-2);
+  border-color: var(--clinic-accent-2);
+}
+
+/* Paginación un poco más limpia */
+.pagination > li > a, 
+.pagination > li > span{
+  border: 1px solid var(--clinic-sep);
+  color: var(--clinic-text);
+}
+.pagination > .active > a, 
+.pagination > .active > span{
+  background: var(--clinic-accent);
+  border-color: var(--clinic-accent);
+}
+
+/* Responsive: en pantallas muy pequeñas, ajusta padding */
+@media (max-width: 576px){
+  .patient-list td, 
+  .patient-list th{ padding: 10px 12px !important; }
+}
+
+
+
+/* ====== Footer – estilo pro y responsive ====== */
+:root{
+  --footer-bg: #0f172a;      /* fondo (slate-900) */
+  --footer-fg: #e2e8f0;      /* texto (slate-200) */
+  --footer-muted: #94a3b8;   /* texto tenue (slate-400) */
+  --footer-accent: #22b8cf;  /* acento (teal/sky) */
+  --footer-accent-hover: #38bdf8;
+  --footer-sep: rgba(148,163,184,.35); /* separador tenue */
+}
+
+.footer{
+  background: var(--footer-bg);
+  color: var(--footer-fg);
+  border-top: 1px solid rgba(148,163,184,.2); /* suaviza el corte */
+  /* altura cómoda y respirable */
+  padding: 14px 0;
+  font-size: 14px;
+  letter-spacing: .2px;
+  /* sutil elevación cuando el contenido es corto */
+  box-shadow: 0 -2px 10px rgba(2,6,23,.05);
+}
+
+.footer .container-fluid{
+  max-width: 1280px;  /* limita ancho para no “estirar” en pantallas muy grandes */
+  margin: 0 auto;
+}
+
+.footer .copyright{
+  color: var(--footer-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer .footer-links{
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;                 /* espacio entre links */
+  flex-wrap: wrap;           /* permite salto de línea si no cabe */
+}
+
+/* Oculta los pipes del HTML y usa separadores visuales mejores */
+.footer .footer-links a{
+  color: var(--footer-fg);
+  text-decoration: none;
+  padding: 6px 2px;
+  position: relative;
+  transition: color .2s ease, opacity .2s ease, transform .2s ease;
+}
+.footer .footer-links a:hover,
+.footer .footer-links a:focus{
+  color: var(--footer-accent);
+  outline: none;
+}
+.footer .footer-links a:active{
+  transform: translateY(0.5px);
+}
+
+/* Inserta separador tipo “•” entre enlaces, accesible y sutil */
+.footer .footer-links a + a{
+  margin-left: 6px;
+}
+.footer .footer-links a + a::before{
+  content: "•";
+  color: var(--footer-sep);
+  margin-right: 10px;
+}
+
+/* Quita las barras del HTML si existen */
+.footer .footer-links a + span,
+.footer .footer-links span{
+  display: none !important;
+}
+
+/* Estados de accesibilidad */
+.footer .footer-links a:focus-visible{
+  outline: 2px solid var(--footer-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Responsive: en móvil centramos y apilamos */
+@media (max-width: 768px){
+  .footer{
+    padding: 18px 0;
+  }
+  .footer .copyright{
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .footer .footer-links{
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
+/* Tema claro alternativo (por si usas body.light-theme) */
+body.light-theme .footer{
+  --footer-bg: #f8fafc;      /* slate-50 */
+  --footer-fg: #0f172a;      /* slate-900 */
+  --footer-muted: #475569;   /* slate-600 */
+  --footer-sep: rgba(71,85,105,.45);
+  --footer-accent: #0ea5a4; 
+  --footer-accent-hover: #14b8a6;
+  border-top-color: rgba(71,85,105,.2);
+  box-shadow: 0 -1px 8px rgba(2,6,23,.05);
+}
+
+
+
+

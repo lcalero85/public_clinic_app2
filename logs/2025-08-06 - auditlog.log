@@ -1,0 +1,250 @@
+Timestamp,Action,TableName,RecordID,SqlQuery,UserID,ServerIP,RequestUrl,RequestData,RequestCompleted,RequestMsg
+"2025-08-06 21:57:41",list,users,"4,3,2,1","SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users/Index,[],true,
+"2025-08-06 21:57:49",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:57:49",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:57:49",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:57:54",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:57:54",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:57:54",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 21:58:09",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:00:01",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:00:32",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users,[],true,
+"2025-08-06 22:02:50",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:02:52",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:03:06",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:03:12",list,users,"4,3,2,1","SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:03:29",list,users,4,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:05:55",list,users,4,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users WHERE  (
+				users.id_user LIKE ? OR 
+				users.full_names LIKE ? OR 
+				users.rol LIKE ? OR 
+				users.user_name LIKE ? OR 
+				users.password LIKE ? OR 
+				users.email LIKE ? OR 
+				users.photo LIKE ? OR 
+				users.register_date LIKE ? OR 
+				users.update_date LIKE ? OR 
+				users.cel LIKE ?
+			) ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users,[],true,
+"2025-08-06 22:06:29",list,users,"4,3,2,1","SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 0",1,::1,users/Index,[],true,
+"2025-08-06 22:06:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:06:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:06:31",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:06:44",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:06:44",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:06:44",list,users,,"SELECT SQL_CALC_FOUND_ROWS  id_user, full_names, rol, user_name, email, photo, register_date, update_date FROM users ORDER BY users.id_user DESC  LIMIT 20 OFFSET 20",1,::1,users/Index,[],true,
+"2025-08-06 22:07:01",userlogout,users,,,1,::1,index/logout,[],true,
+"2025-08-06 22:07:57",userlogin,users,,"SELECT   * FROM users WHERE  user_name = ?  OR email = ?  LIMIT 1",2,::1,index/login/,"{""username"":""rikicastro10"",""password"":""$2y$10$\/ldLSHnmOgwQYh3b9TBWx.a6QP13NoglynmhMk\/Z1enpe8D295kRm""}",true,
+"2025-08-06 22:08:39",userlogout,users,,,2,::1,index/logout,[],true,
+"2025-08-06 22:37:02",userlogin,users,,"SELECT   * FROM users WHERE  user_name = ?  OR email = ?  LIMIT 1",1,::1,index/login/,"{""username"":""juanp10"",""password"":""$2y$10$lsH0i8jgF5Vauv27XhKgR.FpCkjreUdxzqg2qAbrGOUbX2Izh.fLW""}",true,
+"2025-08-06 22:53:22",edit,users,1,"UPDATE users SET `full_names` = ?, `rol` = ?, `user_name` = ?, `photo` = ?, `register_date` = ?, `update_date` = ? WHERE  users.id_user = ? ",1,::1,account/edit//,"{""full_names"":""Juan Perez"",""rol"":""Admin"",""user_name"":""juanp10"",""photo"":""Deprecated:  Creation of dynamic property Uploader::$cache_data is deprecated in C:\\x\\htdocs\\public_clinic_app\\libs\\Uploader.php on line 68http:\/\/localhost\/public_clinic_app\/uploads\/files\/3nly5foeuxvtjqh.png""}",true,
+"2025-08-06 23:00:32",userlogout,users,,,1,::1,index/logout,[],true,

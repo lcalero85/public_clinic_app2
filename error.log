@@ -1,0 +1,10 @@
+[07-Aug-2025 04:34:14 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:34:52 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:34:53 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:34:54 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:34:55 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:35:34 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:35:36 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:35:36 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:35:37 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526
+[07-Aug-2025 04:35:37 Europe/Berlin] PHP Fatal error:  Cannot redeclare str_contains() in C:\x\htdocs\public_clinic_app\helpers\Functions.php on line 526

@@ -599,4 +599,8 @@ body.light-theme .footer{
 
 
 
-
+/* Si usas .custom-select (BS4) */
+#ctrl-status.custom-select{
+    line-height: 1.5;
+    min-height: 40px;
+}

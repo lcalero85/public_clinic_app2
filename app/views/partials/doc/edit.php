@@ -44,7 +44,7 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <input id="ctrl-full_names"  value="<?php  echo $data['full_names']; ?>" type="text" placeholder="Enter Full Names" maxlength="200"  required="" name="full_names"  class="form-control " />
+                                                <input id="ctrl-full_names"  value="<?php  echo $data['full_names']; ?>"  placeholder="Enter Full Names" maxlength="200"  required="" name="full_names"  class="form-control " />
                                                 </div>
                                             </div>
                                         </div>
@@ -106,18 +106,7 @@ $redirect_to = $this->redirect_to;
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group ">
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <label class="control-label" for="age">Age <span class="text-danger">*</span></label>
-                                                    </div>
-                                                    <div class="col-sm-8">
-                                                        <div class="">
-                                                            <input id="ctrl-age"  value="<?php  echo $data['age']; ?>" type="text" placeholder="Enter Age" maxlength="25" minlength="2"  required="" name="age"  class="form-control " />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            
                                                 <div class="form-group ">
                                                     <div class="row">
                                                         <div class="col-sm-4">
@@ -131,25 +120,81 @@ $redirect_to = $this->redirect_to;
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group ">
+                                                 <div class="form-group ">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <label class="control-label" for="photo">Photo <span class="text-danger">*</span></label>
+                                                            <label class="control-label" for="dni">DNI<span class="text-danger">*</span></label>
                                                         </div>
                                                         <div class="col-sm-8">
                                                             <div class="">
-                                                                <div class="dropzone required" input="#ctrl-photo" fieldname="photo"    data-multiple="false" dropmsg="Choose files or drag and drop files to upload"    btntext="Browse" extensions=".jpg,.png,.gif,.jpeg" filesize="10" maximum="1">
-                                                                    <input name="photo" id="ctrl-photo" required="" class="dropzone-input form-control" value="<?php  echo $data['photo']; ?>" type="text"  />
-                                                                        <!--<div class="invalid-feedback animated bounceIn text-center">Please a choose file</div>-->
-                                                                        <div class="dz-file-limit animated bounceIn text-center text-danger"></div>
-                                                                    </div>
-                                                                </div>
-                                                                <?php Html :: uploaded_files_list($data['photo'], '#ctrl-photo'); ?>
+                                                                <input id="ctrl-full_dni"  value="<?php  echo $data['dni']; ?>"  placeholder="Enter DNI" maxlength="200"  required="" name="dni"  class="form-control " />
+                                                                <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-ajax-status"></div>
+                                                 <div class="form-group ">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label class="control-label" for="office_phone">Oficce Phone<span class="text-danger">*</span></label>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="">
+                                                                <input id="ctrl-office_phone"  value="<?php  echo $data['office_phone']; ?>"  placeholder="Enter Oficce Phone" maxlength="200"  required="" name="office_phone"  class="form-control " />
+                                                                <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div><div class="form-group ">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label class="control-label" for="work_email">Work Email<span class="text-danger">*</span></label>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <div class="">
+                                                                <input id="ctrl-work_email"  value="<?php  echo $data['work_email']; ?>"  placeholder="Enter Work Email" maxlength="200"  required="" name="work_email"  class="form-control " />
+                                                                <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                     <?php if (USER_ROLE == 'Admin') { // si el rol del usuario es Admin ?>
+                                                           <div class="form-group">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="control-label" for="status">Doctor Status</label>
+            </div>
+            <div class="col-sm-8">
+                <select id="ctrl-status" name="status" class="custom-select" required>
+                    <?php 
+                    $status_options = $comp_model->doc_status_enum_options();
+                    if(!empty($status_options)){
+                        foreach($status_options as $option){
+                            $value = (!empty($option['value']) ? $option['value'] : null);
+                            $label = (!empty($option['label']) ? $option['label'] : $value);
+                            $selected = ($value == $data['status']) ?  : '';
+                            echo "<option value=\"$value\">$label</option>";
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+    </div>
+<?php } else { ?>
+    <input id="ctrl-status"  
+           value="<?php echo $data['status']; ?>" 
+           type="hidden"  
+           name="status"  
+           required 
+           class="form-control" />
+<?php } ?>
+
+                                                        
+                                                            
+                                                               
+                                                                    <div class="form-ajax-status"></div>
                                                 <div class="form-group text-center">
                                                     <button class="btn btn-primary" type="submit">
                                                         Update

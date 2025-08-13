@@ -223,7 +223,7 @@ $redirect_to = $this->redirect_to;
                 <label class="control-label" for="id_status">Patients Status</label>
             </div>
             <div class="col-sm-8">
-                <select id="ctrl-id_status" name="id_status" class="form-control" required>
+                <select id="ctrl-id_status" name="id_status" class="custom-select" required>
                     <?php 
                     $id_status_options = $comp_model->clinic_patients_id_status_option_list();
                     if(!empty($id_status_options)){

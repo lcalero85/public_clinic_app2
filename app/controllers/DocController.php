@@ -274,7 +274,7 @@ class DocController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id", "full_names", "address", "birthdate", "gender", "age", "Speciality", "register_date", "update_date", "id_user", "photo");
+		$fields = $this->fields = array("id", "full_names", "address", "birthdate", "gender", "Speciality", "register_date", "update_date", "id_user", "dni",'office_phone','work_email','status');
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
@@ -282,18 +282,25 @@ class DocController extends SecureController
 				'address' => 'required',
 				'birthdate' => 'required',
 				'gender' => 'required',
-				'age' => 'required|max_len,25|min_len,2',
 				'Speciality' => 'required',
-				'photo' => 'required',
+				'dni' => 'required',
+				'office_phone' => 'required',
+				'work_email'=> 'required',
+				'status'=> 'required',
+
 			);
 			$this->sanitize_array = array(
 				'full_names' => 'sanitize_string',
 				'address' => 'sanitize_string',
 				'birthdate' => 'sanitize_string',
 				'gender' => 'sanitize_string',
-				'age' => 'sanitize_string',
 				'Speciality' => 'sanitize_string',
-				'photo' => 'sanitize_string',
+				'dni' => 'sanitize_string',
+				'office_phone' => 'sanitize_string',
+				'work_email' => 'sanitize_string',
+				'status' => 'sanitize_string',
+
+
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$modeldata['register_date'] = datetime_now();

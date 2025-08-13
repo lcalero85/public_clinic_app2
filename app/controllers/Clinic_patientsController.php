@@ -278,7 +278,7 @@ class Clinic_patientsController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_patient", "full_names", "address", "gender", "birthdate", "register_observations", "referred", "diseases", "phone_patient", "manager", "register_date", "update_date", "id_user", "id_status", "email", "emergency_contact_phone", "occupation");
+		$fields = $this->fields = array("id_patient", "full_names", "address", "gender", "birthdate", "register_observations", "referred", "diseases", "phone_patient", "manager", "register_date", "update_date", "id_user", "id_status", "email", "emergency_contact_phone", "occupation","photo");
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
@@ -295,6 +295,7 @@ class Clinic_patientsController extends SecureController
 				'email' => 'required|valid_email',
 				'emergency_contact_phone' => 'required|max_len,100',
 				'occupation' => 'required|max_len,100',
+				'photo' => '',
 
 
 			);
@@ -312,12 +313,29 @@ class Clinic_patientsController extends SecureController
 				'email' => 'sanitize_string',
 				'emergency_contact_phone' => 'sanitize_string',
 				'occupation' => 'sanitize_string',
+				'photo' => '',
 
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$modeldata['register_date'] = date_now();
 			$modeldata['update_date'] = date_now();
 			$modeldata['id_user'] = USER_ID;
+
+            // --- Foto: archivo O webcam O nada (NULL) ---
+			$photoData = null;
+
+			if (!empty($_FILES['photo_file']['tmp_name'])) {
+				// 1) Imagen desde el selector de archivos
+				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+			} elseif (!empty($_POST['photo_webcam'])) {
+				// 2) Imagen tomada con webcam (dataURL base64)
+				$base64 = $_POST['photo_webcam'];
+				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+			}
+
+			// Asignar al campo real de la tabla
+			$modeldata['photo'] = $photoData ?: null;
+
 			if ($this->validated()) {
 				$db->where("clinic_patients.id_patient", $rec_id);
 				;

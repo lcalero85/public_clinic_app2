@@ -684,7 +684,7 @@ input.photo_file:focus {
 
 .custom-file-label {
     display: inline-block;
-    background-color: #007bff;
+    background-color: #f5f7f8;
     color: white;
     padding: 8px 14px;
     border-radius: 5px;
@@ -694,7 +694,7 @@ input.photo_file:focus {
 }
 
 .custom-file-label:hover {
-    background-color: #0056b3;
+    background-color: #f8f9fa;
 }
 
 #custom-file-name {

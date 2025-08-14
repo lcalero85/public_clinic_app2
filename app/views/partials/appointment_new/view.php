@@ -158,7 +158,14 @@ $show_export_btn = $this->show_export_btn;
                                                 </span>
                                             </td>
                                         </tr>
-
+                                        <tr class="td-full_names">
+                                            <th class="title"> Next Appointment Date: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['nex_appointment_date']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
                                         <tr class="td-full_names">
                                             <th class="title"> Status Appointment: </th>
                                             <td class="value">

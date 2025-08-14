@@ -137,6 +137,7 @@ class Appointment_newController extends SecureController
 			"appointment_new.historial",
 			"appointment_new.appointment_date",
 			"appointment_new.register_date",
+			"appointment_new.nex_appointment_date",
 			"appointment_new.id_user",
 			"users.full_names AS users_full_names",
 			"appointment_new.id_doc",
@@ -263,32 +264,29 @@ class Appointment_newController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "descritption", "historial", "appointment_date", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
+		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "descritption", "historial", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'id_patient' => 'required',
 				'id_doc' => 'required',
 				'motive' => 'required',
-				'descritption' => 'required',
-				'historial' => 'required',
-				'appointment_date' => 'required',
 				'nex_appointment_date' => 'required',
+				'id_status_appointment' => 'required',
+
 			);
 			$this->sanitize_array = array(
 				'id_patient' => 'sanitize_string',
 				'id_doc' => 'sanitize_string',
 				'motive' => 'sanitize_string',
-				'descritption' => 'sanitize_string',
-				'historial' => 'sanitize_string',
-				'appointment_date' => 'sanitize_string',
 				'nex_appointment_date' => 'sanitize_string',
+				'id_status_appointment' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			$modeldata['register_date'] = datetime_now();
 			$modeldata['update_date'] = datetime_now();
 			$modeldata['id_user'] = USER_ID;
-			$modeldata['id_status_appointment'] = "5";
+		
 			if ($this->validated()) {
 				$db->where("appointment_new.id_appointment", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);

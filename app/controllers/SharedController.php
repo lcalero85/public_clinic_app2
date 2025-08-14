@@ -372,6 +372,13 @@ public function appointment_new_id_appointment_type_option_list(){
     return $result;
 }
 
+public function appointment_new_status_option_list(){
+    $db = $this->GetModel();
+    $sql = "SELECT id AS value, status AS label 
+            FROM appointment_status 
+            ORDER BY status ASC";
+    return $db->rawQuery($sql);
+}
 
 
 }

@@ -76,9 +76,7 @@ $show_export_btn = $this->show_export_btn;
                         </div>
                         <div class="p-3 d-flex">
                             <div class="dropup export-btn-holder mx-1">
-                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-save"></i> Export
-                                </button>
+                               
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                     <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">
@@ -103,11 +101,7 @@ $show_export_btn = $this->show_export_btn;
                                                 <i class="fa fa-edit"></i> Edit
                                             </a>
                                             <?php } ?>
-                                            <?php if($can_delete){ ?>
-                                            <a class="btn btn-sm btn-danger record-delete-btn mx-1"  href="<?php print_link("invoices_concepts/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
-                                                <i class="fa fa-times"></i> Delete
-                                            </a>
-                                            <?php } ?>
+                                            
                                         </div>
                                         <?php
                                         }

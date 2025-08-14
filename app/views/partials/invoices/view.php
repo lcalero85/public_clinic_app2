@@ -52,153 +52,89 @@ $show_export_btn = $this->show_export_btn;
                             <table class="table table-hover table-borderless table-striped">
                                 <!-- Table Body Start -->
                                 <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
-                                    <tr  class="td-invoice_num">
-                                        <th class="title"> Invoice Number: </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['invoice_num']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="invoice_num" 
-                                                data-title="Enter Invoice Num" 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="text" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['invoice_num']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-id_concept">
-                                        <th class="title"> Concept: </th>
-                                        <td class="value">
-                                            <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoices/invoices_concepts/id/" . urlencode($data['id_concept'])) ?>">
-                                                <i class="fa fa-eye"></i> <?php echo $data['invoices_concepts_concept'] ?>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-id_patient">
-                                        <th class="title">  Patient: </th>
-                                        <td class="value">
-                                            <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoices/clinic_patients/id_patient/" . urlencode($data['id_patient'])) ?>">
-                                                <i class="fa fa-eye"></i> <?php echo $data['clinic_patients_full_names'] ?>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-quantity">
-                                        <th class="title"> Quantity: </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-max="100" 
-                                                data-value="<?php echo $data['quantity']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="quantity" 
-                                                data-title="Enter Quantity" 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="number" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['quantity']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-price">
-                                        <th class="title"> Price: </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-max="100" 
-                                                data-step="0.1" 
-                                                data-value="<?php echo $data['price']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="price" 
-                                                data-title="Enter Price" 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="number" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['price']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-total_invoice">
-                                        <th class="title"> Total : </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-max="100" 
-                                                data-step="0.1" 
-                                                data-value="<?php echo $data['total_invoice']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="total_invoice" 
-                                                data-title="Enter Total " 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="number" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['total_invoice']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-date_invoice">
-                                        <th class="title"> Date : </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d', enableTime: false, minDate: '', maxDate: ''}" 
-                                                data-value="<?php echo $data['date_invoice']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="date_invoice" 
-                                                data-title="Enter Date " 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="flatdatetimepicker" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['date_invoice']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-id_invoice_status">
-                                        <th class="title"> Status: </th>
-                                        <td class="value">
-                                            <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("invoice_status/view/" . urlencode($data['id_invoice_status'])) ?>">
-                                                <i class="fa fa-eye"></i> <?php echo $data['invoice_status_status'] ?>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr  class="td-register_date">
-                                        <th class="title"> Register Date: </th>
-                                        <td class="value">
-                                            <span <?php if($can_edit){ ?> data-value="<?php echo $data['register_date']; ?>" 
-                                                data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                data-name="register_date" 
-                                                data-title="Enter Register Date" 
-                                                data-placement="left" 
-                                                data-toggle="click" 
-                                                data-type="text" 
-                                                data-mode="popover" 
-                                                data-showbuttons="left" 
-                                                class="is-editable" <?php } ?>>
-                                                <?php echo $data['register_date']; ?> 
-                                            </span>
-                                        </td>
-                                    </tr>
+                                   
+                                    <tr class="td-full_names">
+                                            <th class="title"> Invoice Number: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['invoice_num']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title"> Invoice Concept: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['invoices_concepts_concept']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title"> Patient Name :  </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['clinic_patients_full_names']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title">Quantity: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['quantity']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title">Unit Price: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['price']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                         <tr class="td-full_names">
+                                            <th class="title">Total Amount: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['total_invoice']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title">Invoice Date: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['date_invoice']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                         <tr class="td-full_names">
+                                            <th class="title">Invoice Status: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['invoice_status_status']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="td-full_names">
+                                            <th class="title">Date Recorded:: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['register_date']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    
+                                
                                 </tbody>
                                 <!-- Table Body End -->
                             </table>
                         </div>
                         <div class="p-3 d-flex">
                             <div class="dropup export-btn-holder mx-1">
-                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-save"></i> Export
-                                </button>
+                               
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                     <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

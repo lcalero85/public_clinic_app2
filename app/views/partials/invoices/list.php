@@ -117,16 +117,15 @@ $show_pagination = $this->show_pagination;
                                         <thead class="table-header bg-light">
                                             <tr>
                                                 <th class="td-sno">#</th>
-                                                <th  class="td-id_invoice"> Id</th>
                                                 <th  class="td-invoice_num"> Invoice Number</th>
-                                                <th  class="td-id_concept"> Concept</th>
-                                                <th  class="td-id_patient"> Patient</th>
+                                                <th  class="td-id_concept"> Invoice ConceptConcept</th>
+                                                <th  class="td-id_patient"> Patient Name</th>
                                                 <th  class="td-quantity"> Quantity</th>
-                                                <th  class="td-price"> Price</th>
-                                                <th  class="td-total_invoice"> Total </th>
-                                                <th  class="td-date_invoice"> Date </th>
-                                                <th  class="td-id_invoice_status">  Status</th>
-                                                <th  class="td-register_date"> Register Date</th>
+                                                <th  class="td-price">Unit Price</th>
+                                                <th  class="td-total_invoice">Total Amount</th>
+                                                <th  class="td-date_invoice">Total Amount</th>
+                                                <th  class="td-id_invoice_status">Payment Status</th>
+                                                <th  class="td-register_date">Invoice Date</th>
                                                 <th class="td-btn"></th>
                                             </tr>
                                         </thead>
@@ -143,118 +142,35 @@ $show_pagination = $this->show_pagination;
                                             ?>
                                             <tr>
                                                 <th class="td-sno"><?php echo $counter; ?></th>
-                                                <td class="td-id_invoice"><a href="<?php print_link("invoices/view/$data[id_invoice]") ?>"><?php echo $data['id_invoice']; ?></a></td>
-                                                <td class="td-invoice_num">
-                                                    <span <?php if($can_edit){ ?> data-value="<?php echo $data['invoice_num']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="invoice_num" 
-                                                        data-title="Enter Invoice Num" 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="text" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['invoice_num']; ?> 
-                                                    </span>
-                                                </td>
-                                                <td class="td-id_concept">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoices/invoices_concepts/id/" . urlencode($data['id_concept'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['invoices_concepts_concept'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-id_patient">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoices/clinic_patients/id_patient/" . urlencode($data['id_patient'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['clinic_patients_full_names'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-quantity">
-                                                    <span <?php if($can_edit){ ?> data-max="100" 
-                                                        data-value="<?php echo $data['quantity']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="quantity" 
-                                                        data-title="Enter Quantity" 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="number" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['quantity']; ?> 
-                                                    </span>
-                                                </td>
-                                                <td class="td-price">
-                                                    <span <?php if($can_edit){ ?> data-max="100" 
-                                                        data-step="0.1" 
-                                                        data-value="<?php echo $data['price']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="price" 
-                                                        data-title="Enter Price" 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="number" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['price']; ?> 
-                                                    </span>
-                                                </td>
-                                                <td class="td-total_invoice">
-                                                    <span <?php if($can_edit){ ?> data-max="100" 
-                                                        data-step="0.1" 
-                                                        data-value="<?php echo $data['total_invoice']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="total_invoice" 
-                                                        data-title="Enter Total " 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="number" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['total_invoice']; ?> 
-                                                    </span>
-                                                </td>
-                                                <td class="td-date_invoice">
-                                                    <span <?php if($can_edit){ ?> data-flatpickr="{altFormat: 'Y-m-d', enableTime: false, minDate: '', maxDate: ''}" 
-                                                        data-value="<?php echo $data['date_invoice']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="date_invoice" 
-                                                        data-title="Enter Date " 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="flatdatetimepicker" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['date_invoice']; ?> 
-                                                    </span>
-                                                </td>
-                                                <td class="td-id_invoice_status">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("invoice_status/view/" . urlencode($data['id_invoice_status'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['invoice_status_status'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-register_date">
-                                                    <span <?php if($can_edit){ ?> data-value="<?php echo $data['register_date']; ?>" 
-                                                        data-pk="<?php echo $data['id_invoice'] ?>" 
-                                                        data-url="<?php print_link("invoices/editfield/" . urlencode($data['id_invoice'])); ?>" 
-                                                        data-name="register_date" 
-                                                        data-title="Enter Register Date" 
-                                                        data-placement="left" 
-                                                        data-toggle="click" 
-                                                        data-type="text" 
-                                                        data-mode="popover" 
-                                                        data-showbuttons="left" 
-                                                        class="is-editable" <?php } ?>>
-                                                        <?php echo $data['register_date']; ?> 
-                                                    </span>
-                                                </td>
+                                            
+                                                  <td class="td-gender">
+                                                        <?php echo $data['invoice_num']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['invoices_concepts_concept']; ?>
+                                                    </td>
+                                                     <td class="td-gender">
+                                                        <?php echo $data['clinic_patients_full_names']; ?>
+                                                    </td>
+                                                     <td class="td-gender">
+                                                        <?php echo $data['quantity']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['price']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['total_invoice']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['date_invoice']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['invoice_status_status']; ?>
+                                                    </td>
+                                                    <td class="td-gender">
+                                                        <?php echo $data['register_date']; ?>
+                                                    </td>
+
                                                 <td class="page-list-action td-btn">
                                                     <div class="dropdown" >
                                                         <button data-toggle="dropdown" class="dropdown-toggle btn btn-primary btn-sm">
@@ -303,9 +219,7 @@ $show_pagination = $this->show_pagination;
                                         <div class="col-md-auto justify-content-center">    
                                             <div class="p-3 d-flex justify-content-between">    
                                                 <div class="dropup export-btn-holder mx-1">
-                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fa fa-save"></i> Export
-                                                    </button>
+                                                    
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                                         <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

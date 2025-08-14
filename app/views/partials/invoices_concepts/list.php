@@ -125,7 +125,6 @@ $show_pagination = $this->show_pagination;
                                                 </th>
                                                 <?php } ?>
                                                 <th class="td-sno">#</th>
-                                                <th  class="td-id"> Id</th>
                                                 <th  class="td-concept"> Concept</th>
                                                 <th class="td-btn"></th>
                                             </tr>
@@ -151,7 +150,7 @@ $show_pagination = $this->show_pagination;
                                                     </th>
                                                     <?php } ?>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
-                                                    <td class="td-id"><a href="<?php print_link("invoices_concepts/view/$data[id]") ?>"><?php echo $data['id']; ?></a></td>
+            
                                                     <td class="td-concept">
                                                         <span <?php if($can_edit){ ?> data-value="<?php echo $data['concept']; ?>" 
                                                             data-pk="<?php echo $data['id'] ?>" 
@@ -225,9 +224,7 @@ $show_pagination = $this->show_pagination;
                                                     </button>
                                                     <?php } ?>
                                                     <div class="dropup export-btn-holder mx-1">
-                                                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fa fa-save"></i> Export
-                                                        </button>
+                                                       
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                             <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                                             <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

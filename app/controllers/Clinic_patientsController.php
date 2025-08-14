@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Clinic_patients Page Controller
  * @category  Controller
@@ -34,7 +35,7 @@ class Clinic_patientsController extends SecureController
 			"clinic_patients.document_number",
 			"clinic_patients.age",
 			"clinic_patients.birthdate",
-		
+
 		);
 		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
 		//search table record
@@ -144,17 +145,19 @@ class Clinic_patientsController extends SecureController
 			"document_type_catalog.type AS document_type_name",
 			"blood_type_catalog.type AS blood_type_name",
 			"clinic_patients.photo",
+			"marital_status_catalog.status AS status",
+			"workplace"
 		);
 		if ($value) {
 			$db->where($rec_id, urldecode($value)); //select record based on field name
 		} else {
-			$db->where("clinic_patients.id_patient", $rec_id);
-			; //select record based on primary key
+			$db->where("clinic_patients.id_patient", $rec_id);; //select record based on primary key
 		}
 		$db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
 		$db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
 		$db->join("document_type_catalog", "clinic_patients.id_document_type = document_type_catalog.id", "INNER");
 		$db->join("blood_type_catalog", "clinic_patients.id_blood_type = blood_type_catalog.id", "INNER");
+		$db->join("marital_status_catalog", "clinic_patients.id_marital_status = marital_status_catalog.id", "INNER");
 
 		$record = $db->getOne($tablename, $fields);
 		if ($record) {
@@ -187,7 +190,31 @@ class Clinic_patientsController extends SecureController
 			$tablename = $this->tablename;
 			$request = $this->request;
 			//fillable fields
-			$fields = $this->fields = array("full_names", "address", "gender", "birthdate", "register_observations", "referred", "diseases", "phone_patient", "manager", "register_date", "update_date", "id_user", "id_status", "email", "id_document_type", "document_number", "occupation", "allergies", "emergency_contact_phone", "id_blood_type", 'photo');
+			$fields = $this->fields = array(
+				"full_names",
+				"address",
+				"gender",
+				"birthdate",
+				"register_observations",
+				"referred",
+				"diseases",
+				"phone_patient",
+				"manager",
+				"register_date",
+				"update_date",
+				"id_user",
+				"id_status",
+				"email",
+				"id_document_type",
+				"document_number",
+				"occupation",
+				"allergies",
+				"emergency_contact_phone",
+				"id_blood_type",
+				'photo',
+				"id_marital_status",
+				"workplace"
+			);
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'full_names' => 'required|max_len,200',
@@ -208,6 +235,8 @@ class Clinic_patientsController extends SecureController
 				'emergency_contact_phone' => 'required',
 				'id_blood_type' => 'required',
 				'photo' => '',
+				'id_marital_status' => 'required',
+				'workplace' => 'required',
 
 			);
 			$this->sanitize_array = array(
@@ -229,6 +258,8 @@ class Clinic_patientsController extends SecureController
 				'emergency_contact_phone' => 'sanitize_string',
 				'id_blood_type' => 'sanitize_string',
 				'photo' => '',
+				'id_marital_status' => 'sanitize_string',
+				'workplace' => 'sanitize_string',
 
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
@@ -279,7 +310,31 @@ class Clinic_patientsController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_patient", "full_names", "address", "gender", "birthdate", "register_observations", "referred", "diseases", "phone_patient", "manager", "register_date", "update_date", "id_user", "id_status", "email", "emergency_contact_phone", "occupation","photo");
+		$fields = $this->fields = array(
+			"id_patient",
+			"full_names",
+			"address",
+			"gender",
+			"birthdate",
+			"register_observations",
+			"referred",
+			"diseases",
+			"phone_patient",
+			"manager",
+			"register_date",
+			"update_date",
+			"id_user",
+			"id_status",
+			"email",
+			"emergency_contact_phone",
+			"occupation",
+			"photo",
+			"workplace",
+			"id_document_type",
+			"id_marital_status",
+			"document_number"
+
+		);
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
@@ -297,8 +352,10 @@ class Clinic_patientsController extends SecureController
 				'emergency_contact_phone' => 'required|max_len,100',
 				'occupation' => 'required|max_len,100',
 				'photo' => '',
-
-
+				"workplace"=> 'required',
+			    'id_document_type'=> 'required',
+			    'id_marital_status'=> 'required',
+			    'document_number'=> 'required',
 			);
 			$this->sanitize_array = array(
 				'full_names' => 'sanitize_string',
@@ -315,6 +372,11 @@ class Clinic_patientsController extends SecureController
 				'emergency_contact_phone' => 'sanitize_string',
 				'occupation' => 'sanitize_string',
 				'photo' => '',
+				"workplace"=> 'sanitize_string',
+			    'id_document_type'=> 'sanitize_string',
+			    'id_marital_status'=> 'sanitize_string',
+			    'document_number'=> 'sanitize_string',
+
 
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
@@ -322,7 +384,7 @@ class Clinic_patientsController extends SecureController
 			$modeldata['update_date'] = date_now();
 			$modeldata['id_user'] = USER_ID;
 
-            // --- Foto: archivo O webcam O nada (NULL) ---
+			// --- Foto: archivo O webcam O nada (NULL) ---
 			$photoData = null;
 
 			if (!empty($_FILES['photo_file']['tmp_name'])) {
@@ -338,8 +400,7 @@ class Clinic_patientsController extends SecureController
 			$modeldata['photo'] = $photoData ?: null;
 
 			if ($this->validated()) {
-				$db->where("clinic_patients.id_patient", $rec_id);
-				;
+				$db->where("clinic_patients.id_patient", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
 				if ($bool && $numRows) {
@@ -361,8 +422,7 @@ class Clinic_patientsController extends SecureController
 				}
 			}
 		}
-		$db->where("clinic_patients.id_patient", $rec_id);
-		;
+		$db->where("clinic_patients.id_patient", $rec_id);;
 		$data = $db->getOne($tablename, $fields);
 		$page_title = $this->view->page_title = "Edit  Clinic Patients";
 		if (!$data) {
@@ -423,8 +483,7 @@ class Clinic_patientsController extends SecureController
 			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
 			if ($this->validated()) {
-				$db->where("clinic_patients.id_patient", $rec_id);
-				;
+				$db->where("clinic_patients.id_patient", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
 				$numRows = $db->getRowCount();
 				if ($bool && $numRows) {

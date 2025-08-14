@@ -155,6 +155,30 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="id_marital_status">Marital Status *</label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <select id="ctrl-id_marital_status" name="id_marital_status" style="width:100%;height:100%" class="form-control" required>
+                                                <option value="">-- Select Marital Status --</option>
+                                                <?php
+                                                $marital_status_options = $comp_model->marital_status_options();
+                                                if (!empty($marital_status_options)) {
+                                                    foreach ($marital_status_options as $option) {
+                                                        $value = $option['value'];
+                                                        $label = $option['label'];
+                                                        $selected = ($value == $data['id_marital_status']) ? 'selected' : '';
+                                                        echo "<option value=\"$value\" $selected>$label</option>";
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group">
                                     <div class="row">
@@ -245,6 +269,21 @@ $redirect_to = $this->redirect_to;
                                                 }
                                                 ?>
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="workplace">Workplace<span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input id="ctrl-workplace"
+                                                value="<?php echo $this->set_field_value('workplace', ""); ?>"
+                                                type="text" placeholder="Enter WorkPlace" maxlength="20" required
+                                                name="workplace" class="form-control" />
                                         </div>
                                     </div>
                                 </div>

@@ -57,7 +57,7 @@ $redirect_to = $this->redirect_to;
     <?php
     }
     ?>
-     <script>
+    <script>
         function updateFileName(input) {
             const label = document.getElementById("custom-file-name");
             if (input.files.length > 0) {
@@ -75,7 +75,7 @@ $redirect_to = $this->redirect_to;
                     <div class="bg-light p-3 animated fadeIn page-content form-card">
                         <form novalidate id="" role="form" enctype="multipart/form-data" class="form page-form form-horizontal needs-validation clinic-form" action="<?php print_link("clinic_patients/edit/$page_id/?csrf_token=$csrf_token"); ?>" method="post">
                             <div>
-                               <!-- Photo Upload / Webcam Capture -->
+                                <!-- Photo Upload / Webcam Capture -->
                                 <div class="form-group">
                                     <label for="photo" class="control-label">Patient Photo</label>
                                     <div>
@@ -175,6 +175,78 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group ">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="id_marital_status">Marital Status <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <select id="ctrl-id_marital_status" name="id_marital_status" class="form-control" style="width:100%;height:30%" required>
+                                                    <option value="">-- Select Marital Status --</option>
+                                                    <?php
+                                                    $marital_status_options = $comp_model->marital_status_options();
+                                                    if (!empty($marital_status_options)) {
+                                                        foreach ($marital_status_options as $option) {
+                                                            $value = $option['value'];
+                                                            $label = $option['label'];
+                                                            $selected = ($value == $data['id_marital_status']) ? 'selected' : '';
+                                                            echo "<option value=\"$value\" $selected>$label</option>";
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="id_document_type">Document Type <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <select id="ctrl-id_document_type" name="id_document_type" class="form-control" style="width:100%;height:30%" required>
+                                                    <option value="">-- Select Document Type --</option>
+                                                    <?php
+                                                    $document_type_options = $comp_model->document_type_options();
+                                                    if (!empty($document_type_options)) {
+                                                        foreach ($document_type_options as $option) {
+                                                            $value = $option['value'];
+                                                            $label = $option['label'];
+                                                            $selected = ($value == $data['id_document_type']) ? 'selected' : '';
+                                                            echo "<option value=\"$value\" $selected>$label</option>";
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="document_number">Document Number <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <input id="ctrl-document_number"
+                                                    name="document_number"
+                                                    value="<?php echo $data['document_number']; ?>"
+                                                    type="text"
+                                                    placeholder="Enter Document Number"
+                                                    maxlength="50"
+                                                    class="form-control"
+                                                    required />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group ">
                                     <div class="row">
@@ -188,7 +260,26 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group ">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label" for="workplace">Workplace <span class="text-danger">*</span></label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <input id="ctrl-workplace"
+                                                    name="workplace"
+                                                    value="<?php echo $data['workplace']; ?>"
+                                                    type="text"
+                                                    placeholder="Enter Workplace"
+                                                    maxlength="255"
+                                                    class="form-control"
+                                                    required />
 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">

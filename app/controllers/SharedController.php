@@ -380,5 +380,18 @@ public function appointment_new_status_option_list(){
     return $db->rawQuery($sql);
 }
 
+public function marital_status_options(){
+    $db = $this->GetModel();
+    $sql = "SELECT id AS value, status AS label FROM marital_status_catalog ORDER BY status ASC";
+    $result = $db->rawQuery($sql);
+    return $result;
+}
+
+public function document_type_options(){
+    $db = $this->GetModel();
+    $sql = "SELECT id AS value, type AS label FROM document_type_catalog ORDER BY type ASC";
+    return $db->rawQuery($sql);
+}
+
 
 }

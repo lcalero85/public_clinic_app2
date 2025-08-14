@@ -34,7 +34,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_patient">Patient <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_patient">Patient Name <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -63,7 +63,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_concept">Concept <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_concept">Invoice Concept <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -92,7 +92,7 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="comments">Comments <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="comments">Additional Notes<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -117,7 +117,7 @@ $redirect_to = $this->redirect_to;
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="price">Price <span class="text-danger">*</span></label>
+                                                <label class="control-label" for="price">Unit Price<span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
@@ -129,7 +129,7 @@ $redirect_to = $this->redirect_to;
                                         <div class="form-group ">
                                             <div class="row">
                                                 <div class="col-sm-4">
-                                                    <label class="control-label" for="total_invoice">Total  <span class="text-danger">*</span></label>
+                                                    <label class="control-label" for="total_invoice">Total Amount<span class="text-danger">*</span></label>
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <div class="">
@@ -141,7 +141,7 @@ $redirect_to = $this->redirect_to;
                                             <div class="form-group ">
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        <label class="control-label" for="date_invoice">Date  <span class="text-danger">*</span></label>
+                                                        <label class="control-label" for="date_invoice">Invoice Date<span class="text-danger">*</span></label>
                                                     </div>
                                                     <div class="col-sm-8">
                                                         <div class="input-group">
@@ -156,7 +156,7 @@ $redirect_to = $this->redirect_to;
                                                 <div class="form-group ">
                                                     <div class="row">
                                                         <div class="col-sm-4">
-                                                            <label class="control-label" for="id_invoice_status"> Status <span class="text-danger">*</span></label>
+                                                            <label class="control-label" for="id_invoice_status">Payment Status<span class="text-danger">*</span></label>
                                                         </div>
                                                         <div class="col-sm-8">
                                                             <div class="">

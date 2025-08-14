@@ -32,7 +32,7 @@ $show_export_btn = $this->show_export_btn;
     data-page-url="<?php print_link($current_page); ?>">
     <?php
     if ($show_header == true) {
-        ?>
+    ?>
         <div class="bg-light p-3 mb-3">
             <div class="container">
                 <div class="row ">
@@ -42,7 +42,7 @@ $show_export_btn = $this->show_export_btn;
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
     ?>
     <div class="">
@@ -56,7 +56,7 @@ $show_export_btn = $this->show_export_btn;
                         if (!empty($data)) {
                             $rec_id = (!empty($data['id_patient']) ? urlencode($data['id_patient']) : null);
                             $counter++;
-                            ?>
+                        ?>
                             <div id="page-report-body" class="">
                                 <table class="table table-hover table-borderless table-striped patient-view">
                                     <!-- Table Body Start -->
@@ -77,7 +77,7 @@ $show_export_btn = $this->show_export_btn;
                                                         }
                                                     }
                                                     $base64 = base64_encode($data['photo']);
-                                                    ?>
+                                                ?>
                                                     <img src="data:<?= $mime ?>;base64,<?= $base64 ?>" alt="Patient photo"
                                                         class="patient-photo" loading="lazy">
                                                 <?php else: ?>
@@ -136,6 +136,14 @@ $show_export_btn = $this->show_export_btn;
                                                 </span>
                                             </td>
                                         </tr>
+                                        <tr class="td-full_names">
+                                            <th class="title"> Workplace: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['workplace']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
 
                                         <tr class="td-full_names">
                                             <th class="title"> Email Patients: </th>
@@ -184,6 +192,15 @@ $show_export_btn = $this->show_export_btn;
                                             <td class="value">
                                                 <span>
                                                     <?php echo $data['gender']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="td-marital_status">
+                                            <th class="title">Marital Status: </th>
+                                            <td class="value">
+                                                <span>
+                                                    <?php echo $data['status']; ?>
                                                 </span>
                                             </td>
                                         </tr>
@@ -310,17 +327,17 @@ $show_export_btn = $this->show_export_btn;
                                         </a>
                                     <?php } ?>
                                 </div>
-                                <?php
+                            <?php
                         } else {
                             ?>
                                 <!-- Empty Record Message -->
                                 <div class="text-muted p-3">
                                     <i class="fa fa-ban"></i> No Record Found
                                 </div>
-                                <?php
+                            <?php
                         }
-                        ?>
-                        </div>
+                            ?>
+                            </div>
                     </div>
                 </div>
             </div>

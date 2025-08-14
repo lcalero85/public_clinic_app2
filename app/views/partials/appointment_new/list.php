@@ -124,13 +124,15 @@ $show_pagination = $this->show_pagination;
                                                     </label>
                                                 </th>
                                             <?php } ?>
-                                            <th class="td-sno">Appointment No.</th>
+                                            <th class="td-sno">No.</th>
                                             <th class="td-id_patient">Patient Name</th>
-                                            <th class="td-id_doc">Attending Physician</th>
-                                            <th style="width:col-md-7;" class="td-motive"> Reason & Details</th>
+                                            <th class="td-id_doc">Doctor</th>
+                                            <th style="width:col-md-7;" class="td-motive"> Reason</th>
                                             <th class="td-appointment_date">Appointment Date</th>
-                                            <th class="td-id_status_appointment">Appointment Status</th>
-                                             <th class="td-id_status_appointment">Actions </th>
+                                            <th class="td-id_status_appointment">Priority</th>
+                                            <th class="td-id_status_appointment">Type</th>
+                                            <th class="td-id_status_appointment">Status</th>
+                                            <th class="td-id_status_appointment">Actions </th>
                                             <th class="td-btn"></th>
                                         </tr>
                                     </thead>
@@ -169,22 +171,47 @@ $show_pagination = $this->show_pagination;
                                                         <span>
                                                             <?php
                                                             // Unir motive y description con un separador
-                                                            echo $data['motive_summary'] 
+                                                            echo $data['motive_summary']
                                                             ?>
                                                         </span>
                                                     </td>
-                                                   <td class="td-clinic_doc_full_names">
+                                                    <td class="td-clinic_doc_full_names">
                                                         <span>
                                                             <?php echo $data['appointment_date']; ?>
                                                         </span>
                                                     </td>
                                                     <td class="td-clinic_doc_full_names">
                                                         <span>
+                                                            <?php echo $data['priority']; ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="td-id_appointment_type">
+                                                        <span>
+                                                            <?php
+                                                            $appointment_types = $comp_model->appointment_new_id_appointment_type_option_list();
+                                                            $appointment_type_label = $data['id_appointment_type']; // Por defecto el ID si no se encuentra coincidencia
+
+                                                            if (!empty($appointment_types)) {
+                                                                foreach ($appointment_types as $type) {
+                                                                    if ($type['value'] == $data['id_appointment_type']) {
+                                                                        $appointment_type_label = $type['label'];
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            echo $appointment_type_label;
+                                                            ?>
+                                                        </span>
+                                                    </td>
+
+                                                    <td class="td-clinic_doc_full_names">
+                                                        <span>
                                                             <?php echo $data['status']; ?>
                                                         </span>
                                                     </td>
-                                                  
-                                                  
+
+
                                                     <td class="page-list-action td-btn">
                                                         <div class="dropdown">
                                                             <button data-toggle="dropdown" class="dropdown-toggle btn btn-primary btn-sm">
@@ -243,7 +270,7 @@ $show_pagination = $this->show_pagination;
                                                     </button>
                                                 <?php } ?>
                                                 <div class="dropup export-btn-holder mx-1">
-                                                  
+
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                                         <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

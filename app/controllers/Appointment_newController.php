@@ -34,7 +34,9 @@ class Appointment_newController extends SecureController
 			"appointment_new.register_date",
 			"appointment_new.nex_appointment_date",
 			"appointment_new.id_status_appointment",
+			"appointment_new.id_appointment_type",
 			"appointment_status.status AS status",
+			"appointment_new.priority",
 			"appointment_new.id_user",
 			"users.full_names AS users_full_names",
 		);
@@ -56,6 +58,8 @@ class Appointment_newController extends SecureController
         appointment_new.nex_appointment_date LIKE ? OR
         appointment_new.id_status_appointment LIKE ? OR
 		appointment_status.status LIKE ? OR
+		appointment_new.priority LIKE ? OR
+		appointment_new.id_appointment_type LIKE ? OR
         appointment_new.id_user LIKE ? OR
         clinic_patients.full_names LIKE ? OR
         doc.full_names LIKE ? OR
@@ -137,6 +141,10 @@ class Appointment_newController extends SecureController
 			"users.full_names AS users_full_names",
 			"appointment_new.id_doc",
 			"doc.full_names AS doc_full_names",
+			"doc.Speciality AS Speciality",
+			"appointment_new.priority",
+			"reminder_preference",
+			"follow_up_required",
 			"appointment_new.id_status_appointment",
 			"appointment_status.status AS appointment_status_status"
 		);

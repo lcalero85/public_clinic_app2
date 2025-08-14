@@ -388,7 +388,7 @@ class UsersController extends SecureController
 					$db->insert("clinic_patients", $table_data);
 					# End of after add statement
 					$this->set_flash_msg("Grabar agregado exitosamente", "success");
-					return	$this->redirect("users");
+					return	$this->redirect("home");
 				} else {
 					$this->set_page_error();
 					$this->write_to_log("add", "false");

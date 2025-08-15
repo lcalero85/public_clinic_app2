@@ -136,33 +136,14 @@ $show_pagination = $this->show_pagination;
                                             ?>
                                             <tr>
                                                 <th class="td-sno"><?php echo $counter; ?></th>
-                                                 <td class="td-clinic_patients_full_names">
-                                                        <span>
-                                                            <?php echo $data['clinic_patients_full_names']; ?>
-                                                        </span>
-                                                    </td>
-
-
-
-                                                <td class="td-id_doc">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/appointments/doc/id/" . urlencode($data['id_doc'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['doc_full_names'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-motive"> <?php echo $data['clinic_patients_full_names']; ?></td>
+                                                <td class="td-motive"> <?php echo $data['doc_full_names']; ?></td>
                                                 <td class="td-motive"> <?php echo $data['motive']; ?></td>
                                                 <td class="td-descritption"> <?php echo $data['descritption']; ?></td>
                                                 <td class="td-historial"> <?php echo $data['historial']; ?></td>
                                                 <td class="td-register_date"> <?php echo $data['register_date']; ?></td>
-                                                <td class="td-id_user">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/appointments/users/id_user/" . urlencode($data['id_user'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['users_full_names'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-id_status_appointment">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/appointments/appointment_status/id/" . urlencode($data['id_status_appointment'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['appointment_status_status'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-register_date"> <?php echo $data['users_full_names']; ?></td>
+                                                <td class="td-register_date"> <?php echo $data['appointment_status_status']; ?></td>
                                             </tr>
                                             <?php 
                                             }

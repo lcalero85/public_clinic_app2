@@ -109,7 +109,6 @@ $show_pagination = $this->show_pagination;
                                         <thead class="table-header bg-light">
                                             <tr>
                                                 <th class="td-sno">#</th>
-                                                <th  class="td-id_patient"> Id </th>
                                                 <th  class="td-full_names"> Names</th>
                                                 <th  class="td-address"> Address</th>
                                                 <th  class="td-gender"> Gender</th>
@@ -138,7 +137,6 @@ $show_pagination = $this->show_pagination;
                                             ?>
                                             <tr>
                                                 <th class="td-sno"><?php echo $counter; ?></th>
-                                                <td class="td-id_patient"> <?php echo $data['id_patient']; ?></td>
                                                 <td class="td-full_names"> <?php echo $data['full_names']; ?></td>
                                                 <td class="td-address"> <?php echo $data['address']; ?></td>
                                                 <td class="td-gender"> <?php echo $data['gender']; ?></td>
@@ -150,16 +148,9 @@ $show_pagination = $this->show_pagination;
                                                 <td class="td-manager"> <?php echo $data['manager']; ?></td>
                                                 <td class="td-diseases"> <?php echo $data['diseases']; ?></td>
                                                 <td class="td-register_date"> <?php echo $data['register_date']; ?></td>
-                                                <td class="td-id_status">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/actives_patients/patients_status/id/" . urlencode($data['id_status'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['patients_status_status'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-id_user">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/actives_patients/users/id_user/" . urlencode($data['id_user'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['users_full_names'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-register_date"> <?php echo $data['patients_status_status']; ?></td>
+                                                <td class="td-register_date"> <?php echo $data['users_full_names']; ?></td>
+                                                
                                             </tr>
                                             <?php 
                                             }

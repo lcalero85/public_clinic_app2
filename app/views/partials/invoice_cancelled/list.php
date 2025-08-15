@@ -109,7 +109,6 @@ $show_pagination = $this->show_pagination;
                                         <thead class="table-header bg-light">
                                             <tr>
                                                 <th class="td-sno">#</th>
-                                                <th  class="td-id_invoice"> Id Invoice</th>
                                                 <th  class="td-invoice_num"> Invoice Num</th>
                                                 <th  class="td-comments"> Comments</th>
                                                 <th  class="td-id_concept">  Concept</th>
@@ -136,34 +135,19 @@ $show_pagination = $this->show_pagination;
                                             ?>
                                             <tr>
                                                 <th class="td-sno"><?php echo $counter; ?></th>
-                                                <td class="td-id_invoice"> <?php echo $data['id_invoice']; ?></td>
                                                 <td class="td-invoice_num"> <?php echo $data['invoice_num']; ?></td>
                                                 <td class="td-comments"> <?php echo $data['comments']; ?></td>
-                                                <td class="td-id_concept">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoice_cancelled/invoices_concepts/id/" . urlencode($data['id_concept'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['invoices_concepts_concept'] ?>
-                                                    </a>
-                                                </td>
-                                                <td class="td-id_patient">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoice_cancelled/clinic_patients/id_patient/" . urlencode($data['id_patient'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['clinic_patients_full_names'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-comments"> <?php echo $data['invoices_concepts_concept']; ?></td>
+                                                <td class="td-comments"> <?php echo $data['clinic_patients_full_names']; ?></td>
                                                 <td class="td-quantity"> <?php echo $data['quantity']; ?></td>
                                                 <td class="td-price"> <?php echo $data['price']; ?></td>
                                                 <td class="td-total_invoice"> <?php echo $data['total_invoice']; ?></td>
                                                 <td class="td-date_invoice"> <?php echo $data['date_invoice']; ?></td>
-                                                <td class="td-id_invoice_status">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoice_cancelled/invoice_status/id/" . urlencode($data['id_invoice_status'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['invoice_status_status'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-date_invoice"> <?php echo $data['invoice_status_status']; ?></td>
+                                                
                                                 <td class="td-register_date"> <?php echo $data['register_date']; ?></td>
-                                                <td class="td-id_user">
-                                                    <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/invoice_cancelled/users/id_user/" . urlencode($data['id_user'])) ?>">
-                                                        <i class="fa fa-eye"></i> <?php echo $data['users_full_names'] ?>
-                                                    </a>
-                                                </td>
+                                                <td class="td-register_date"> <?php echo $data['users_full_names']; ?></td>
+                                                
                                             </tr>
                                             <?php 
                                             }

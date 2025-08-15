@@ -393,5 +393,13 @@ public function document_type_options(){
     return $db->rawQuery($sql);
 }
 
+public function get_all_roles(){
+    $db = $this->GetModel();
+    $sql = "SELECT id_role AS value, role_name AS label FROM roles";
+    $result = $db->rawQuery($sql);
+    return $result;
+}
+
+
 
 }

@@ -103,5 +103,21 @@ define("ORDER_TYPE", "DESC");  //Default Order Type
 define('USER_ID',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['id_user'] : null ));
 define('USER_NAME',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['user_name'] : null ));
 define('USER_EMAIL',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['email'] : null ));
-define('USER_PHOTO',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['photo'] : null ));
 define('USER_ROLE',(isset($_SESSION[APP_ID.'user_data']) ? $_SESSION[APP_ID.'user_data']['rol'] : null ));
+// Constante con el ID del rol
+define(
+    'USER_ROLE_ID',
+    (isset($_SESSION[APP_ID . 'user_data']) ? $_SESSION[APP_ID . 'user_data']['id_role'] : null)
+);
+
+// Constante con el nombre del rol (suponiendo que ya lo guardas en la sesión como 'role_name')
+define(
+    'USER_ROLE_NAME',
+    (isset($_SESSION[APP_ID . 'user_data']) ? $_SESSION[APP_ID . 'user_data']['role_name'] : null)
+);
+// Si existe foto, será un BLOB convertido a Base64
+define('USER_PHOTO', 
+    (isset($_SESSION[APP_ID . 'user_data']['photo']) && !empty($_SESSION[APP_ID . 'user_data']['photo'])) 
+    ? 'data:image/jpeg;base64,' . base64_encode($_SESSION[APP_ID . 'user_data']['photo']) 
+    : null
+);

@@ -21,52 +21,68 @@ class IndexController extends BaseController{
 		}
 	}
 	private function login_user($username , $password_text, $rememberme = false){
-		$db = $this->GetModel();
-		$username = htmlspecialchars(strip_tags($username), ENT_QUOTES, 'UTF-8');
-		$db->where("user_name", $username)->orWhere("email", $username);
-		$tablename = $this->tablename;
-		$user = $db->getOne($tablename);
-		if(!empty($user)){
-			//Verify User Password Text With DB Password Hash Value.
-			//Uses PHP password_verify() function with default options
-			$password_hash = $user['password'];
-			$this->modeldata['password'] = $password_hash; //update the modeldata with the password hash
-			if(password_verify($password_text,$password_hash)){
-        		unset($user['password']); //Remove user password. No need to store it in the session
-				set_session("user_data", $user); // Set active user data in a sessions
-				$this->write_to_log("userlogin", "true");
-				//if Remeber Me, Set Cookie
-				if($rememberme == true){
-					$sessionkey = time().random_str(20); // Generate a session key for the user
-					//Update user session info in database with the session key
-					$db->where("id_user", $user['id_user']);
-					$res = $db->update($tablename, array("login_session_key" => hash_value($sessionkey)));
-					if(!empty($res)){
-						set_cookie("login_session_key", $sessionkey); // save user login_session_key in a Cookie
-					}
-				}
-				else{
-					clear_cookie("login_session_key");// Clear any previous set cookie
-				}
-				$redirect_url = get_session("login_redirect_url");// Redirect to user active page
-				if(!empty($redirect_url)){
-					clear_session("login_redirect_url");
-					return $this->redirect($redirect_url);
-				}
-				else{
-					return $this->redirect(HOME_PAGE);
-				}
-			}
-			else{
-				//password is not correct
-				return $this->login_fail("Username or password not correct");
-			}
-		}
-		else{
-			//user is not registered
-			return $this->login_fail("Username or password not correct");
-		}
-	}
+    $db = $this->GetModel();
+    $username = htmlspecialchars(strip_tags($username), ENT_QUOTES, 'UTF-8');
+    $db->where("user_name", $username)->orWhere("email", $username);
+
+    // 🔹 Incluimos 'photo' en la consulta
+    $user = $db->getOne($this->tablename, "*"); // o especificar campos: 'id_user, full_names, rol, id_role, user_name, email, photo'
+
+    if(!empty($user)){
+        $password_hash = $user['password'];
+        $this->modeldata['password'] = $password_hash;
+
+        if(password_verify($password_text,$password_hash)){
+            unset($user['password']); // No guardar contraseña en sesión
+
+            // Obtener el nombre del rol desde la tabla roles
+            if (!empty($user['id_role'])) {
+                $role = $db->where('id_role', $user['id_role'])->getOne('roles', ['role_name']);
+                $user['role_name'] = $role ? $role['role_name'] : null;
+            } else {
+                $user['role_name'] = null;
+            }
+
+            // 🔹 Guardar foto como BLOB en la sesión
+            if (!empty($user['photo'])) {
+                // Lo guardamos tal cual (BLOB)
+                $user['photo'] = $user['photo'];
+            } else {
+                $user['photo'] = null;
+            }
+
+            // Guardar todo en sesión
+            set_session("user_data", $user);
+
+            $this->write_to_log("userlogin", "true");
+
+            // Remember me
+            if($rememberme == true){
+                $sessionkey = time().random_str(20);
+                $db->where("id_user", $user['id_user']);
+                $res = $db->update($this->tablename, array("login_session_key" => hash_value($sessionkey)));
+                if(!empty($res)){
+                    set_cookie("login_session_key", $sessionkey);
+                }
+            } else {
+                clear_cookie("login_session_key");
+            }
+
+            $redirect_url = get_session("login_redirect_url");
+            if(!empty($redirect_url)){
+                clear_session("login_redirect_url");
+                return $this->redirect($redirect_url);
+            } else {
+                return $this->redirect(HOME_PAGE);
+            }
+        } else {
+            return $this->login_fail("Username or password not correct");
+        }
+    } else {
+        return $this->login_fail("Username or password not correct");
+    }
+}
+
 	/**
      * Display login page with custom message when login fails
      * @return BaseView

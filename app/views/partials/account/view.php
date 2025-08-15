@@ -52,8 +52,8 @@ $show_export_btn = $this->show_export_btn;
                             <div class="profile">
                                 <div class="avatar">
                                     <?php 
-                                    if(!empty(USER_PHOTO)){
-                                    Html::page_img(USER_PHOTO, 100, 100); 
+                                    if(!empty(USER_IMAGE)){
+                                    Html::page_img(USER_IMAGE, 100, 100); 
                                     }
                                     ?>
                                 </div>

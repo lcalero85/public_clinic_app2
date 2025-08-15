@@ -20,7 +20,7 @@ $current_page = $this->set_current_page_link();
                 <h6>
                     <?php
                         echo "User : ".USER_NAME."<br>";
-                        echo "Role : ".USER_ROLE ."<br>";
+                        echo "Role : ".USER_ROLE_NAME ."<br>";
                         echo "Last access :".date_now();
                     ?>
                 </h6>

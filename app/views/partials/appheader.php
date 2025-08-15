@@ -1,17 +1,15 @@
 <?php
 // Función para convertir foto binaria a Base64
 // Función para obtener la imagen de usuario en formato Base64
-function get_user_photo_src($photoValue)
-{
-    if (!empty($photoValue)) {
-        // Si ya es una cadena con data:image (ya codificado)
-        if (strpos($photoValue, 'data:image') === 0) {
-            return $photoValue;
-        }
-        // Si es binario, lo codificamos
-        return 'data:image/jpeg;base64,' . base64_encode($photoValue);
+
+    function get_user_photo_src($photoBlob) {
+    if (!empty($photoBlob)) {
+        // Forzar actualización de caché con timestamp
+        $base64 = 'data:image/jpeg;base64,' . base64_encode($photoBlob);
+        return $base64 . '?t=' . time();
     }
     return null;
+
 }
 
 ?>
@@ -57,7 +55,7 @@ function get_user_photo_src($photoValue)
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                             <?php
 
-                            $userPhotoSrc = get_user_photo_src(USER_PHOTO);
+                            $userPhotoSrc = get_user_photo_src(USER_IMAGE);
                             if ($userPhotoSrc) { ?>
                                 <img class="user-photo rounded-circle" src="<?php echo $userPhotoSrc; ?>" alt="User Photo" />
                             <?php } else { ?>
@@ -85,7 +83,7 @@ function get_user_photo_src($photoValue)
                     <?php $isSidebar = true; ?>
                     <?php
                     
-                    $userPhotoSrc = get_user_photo_src(USER_PHOTO);
+                    $userPhotoSrc = get_user_photo_src(USER_IMAGE);
                     if ($userPhotoSrc) { ?>
                         <img class="user-photo rounded-circle" src="<?php echo $userPhotoSrc; ?>" alt="User Photo" />
                     <?php } else { ?>

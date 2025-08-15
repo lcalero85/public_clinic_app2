@@ -116,7 +116,7 @@ define(
     (isset($_SESSION[APP_ID . 'user_data']) ? $_SESSION[APP_ID . 'user_data']['role_name'] : null)
 );
 // Si existe foto, será un BLOB convertido a Base64
-define('USER_PHOTO', 
+define('USER_IMAGE', 
     (isset($_SESSION[APP_ID . 'user_data']['photo']) && !empty($_SESSION[APP_ID . 'user_data']['photo'])) 
     ? 'data:image/jpeg;base64,' . base64_encode($_SESSION[APP_ID . 'user_data']['photo']) 
     : null

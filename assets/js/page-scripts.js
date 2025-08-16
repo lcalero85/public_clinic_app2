@@ -753,6 +753,7 @@ $(document).on('click', '.btn-toggle-password', function(){
 /**
  * replace failed images with better looking image
  */
+
 $(window).bind('load', function(){
 	$('img').each(function() {
 		if((typeof this.naturalWidth != "undefined" && this.naturalWidth == 0 ) || this.readyState == 'uninitialized' ) {

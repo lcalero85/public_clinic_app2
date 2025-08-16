@@ -1,17 +1,12 @@
 <?php
-// Función para convertir foto binaria a Base64
-// Función para obtener la imagen de usuario en formato Base64
-
-    function get_user_photo_src($photoBlob) {
+function get_user_photo_src($photoBlob)
+{
     if (!empty($photoBlob)) {
-        // Forzar actualización de caché con timestamp
-        $base64 = 'data:image/jpeg;base64,' . base64_encode($photoBlob);
-        return $base64 . '?t=' . time();
+        // Ya viene con el encabezado listo para usar
+        return $photoBlob;
     }
     return null;
-
 }
-
 ?>
 
 <!-- Forzar estado del sidebar por defecto = COLAPSADO -->
@@ -45,9 +40,9 @@
         </a>
         <?php if (user_login_status() == true) { ?>
             <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-            <span class="navbar-toggler-icon"></span>
-            </button>
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </button>
             <div class="navbar-collapse collapse navbar-responsive-collapse">
                 <ul class="navbar-nav ml-auto">
@@ -56,12 +51,14 @@
                             <?php
 
                             $userPhotoSrc = get_user_photo_src(USER_IMAGE);
-                            if ($userPhotoSrc) { ?>
-                                <img class="user-photo rounded-circle" src="<?php echo $userPhotoSrc; ?>" alt="User Photo" />
-                            <?php } else { ?>
-                                
-                            <?php } ?>
-
+                            ?>
+                            <img class="user-photo rounded-circle"
+                                src="<?php echo $userPhotoSrc ? $userPhotoSrc : 'assets/images/no-image-available.png'; ?>"
+                                alt="User Photo"
+                                style="width:80px; height:80px; object-fit:cover; border-radius:50%;"
+                                onerror="this.onerror=null; this.src='assets/images/no-image-available.png';" />
+                            <?php //var_dump(USER_IMAGE)
+                            ?>
                             <span>Hi <?php echo ucwords(USER_NAME); ?> !</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -75,20 +72,20 @@
     </div>
 </div>
 
+
 <?php if (user_login_status() == true) { ?>
     <nav id="sidebar" class="navbar-light bg-info">
         <ul class="nav navbar-nav w-100 flex-column align-self-start">
             <li class="menu-profile text-center nav-item">
                 <a class="avatar" href="<?php print_link('account') ?>">
-                    <?php $isSidebar = true; ?>
-                    <?php
-                    
-                    $userPhotoSrc = get_user_photo_src(USER_IMAGE);
-                    if ($userPhotoSrc) { ?>
-                        <img class="user-photo rounded-circle" src="<?php echo $userPhotoSrc; ?>" alt="User Photo" />
-                    <?php } else { ?>
-                     
-                    <?php } ?>
+                    <?php $userPhotoSrc = get_user_photo_src(USER_IMAGE); ?>
+                    <?php //var_dump(USER_IMAGE)
+                    ?>
+                    <img class="user-photo rounded-circle"
+                        src="<?php echo $userPhotoSrc ? $userPhotoSrc : 'assets/images/no-image-available.png'; ?>"
+                        alt="User Photo"
+                        style="width:80px; height:80px; object-fit:cover; border-radius:50%;"
+                        onerror="this.onerror=null; this.src='assets/images/no-image-available.png';" />
                 </a>
                 <h5 class="user-name">Hi <?php echo ucwords(USER_NAME); ?>
                     <small class="text-muted"><?php echo USER_ROLE_NAME; ?></small>

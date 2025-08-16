@@ -33,27 +33,28 @@ class ACL
                 'appointments' => array('list','view')
             ),
 
-        2 => // Doctor
+        3 => // Doctor
             array(
                 'users' => array('register'),
                 'clinic_prescription' => array('list','view','add','edit', 'editfield','delete'),
                 'my_appointment' => array('list','view')
             ),
 
-        3 => // Assistant
+        2=> // Assistant
             array(
-                'users' => array('view','register'),
-                'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
-                'appointment_new' => array('list','view','add','edit', 'editfield','delete'),
-                'doc' => array('list','view','add','edit', 'editfield','delete'),
-                'patients_status' => array('list','view','add','edit', 'editfield','delete'),
-                'actives_patients' => array('list','view'),
-                'invoices' => array('list','view','add','edit', 'editfield','delete'),
-                'invoice_cancelled' => array('list','view'),
-                'invoice_debt' => array('list','view'),
-                'inactives_patients' => array('list','view'),
-                'appointments' => array('list','view')
-            ),
+							'users' => array('view','register'),
+							'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
+							'appointment_new' => array('list','view','add','edit', 'editfield','delete'),
+							'doc' => array('list','view','add','edit', 'editfield','delete'),
+							'patients_status' => array('list','view','add','edit', 'editfield','delete'),
+							'actives_patients' => array('list','view'),
+							'invoices' => array('list','view','add','edit', 'editfield','delete'),
+							'invoice_cancelled' => array('list','view'),
+							'invoice_debt' => array('list','view'),
+							'inactives_patients' => array('list','view'),
+							'appointments' => array('list','view')
+							
+						),
 
         4 => // Patients
             array(

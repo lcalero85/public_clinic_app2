@@ -119,10 +119,9 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <select required id="ctrl-id_role" name="id_role" placeholder="Select a value ..." class="custom-select">
+                                                <select required id="ctrl-id_role" name="id_role" class="custom-select">
                                                     <option value="">Select a value ...</option>
                                                     <?php
-                                                    // Obtener roles desde la BD
                                                     $rol_options = $comp_model->get_all_roles();
                                                     if (!empty($rol_options)) {
                                                         foreach ($rol_options as $option) {
@@ -130,7 +129,9 @@ $redirect_to = $this->redirect_to;
                                                             $label = $option['label']; // role_name
                                                             $selected = $this->set_field_selected('id_role', $value, "");
                                                     ?>
-                                                            <option <?php echo $selected ?> value="<?php echo $value ?>">
+                                                            <option <?php echo $selected ?>
+                                                                value="<?php echo $value ?>"
+                                                                data-role-name="<?php echo htmlspecialchars($label); ?>">
                                                                 <?php echo $label ?>
                                                             </option>
                                                     <?php

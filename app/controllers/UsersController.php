@@ -187,6 +187,8 @@ class UsersController extends SecureController
         $postdata = $this->format_request_data($formdata);
         $cpassword = trim($postdata['confirm_password']);
         $password = trim($postdata['password']);
+        $labels = trim($postdata['label']);
+       
 
         if ($cpassword !== $password) {
             $this->view->page_error[] = "Your password confirmation is not consistent";
@@ -219,6 +221,7 @@ class UsersController extends SecureController
         $modeldata['password'] = password_hash($password_text, PASSWORD_DEFAULT);
         $modeldata['register_date'] = datetime_now();
         $modeldata['update_date'] = datetime_now();
+        $modeldata['rol'] = $labels;
       
 
         // Validar duplicados en users

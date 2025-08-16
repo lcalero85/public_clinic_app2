@@ -118,7 +118,7 @@ $show_pagination = $this->show_pagination;
                                             <tr>
                                                 <th class="td-sno">#</th>
                                                 <th  class="td-invoice_num"> Invoice Number</th>
-                                                <th  class="td-id_concept"> Invoice ConceptConcept</th>
+                                                <th  class="td-id_concept"> Invoice Concept</th>
                                                 <th  class="td-id_patient"> Patient Name</th>
                                                 <th  class="td-quantity"> Quantity</th>
                                                 <th  class="td-price">Unit Price</th>

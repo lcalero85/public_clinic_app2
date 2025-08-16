@@ -895,7 +895,7 @@ function get_url()
  */
 function set_page_link($pagepath = null, $newqs = array())
 {
-	$get =  filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
+	$get = filter_input_array(INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	unset($get['request_uri']);
 	$allget = array_merge($get, $newqs);
 	$qs = null;

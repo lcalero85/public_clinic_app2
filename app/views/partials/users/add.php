@@ -7,6 +7,7 @@ $show_header = $this->show_header;
 $view_title = $this->view_title;
 $redirect_to = $this->redirect_to;
 ?>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

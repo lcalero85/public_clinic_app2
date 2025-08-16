@@ -20,6 +20,11 @@ $show_edit_btn = $this->show_edit_btn;
 $show_delete_btn = $this->show_delete_btn;
 $show_export_btn = $this->show_export_btn;
 ?>
+<!-- Import Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Link custom stylesheet and FontAwesome for icons -->
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="view"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <?php
     if( $show_header == true ){
@@ -49,7 +54,7 @@ $show_export_btn = $this->show_export_btn;
                         $counter++;
                         ?>
                         <div id="page-report-body" class="">
-                            <table class="table table-hover table-borderless table-striped">
+                            <table class="table table-hover table-borderless table-striped patient-view">
                                 <!-- Table Body Start -->
                                 <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
                                    

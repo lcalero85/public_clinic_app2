@@ -124,13 +124,13 @@ $show_pagination = $this->show_pagination;
                                                     </label>
                                                 </th>
                                             <?php } ?>
-                                            <th class="td-sno">#</th>
-                                            <th class="td-full_names"> Names</th>
-                                            <th class="td-rol"> Rol</th>
-                                            <th class="td-user_name"> User Name</th>
-                                            <th class="td-email"> Email</th>
-                                            <th class="td-register_date"> Register Date</th>
-                                            <th class="td-update_date"> Update Date</th>
+                                            <th class="td-sno">ID</th>
+                                            <th class="td-full_names">Full Name</th>
+                                            <th class="td-rol"> Role</th>
+                                            <th class="td-user_name">UserName</th>
+                                            <th class="td-email">Email</th>
+                                            <th class="td-register_date">Created At</th>
+                                            <th class="td-update_date">Updated At</th>
                                             <th class="td-btn"></th>
                                         </tr>
                                     </thead>

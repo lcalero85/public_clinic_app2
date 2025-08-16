@@ -39,7 +39,7 @@ $redirect_to = $this->redirect_to;
     data-page-url="<?php print_link($current_page); ?>">
     <?php
     if ($show_header == true) {
-        ?>
+    ?>
         <div class="bg-light p-3 mb-3">
             <div class="container">
                 <div class="row ">
@@ -49,7 +49,7 @@ $redirect_to = $this->redirect_to;
                 </div>
             </div>
         </div>
-        <?php
+    <?php
     }
     ?>
     <script>
@@ -72,7 +72,7 @@ $redirect_to = $this->redirect_to;
                             class="form page-form form-horizontal needs-validation"
                             action="<?php print_link("doc/add?csrf_token=$csrf_token") ?>" method="post">
                             <div>
-                             <div class="form-group">
+                                <div class="form-group">
                                     <label for="photo" class="control-label">Patient Photo</label>
                                     <div>
 
@@ -172,13 +172,13 @@ $redirect_to = $this->redirect_to;
                                                         $label = $option['label'];
                                                         //check if current option is checked option
                                                         $checked = $this->set_field_checked('gender', $value, "");
-                                                        ?>
+                                                ?>
                                                         <label class="custom-control custom-radio custom-control-inline">
                                                             <input id="ctrl-gender" class="custom-control-input" <?php echo $checked ?> value="<?php echo $value ?>" type="radio"
                                                                 required="" name="gender" />
                                                             <span class="custom-control-label"><?php echo $label ?></span>
                                                         </label>
-                                                        <?php
+                                                <?php
                                                     }
                                                 }
                                                 ?>
@@ -370,12 +370,17 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
-                                <?php if (USER_ROLE === 'Admin') { ?>
+                                <?php
+                                // Detectar si es Admin (por nombre o id de rol)
+                                $isAdmin = (defined('USER_ROLE_NAME') && USER_ROLE_NAME === 'Admin')
+                                    || (defined('USER_ROLE_ID') && USER_ROLE_ID == 1);
+                                // Cambia "1" si el ID real de Admin en tu tabla roles es distinto
+                                ?>
+                                <?php if ($isAdmin) { ?>
                                     <div class="form-group ">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label class="control-label" for="status">Status <span
-                                                        class="text-danger">*</span></label>
+                                                <label class="control-label" for="status">Status <span class="text-danger">*</span></label>
                                             </div>
                                             <div class="col-sm-8">
                                                 <div class="">
@@ -401,8 +406,6 @@ $redirect_to = $this->redirect_to;
                                     <!-- Campo oculto para usuarios que no son admin -->
                                     <input type="hidden" name="status" value="Active">
                                 <?php } ?>
-
-
                                 <div class="form-group form-submit-btn-holder text-center mt-3">
                                     <div class="form-ajax-status"></div>
                                     <button class="btn btn-primary" type="submit">

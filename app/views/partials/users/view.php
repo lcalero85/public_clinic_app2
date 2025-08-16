@@ -20,6 +20,11 @@ $show_edit_btn = $this->show_edit_btn;
 $show_delete_btn = $this->show_delete_btn;
 $show_export_btn = $this->show_export_btn;
 ?>
+<!-- Import Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Link custom stylesheet and FontAwesome for icons -->
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="view" data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
     <?php
     if ($show_header == true) {
@@ -49,9 +54,32 @@ $show_export_btn = $this->show_export_btn;
                             $counter++;
                         ?>
                             <div id="page-report-body" class="">
-                                <table class="table table-hover table-borderless table-striped">
+                                <table class="table table-hover table-borderless table-striped patient-view">
                                     <!-- Table Body Start -->
                                     <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
+                                          <tr class="td-photo">
+                                            <th class="title"> User Photo: </th>
+                                            <td class="value">
+                                                <?php if (!empty($data['photo'])):
+                                                    $mime = 'image/jpeg';
+                                                    if (function_exists('finfo_open')) {
+                                                        $fi = finfo_open(FILEINFO_MIME_TYPE);
+                                                        if ($fi) {
+                                                            $det = finfo_buffer($fi, $data['photo']);
+                                                            if ($det)
+                                                                $mime = $det;
+                                                            finfo_close($fi);
+                                                        }
+                                                    }
+                                                    $base64 = base64_encode($data['photo']);
+                                                ?>
+                                                    <img src="data:<?= $mime ?>;base64,<?= $base64 ?>" alt="Patient photo"
+                                                        class="patient-photo" loading="lazy">
+                                                <?php else: ?>
+                                                    <span class="no-photo-msg">Patient photo not available</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
                                         <tr class="td-full_names">
                                             <th class="title"> Full Names: </th>
                                             <td class="value">
@@ -60,9 +88,8 @@ $show_export_btn = $this->show_export_btn;
                                                 </span>
                                             </td>
                                         </tr>
-
                                         <tr class="td-rol">
-                                            <th class="title"> Rol: </th>
+                                            <th class="title"> Role: </th>
                                             <td class="value">
                                                 <span>
                                                     <?php echo $data['role_name']; ?>
@@ -71,7 +98,7 @@ $show_export_btn = $this->show_export_btn;
                                         </tr>
 
                                         <tr class="td-user_name">
-                                            <th class="title"> User Name: </th>
+                                            <th class="title"> UserName: </th>
                                             <td class="value">
                                                 <span>
                                                     <?php echo $data['user_name']; ?>
@@ -80,7 +107,7 @@ $show_export_btn = $this->show_export_btn;
                                         </tr>
 
                                         <tr class="td-email">
-                                            <th class="title"> Email: </th>
+                                            <th class="title"> Email Address </th>
                                             <td class="value">
                                                 <?php echo $data['email']; ?>
                                             </td>

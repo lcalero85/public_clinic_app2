@@ -74,7 +74,7 @@ $redirect_to = $this->redirect_to;
                     <div class="bg-light p-3 animated fadeIn page-content">
                         <form novalidate id="" role="form" enctype="multipart/form-data" class="form page-form form-horizontal needs-validation" action="<?php print_link("doc/edit/$page_id/?csrf_token=$csrf_token"); ?>" method="post">
                             <div>
-                            <div class="form-group">
+                                <div class="form-group">
                                     <label for="photo" class="control-label">Patient Photo</label>
                                     <div>
 
@@ -227,8 +227,13 @@ $redirect_to = $this->redirect_to;
                                     </div>
                                 </div>
 
-                                <?php if (USER_ROLE == 'Admin') { // si el rol del usuario es Admin 
+                                <?php
+                                // Detectar si es Admin (por nombre o id de rol)
+                                $isAdmin = (defined('USER_ROLE_NAME') && USER_ROLE_NAME === 'Admin')
+                                    || (defined('USER_ROLE_ID') && USER_ROLE_ID == 1);
+                                // Cambia "1" si el ID real de Admin en tu tabla roles es distinto
                                 ?>
+                                <?php if ($isAdmin) { ?>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-4">
@@ -242,8 +247,8 @@ $redirect_to = $this->redirect_to;
                                                         foreach ($status_options as $option) {
                                                             $value = (!empty($option['value']) ? $option['value'] : null);
                                                             $label = (!empty($option['label']) ? $option['label'] : $value);
-                                                            $selected = ($value == $data['status']) ?: '';
-                                                            echo "<option value=\"$value\">$label</option>";
+                                                            $selected = ($value == $data['status']) ? 'selected' : '';
+                                                            echo "<option value=\"$value\" $selected>$label</option>";
                                                         }
                                                     }
                                                     ?>
@@ -252,6 +257,7 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 <?php } else { ?>
+                                    <!-- Campo oculto para usuarios que no son Admin -->
                                     <input id="ctrl-status"
                                         value="<?php echo $data['status']; ?>"
                                         type="hidden"
@@ -259,10 +265,6 @@ $redirect_to = $this->redirect_to;
                                         required
                                         class="form-control" />
                                 <?php } ?>
-
-
-
-
                                 <div class="form-ajax-status"></div>
                                 <div class="form-group text-center">
                                     <button class="btn btn-primary" type="submit">

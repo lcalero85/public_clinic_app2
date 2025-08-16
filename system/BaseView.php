@@ -1,18 +1,19 @@
 <?php
 defined('ROOT') or exit('No direct script access allowed');
+
 use Dompdf\Dompdf;
 
 /**
  * Application Base View
  */
 class BaseView
-  
+
 {
-    public $view_args = [];
-    public $form_data = [];
-    public $csrf_token;
-    public $request_uri;
-    public $search;
+	public $view_args = [];
+	public $form_data = [];
+	public $csrf_token;
+	public $request_uri;
+	public $search;
 	/**
 	 * Data Passed From Controller to the View
 	 * Can Be Access By All Other Sub View in The Page
@@ -24,7 +25,7 @@ class BaseView
 	 * Reference to the current route class
 	 * Provide acccess to route properties
 	 * @var Router
-	*/
+	 */
 	public $route = null;
 
 
@@ -40,7 +41,7 @@ class BaseView
 	 * @var  int
 	 */
 	public $limit_count = MAX_RECORD_COUNT;
-	
+
 	/**
 	 * Current page number
 	 * @var  int
@@ -212,7 +213,7 @@ class BaseView
 	 * @var string
 	 */
 	public $view_name = null;
-	
+
 	/**
 	 * The view template use to render the page data when request is ajax
 	 * @var string
@@ -249,7 +250,7 @@ class BaseView
 	 * @var string
 	 */
 	public $search_template = null;
-	
+
 	/**
 	 * The html view use to render ajax content
 	 * @var string
@@ -263,7 +264,7 @@ class BaseView
 	 * @var string
 	 */
 	public $force_layout = null;
-	
+
 	/**
 	 * Show print dialog after the page load
 	 * @var boolean
@@ -271,7 +272,7 @@ class BaseView
 	public $force_print = false;
 
 
-	
+
 
 	function __construct($arg = null)
 	{
@@ -299,8 +300,7 @@ class BaseView
 			$report_body = $this->parse_report_html(); //get exportable content
 			echo $report_body;
 			return;
-		} 
-		elseif ($page_format == "pdf") {
+		} elseif ($page_format == "pdf") {
 			$report_body = $this->parse_report_html(); //get exportable content
 			$filename = $this->report_filename;
 			$dompdf = new Dompdf();
@@ -313,8 +313,7 @@ class BaseView
 			// Output the generated PDF to Browser
 			$dompdf->stream("$filename.pdf");
 			return;
-		} 
-		elseif ($page_format == "word") {
+		} elseif ($page_format == "word") {
 			$report_body = $this->parse_report_html(); //get exportable content
 			$filename = $this->report_filename;
 			$htd = new Html2Doc();
@@ -356,31 +355,35 @@ class BaseView
 				'description'=>'string',
 				'tax'=>'[$$-1009]#,##0.00;[RED]-[$$-1009]#,##0.00',
 			  ); */
-			$arr_titles = array_keys(current($records));// get the table header from the record.
-			$headers = array_fill_keys($arr_titles, 'string'); //setting all headers to cell type of string
+			if (is_array($records) && !empty($records)) {
+				$arr_titles = array_keys(current($records));
+				$headers = array_fill_keys($arr_titles, 'string');
 
-			$writer = new XLSXWriter();
-			$writer->setAuthor(SITE_NAME);
-			$writer->writeSheetHeader($sheet_name, $headers);
-			foreach ($records as $row) {
-				$writer->writeSheetRow($sheet_name, $row);
+				$writer = new XLSXWriter();
+				$writer->setAuthor(SITE_NAME);
+				$writer->writeSheetHeader($sheet_name, $headers);
+
+				foreach ($records as $row) {
+					$writer->writeSheetRow($sheet_name, $row);
+				}
+
+				$writer->writeToStdOut();
+			} elseif ($records instanceof Error) {
+				// Manejo explícito de error
+				die("❌ Error recibido en exportación: " . $records->getMessage());
+			} else {
+				die("❌ No hay datos válidos para exportar.");
 			}
-			$writer->writeToStdOut();
-			//$writer->writeToFile('example.xlsx');//to save locally
-			//echo $writer->writeToString();//to output to a variable
-			return;
 		}
 
 		//continue to render page on the browser 
-		if (is_ajax()){
-			if(!empty($this->search_template) && file_exists(PAGES_DIR . $this->search_template)){
+		if (is_ajax()) {
+			if (!empty($this->search_template) && file_exists(PAGES_DIR . $this->search_template)) {
 				include(PAGES_DIR . $this->search_template);
+			} else {
+				include(LAYOUTS_DIR . "ajax_layout.php");
 			}
-			else{
-				include(LAYOUTS_DIR . "ajax_layout.php"); 
-			}
-		}
-		elseif (!empty($layout) && $this->is_partial_view == false) {
+		} elseif (!empty($layout) && $this->is_partial_view == false) {
 			// If force_layout is set, then use the layout.
 			// force layout can be set to render a view with different layout from another controller or view.
 			if (!empty($this->force_layout)) {
@@ -392,8 +395,7 @@ class BaseView
 			} else {
 				echo "The Layout Does not Exit;";
 			}
-		} 
-		else {
+		} else {
 			/* //Do not Include Layout if Render as a Partial View in another View
 				use the partial_view if it's set
 				Get View name from current page url if not passed from controller 
@@ -451,33 +453,33 @@ class BaseView
 	 * @return null
 	 */
 	protected function render_page($url, $page_props = null, $view_path = null)
-{
-    if ($this->format == "html") {
-        $qs = parse_url($url, PHP_URL_QUERY);
-        $get = [];
+	{
+		if ($this->format == "html") {
+			$qs = parse_url($url, PHP_URL_QUERY);
+			$get = [];
 
-        if (!empty($qs)) {
-            parse_str($qs, $get);
-        }
+			if (!empty($qs)) {
+				parse_str($qs, $get);
+			}
 
-        $request = array();
-        if (!empty($get)) { // build new $_GET array from the url query string
-            foreach ($get as $key => $val) {
-                $request[$key] = $val;
-            }
-        }
+			$request = array();
+			if (!empty($get)) { // build new $_GET array from the url query string
+				foreach ($get as $key => $val) {
+					$request[$key] = $val;
+				}
+			}
 
-        $path = parse_url($url, PHP_URL_PATH); // Get Path from URL
+			$path = parse_url($url, PHP_URL_PATH); // Get Path from URL
 
-        // Dispatch as new page
-        $router = new Router;
-        $router->request = $request;
-        $router->is_partial_view = true;
-        $router->page_props = $page_props;
-        $router->partial_view = $view_path;
-        $router->run($path);
-    }
-}
+			// Dispatch as new page
+			$router = new Router;
+			$router->request = $request;
+			$router->is_partial_view = true;
+			$router->page_props = $page_props;
+			$router->partial_view = $view_path;
+			$router->run($path);
+		}
+	}
 	/**
 	 * Construct New Url With Current Url Or  New Query String
 	 * @param $newqs Array of New Query String Key Values
@@ -495,7 +497,7 @@ class BaseView
 			$all_get = array_merge($get, $newqs);
 		}
 		$qs = null;
-		if(!empty($all_get)){
+		if (!empty($all_get)) {
 			$qs = http_build_query($all_get);
 			$link .= "?$qs";
 		}
@@ -654,10 +656,8 @@ class BaseView
 		$page_html = str_replace('&', '&amp;', $page_html);
 		$page_html = str_replace(array('_lt_', '_gt_', '_amp_'), array('&lt;', '&gt;', '&amp;'), $page_html);
 		// Load DOM
-		$orignalLibEntityLoader = libxml_disable_entity_loader(true);
 		$doc = new \DOMDocument();
 		@$doc->loadHTML($page_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOEMPTYTAG);
-		libxml_disable_entity_loader($orignalLibEntityLoader);
 		//extract only the report part
 		$page_body = $doc->getElementById("page-report-body");
 		if (!empty($page_body)) {
@@ -748,13 +748,28 @@ class BaseView
 	 * Set the inner html of a page element
 	 * @return string
 	 */
-	private function setInnerHTML($element, $html)
+	private function setInnerHTML($element, $html): void
 	{
-		$html = htmlentities($html);
 		$fragment = $element->ownerDocument->createDocumentFragment();
-		$fragment->appendXML($html);
-		$clone = $element->cloneNode(); // Get element copy without children
-		$clone->appendChild($fragment);
+
+		// Documento temporal en UTF-8
+		$tmpDoc = new \DOMDocument();
+		@$tmpDoc->loadHTML('<?xml encoding="UTF-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+		// Obtener el body del documento temporal
+		$body = $tmpDoc->getElementsByTagName('body')->item(0);
+
+		if ($body) {
+			foreach ($body->childNodes as $child) {
+				$fragment->appendChild($element->ownerDocument->importNode($child, true));
+			}
+		}
+
+		// Clonar el nodo sin hijos y reemplazarlo
+		$clone = $element->cloneNode(false);
+		if ($fragment->hasChildNodes()) {
+			$clone->appendChild($fragment);
+		}
 		$element->parentNode->replaceChild($clone, $element);
 	}
 }

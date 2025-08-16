@@ -159,9 +159,7 @@ $show_pagination = $this->show_pagination;
                                     <div class="col-md-auto justify-content-center">    
                                         <div class="p-3 d-flex justify-content-between">    
                                             <div class="dropup export-btn-holder mx-1">
-                                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa fa-save"></i> Exportar
-                                                </button>
+                                                
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                                     <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

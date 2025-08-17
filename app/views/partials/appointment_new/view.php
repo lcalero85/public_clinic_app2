@@ -49,7 +49,7 @@ $show_export_btn = $this->show_export_btn;
                             $counter++;
                         ?>
                             <div id="page-report-body" class="">
-                                <table class="table table-hover table-borderless table-striped">
+                                <table class="table table-hover table-borderless table-striped patient-view">
                                     <!-- Table Body Start -->
                                     <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
 

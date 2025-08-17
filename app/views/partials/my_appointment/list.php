@@ -128,7 +128,7 @@ $show_pagination = $this->show_pagination;
                                             <td class="td-historial"> <?php echo $data['historial']; ?></td>
                                             <td class="td-appointment_date"> <?php echo $data['appointment_date']; ?></td>
                                             <td class="td-register_date"> <?php echo $data['register_date']; ?></td>
-                                            <td class="td-Name"> <?php echo $data['Name']; ?></td>
+                                            <td class="td-Name"> <?php echo $data['doctor_name']; ?></td>
                                             <td class="td-status"> <?php echo $data['status']; ?></td>
                                         </tr>
                                         <?php 

@@ -122,7 +122,7 @@ $show_pagination = $this->show_pagination;
                                         ?>
                                         <tr>
                                             <th class="td-sno"><?php echo $counter; ?></th>
-                                            <td class="td-id_patient"> <span><?php echo $data['full_names']; ?></span></td>
+                                            <td class="td-id_patient"> <span><?php echo $data['patient_name']; ?></span></td>
                                             <td class="td-motive"> <?php echo $data['motive']; ?></td>
                                             <td class="td-descritption"> <?php echo $data['descritption']; ?></td>
                                             <td class="td-historial"> <?php echo $data['historial']; ?></td>

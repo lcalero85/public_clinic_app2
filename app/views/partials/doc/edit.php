@@ -75,7 +75,10 @@ $redirect_to = $this->redirect_to;
                         <form novalidate id="" role="form" enctype="multipart/form-data" class="form page-form form-horizontal needs-validation" action="<?php print_link("doc/edit/$page_id/?csrf_token=$csrf_token"); ?>" method="post">
                             <div>
                                 <div class="form-group">
-                                    <label for="photo" class="control-label">Patient Photo</label>
+                                    <label for="photo" class="control-label">Doctor Photo</label>
+                                    <small class="form-text text-info">
+                                                Uploading a new photo is optional. Leave this field empty to keep the current one.
+                                            </small>
                                     <div>
 
                                         <div class="custom-file">
@@ -102,6 +105,9 @@ $redirect_to = $this->redirect_to;
                                         <button type="button" onclick="capturePhoto()"
                                             class="btn btn-sm btn-success mt-2" style="display:none;"
                                             id="captureBtn">Capture Photo</button>
+                                            <small class="form-text text-info">
+                                                Uploading a new photo is optional. Leave this field empty to keep the current one.
+                                            </small>
                                     </div>
                                 </div>
                                 <div class="form-group ">

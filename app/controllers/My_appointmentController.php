@@ -45,20 +45,19 @@ class My_appointmentController extends SecureController
 		} elseif ($userRoleId == 4) {
 			// Consulta para PACIENTE
 			$sqltext = "SELECT SQL_CALC_FOUND_ROWS  
-				cp.full_names AS full_names,
-				app.motive,
-				app.descritption,
-				app.historial,
-				app.appointment_date,
-				app.register_date,
-				dc.full_names AS doctor_name,
-				apps.status
-			FROM appointment_new AS app
-			INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
-			INNER JOIN users AS us ON cp.id_user = us.id_user
-			INNER JOIN doc AS dc ON app.id_doc = dc.id
-			INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
-			WHERE cp.id_user = " . USER_ID;
+    cp.full_names AS full_names,
+    app.motive,
+    app.descritption,
+    app.historial,
+    app.appointment_date,
+    app.register_date,
+    dc.full_names AS doctor_name,
+    apps.status
+FROM appointment_new AS app
+INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
+INNER JOIN doc AS dc ON app.id_doc = dc.id
+INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
+WHERE cp.id_user = " . USER_ID;
 		} else {
 			// Admin o Assistant → ven todas las citas
 			$sqltext = "SELECT SQL_CALC_FOUND_ROWS  

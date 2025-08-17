@@ -36,7 +36,7 @@ class ACL
         3 => // Doctor
             array(
                 'users' => array('register'),
-                'clinic_prescription' => array('list','view','add','edit', 'editfield','delete'),
+                'clinic_prescription' => array('add','edit', 'editfield','delete'),
                 'my_appointment' => array('list','view')
             ),
 

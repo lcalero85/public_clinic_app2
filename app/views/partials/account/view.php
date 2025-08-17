@@ -107,6 +107,7 @@ $show_export_btn = $this->show_export_btn;
                                                                 <?php echo USER_ROLE_NAME; ?>
                                                             </td>
                                                         </tr>
+
                                                         <tr class="td-user_name">
                                                             <th class="title">Username</th>
                                                             <td class="value">

@@ -1,10 +1,5 @@
-<?php
-
-/**
- * My_appointment Page Controller
- * @category  Controller
- */
-class My_appointmentController extends SecureController
+<?php 
+class My_appointmentController extends SecureController 
 {
     function __construct()
     {
@@ -95,13 +90,17 @@ class My_appointmentController extends SecureController
 
         // Paginación
         $pagination = $this->get_pagination(MAX_RECORD_COUNT);
-        $tc = $db->withTotalCount();
-        $records = $db->query($sqltext, $pagination, $queryparams);
+
+        // 🔹 Ejecutar consulta con paginación
+        $records = $db->rawQuery($sqltext . " LIMIT {$pagination[0]}, {$pagination[1]}", $queryparams);
+
+        // Obtener total de registros
+        $tc = $db->rawQueryOne("SELECT FOUND_ROWS() AS totalCount");
+        $total_records = intval($tc['totalCount']);
 
         $records_count = count($records);
-        $total_records = intval($tc->totalCount);
         $page_limit = (!empty($pagination) ? $pagination[1] : 1);
-        $total_pages = ceil($total_records / $page_limit);
+        $total_pages = ($page_limit > 0 ? ceil($total_records / $page_limit) : 1);
 
         // Datos para la vista
         $data = new stdClass;

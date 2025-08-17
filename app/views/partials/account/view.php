@@ -30,7 +30,7 @@ $show_export_btn = $this->show_export_btn;
             <div class="container">
                 <div class="row ">
                     <div class="col ">
-                        <h4 class="record-title">My Account</h4>
+                        <h4 class="record-title">My User Account</h4>
                     </div>
                 </div>
             </div>
@@ -50,18 +50,16 @@ $show_export_btn = $this->show_export_btn;
                             $rec_id = (!empty($data['id_user']) ? urlencode($data['id_user']) : null);
                             $counter++;
                         ?>
-                            <div class="bg-primary m-2 mb-4">
-                                <div class="profile">
+                            <div class="profile-card m-2 mb-4">
+                                <div class="profile text-center">
                                     <div class="avatar">
-
                                         <?php $userPhotoSrc = get_user_photo_src(USER_IMAGE); ?>
-                                        <img class="user-photo rounded-circle"
+                                        <img class="user-photo"
                                             src="<?php echo $userPhotoSrc ? $userPhotoSrc : 'assets/images/no-image-available.png'; ?>"
                                             alt="User Photo"
-                                            style="width:80px; height:80px; object-fit:cover; border-radius:50%;"
                                             onerror="this.onerror=null; this.src='assets/images/no-image-available.png';" />
                                     </div>
-                                    <h1 class="title mt-4"><?php echo $data['user_name']; ?></h1>
+                                    <h1 class="profile-name mt-3"><?php echo $data['user_name']; ?></h1>
                                 </div>
                             </div>
                             <div class="row">
@@ -95,101 +93,44 @@ $show_export_btn = $this->show_export_btn;
                                     <div class="mb-3">
                                         <div class="tab-content">
                                             <div class="tab-pane show active fade" id="AccountPageView" role="tabpanel">
-                                                <table class="table table-hover table-borderless table-striped">
+                                                <table class="table table-hover table-borderless table-striped patient-view">
                                                     <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
                                                         <tr class="td-full_names">
-                                                            <th class="title"> Full Names: </th>
+                                                            <th class="title">Full Name</th>
                                                             <td class="value">
-                                                                <span <?php if ($can_edit) { ?> data-value="<?php echo $data['full_names']; ?>"
-                                                                    data-pk="<?php echo $data['id_user'] ?>"
-                                                                    data-url="<?php print_link("users/editfield/" . urlencode($data['id_user'])); ?>"
-                                                                    data-name="full_names"
-                                                                    data-title="Enter Full Names"
-                                                                    data-placement="left"
-                                                                    data-toggle="click"
-                                                                    data-type="text"
-                                                                    data-mode="popover"
-                                                                    data-showbuttons="left"
-                                                                    class="is-editable" <?php } ?>>
-                                                                    <?php echo $data['full_names']; ?>
-                                                                </span>
+                                                                <?php echo htmlspecialchars($data['full_names']); ?>
                                                             </td>
                                                         </tr>
                                                         <tr class="td-rol">
-                                                            <th class="title"> Rol: </th>
+                                                            <th class="title">Role</th>
                                                             <td class="value">
-                                                                <span <?php if ($can_edit) { ?> data-source='<?php echo json_encode_quote(Menu::$rol); ?>'
-                                                                    data-value="<?php echo $data['rol']; ?>"
-                                                                    data-pk="<?php echo $data['id_user'] ?>"
-                                                                    data-url="<?php print_link("users/editfield/" . urlencode($data['id_user'])); ?>"
-                                                                    data-name="rol"
-                                                                    data-title="Select a value ..."
-                                                                    data-placement="left"
-                                                                    data-toggle="click"
-                                                                    data-type="select"
-                                                                    data-mode="popover"
-                                                                    data-showbuttons="left"
-                                                                    class="is-editable" <?php } ?>>
-                                                                    <?php echo $data['rol']; ?>
-                                                                </span>
+                                                                <?php echo USER_ROLE_NAME; ?>
                                                             </td>
                                                         </tr>
                                                         <tr class="td-user_name">
-                                                            <th class="title"> User Name: </th>
+                                                            <th class="title">Username</th>
                                                             <td class="value">
-                                                                <span <?php if ($can_edit) { ?> data-value="<?php echo $data['user_name']; ?>"
-                                                                    data-pk="<?php echo $data['id_user'] ?>"
-                                                                    data-url="<?php print_link("users/editfield/" . urlencode($data['id_user'])); ?>"
-                                                                    data-name="user_name"
-                                                                    data-title="Enter User Name"
-                                                                    data-placement="left"
-                                                                    data-toggle="click"
-                                                                    data-type="text"
-                                                                    data-mode="popover"
-                                                                    data-showbuttons="left"
-                                                                    class="is-editable" <?php } ?>>
-                                                                    <?php echo $data['user_name']; ?>
-                                                                </span>
+                                                                <?php echo htmlspecialchars($data['user_name']); ?>
                                                             </td>
                                                         </tr>
                                                         <tr class="td-email">
-                                                            <th class="title"> Email: </th>
-                                                            <td class="value"> <?php echo $data['email']; ?></td>
-                                                        </tr>
-                                                        <tr class="td-register_date">
-                                                            <th class="title"> Register Date: </th>
+                                                            <th class="title">Email Address</th>
                                                             <td class="value">
-                                                                <span <?php if ($can_edit) { ?> data-value="<?php echo $data['register_date']; ?>"
-                                                                    data-pk="<?php echo $data['id_user'] ?>"
-                                                                    data-url="<?php print_link("users/editfield/" . urlencode($data['id_user'])); ?>"
-                                                                    data-name="register_date"
-                                                                    data-title="Enter Register Date"
-                                                                    data-placement="left"
-                                                                    data-toggle="click"
-                                                                    data-type="text"
-                                                                    data-mode="popover"
-                                                                    data-showbuttons="left"
-                                                                    class="is-editable" <?php } ?>>
-                                                                    <?php echo $data['register_date']; ?>
-                                                                </span>
+                                                                <?php echo htmlspecialchars($data['email']); ?>
                                                             </td>
                                                         </tr>
-                                                        <tr class="td-update_date">
-                                                            <th class="title"> Update Date: </th>
+
+                                                        <tr class="td-register_date">
+                                                            <th class="title">Registration Date</th>
                                                             <td class="value">
-                                                                <span <?php if ($can_edit) { ?> data-value="<?php echo $data['update_date']; ?>"
-                                                                    data-pk="<?php echo $data['id_user'] ?>"
-                                                                    data-url="<?php print_link("users/editfield/" . urlencode($data['id_user'])); ?>"
-                                                                    data-name="update_date"
-                                                                    data-title="Enter Update Date"
-                                                                    data-placement="left"
-                                                                    data-toggle="click"
-                                                                    data-type="text"
-                                                                    data-mode="popover"
-                                                                    data-showbuttons="left"
-                                                                    class="is-editable" <?php } ?>>
-                                                                    <?php echo $data['update_date']; ?>
-                                                                </span>
+                                                                <?php echo date("F j, Y, g:i A", strtotime($data['register_date'])); ?>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr class="td-update_date">
+                                                            <th class="title">Last Update</th>
+                                                            <td class="value">
+                                                                <?php echo date("F j, Y, g:i A", strtotime($data['update_date'])); ?>
                                                             </td>
                                                         </tr>
                                                     </tbody>

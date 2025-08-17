@@ -50,6 +50,20 @@ $current_page = $this->set_current_page_link();
                         </a>
                     </div>
                 </div>
+
+                <?php if (USER_ROLE_ID == 3): ?>
+                    <div class="card text-center shadow-sm m-2">
+                    <div class="card-body">
+                        <div class="mb-2">
+                             <i class="fa fa-calendar-check fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Today's Appointments</h5>
+                        <a href="<?php print_link('my_appointment'); ?>" class="btn btn-primary btn-sm mt-2">
+                            View My Appointments today
+                        </a>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

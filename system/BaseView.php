@@ -9,6 +9,15 @@ use Dompdf\Dompdf;
 class BaseView
 
 {
+	private $vars = [];
+
+    public function __set($name, $value) {
+        $this->vars[$name] = $value;
+    }
+
+    public function __get($name) {
+        return $this->vars[$name] ?? null;
+    }
 	public $view_args = [];
 	public $form_data = [];
 	public $csrf_token;

@@ -289,93 +289,113 @@ class DocController extends SecureController
 	 * @return array
 	 */
 	function edit($rec_id = null, $formdata = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$this->rec_id = $rec_id;
-		$tablename = $this->tablename;
-		//editable fields
-		$fields = $this->fields = array("id", "full_names", "address", "birthdate", "gender", "Speciality", "register_date", "update_date", "id_user", "dni",'office_phone','work_email','status','photo');
-		if ($formdata) {
-			$postdata = $this->format_request_data($formdata);
-			$this->rules_array = array(
-				'full_names' => 'required|max_len,200',
-				'address' => 'required',
-				'birthdate' => 'required',
-				'gender' => 'required',
-				'Speciality' => 'required',
-				'dni' => 'required',
-				'office_phone' => 'required',
-				'work_email'=> 'required',
-				'status'=> 'required',
-				'photo' => '',
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $this->rec_id = $rec_id;
+    $tablename = $this->tablename;
+    //editable fields
+    $fields = $this->fields = array(
+        "id",
+        "full_names",
+        "address",
+        "birthdate",
+        "gender",
+        "Speciality",
+        "register_date",
+        "update_date",
+        "id_user",
+        "dni",
+        'office_phone',
+        'work_email',
+        'status',
+        'photo'
+    );
 
-			);
-			$this->sanitize_array = array(
-				'full_names' => 'sanitize_string',
-				'address' => 'sanitize_string',
-				'birthdate' => 'sanitize_string',
-				'gender' => 'sanitize_string',
-				'Speciality' => 'sanitize_string',
-				'dni' => 'sanitize_string',
-				'office_phone' => 'sanitize_string',
-				'work_email' => 'sanitize_string',
-				'status' => 'sanitize_string',
-				'photo' => '',
+    if ($formdata) {
+        $postdata = $this->format_request_data($formdata);
+        $this->rules_array = array(
+            'full_names' => 'required|max_len,200',
+            'address' => 'required',
+            'birthdate' => 'required',
+            'gender' => 'required',
+            'Speciality' => 'required',
+            'dni' => 'required',
+            'office_phone' => 'required',
+            'work_email'=> 'required',
+            'status'=> 'required',
+            'photo' => '',
+        );
+        $this->sanitize_array = array(
+            'full_names' => 'sanitize_string',
+            'address' => 'sanitize_string',
+            'birthdate' => 'sanitize_string',
+            'gender' => 'sanitize_string',
+            'Speciality' => 'sanitize_string',
+            'dni' => 'sanitize_string',
+            'office_phone' => 'sanitize_string',
+            'work_email' => 'sanitize_string',
+            'status' => 'sanitize_string',
+            'photo' => '',
+        );
 
+        $modeldata = $this->modeldata = $this->validate_form($postdata);
+        $modeldata['register_date'] = datetime_now();
+        $modeldata['update_date'] = datetime_now();
+        $modeldata['id_user'] = USER_ID;
 
-			);
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$modeldata['register_date'] = datetime_now();
-			$modeldata['update_date'] = datetime_now();
-			$modeldata['id_user'] = USER_ID;
-                 // --- Foto: archivo O webcam O nada (NULL) ---
-			$photoData = null;
+        // --- Foto: archivo O webcam O nada (NO modificar si no se envía) ---
+        $photoData = null;
 
-			if (!empty($_FILES['photo_file']['tmp_name'])) {
-				// 1) Imagen desde el selector de archivos
-				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
-			} elseif (!empty($_POST['photo_webcam'])) {
-				// 2) Imagen tomada con webcam (dataURL base64)
-				$base64 = $_POST['photo_webcam'];
-				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
-			}
+        if (!empty($_FILES['photo_file']['tmp_name'])) {
+            // 1) Imagen desde el selector de archivos
+            $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+        } elseif (!empty($_POST['photo_webcam'])) {
+            // 2) Imagen tomada con webcam (dataURL base64)
+            $base64 = $_POST['photo_webcam'];
+            $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+        }
 
-			// Asignar al campo real de la tabla
-			$modeldata['photo'] = $photoData ?: null;
-			if ($this->validated()) {
-				$db->where("doc.id", $rec_id);
-				;
-				$bool = $db->update($tablename, $modeldata);
-				$numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
-				if ($bool && $numRows) {
-					$this->write_to_log("edit", "true");
-					$this->set_flash_msg("Record updated successfully", "success");
-					return $this->redirect("doc");
-				} else {
-					if ($db->getLastError()) {
-						$this->set_page_error();
-						$this->write_to_log("edit", "false");
-					} elseif (!$numRows) {
-						//not an error, but no record was updated
-						$page_error = "No record updated";
-						$this->set_page_error($page_error);
-						$this->set_flash_msg($page_error, "warning");
-						$this->write_to_log("edit", "false");
-						return $this->redirect("doc");
-					}
-				}
-			}
-		}
-		$db->where("doc.id", $rec_id);
-		;
-		$data = $db->getOne($tablename, $fields);
-		$page_title = $this->view->page_title = "Edit  Doctors";
-		if (!$data) {
-			$this->set_page_error();
-		}
-		return $this->render_view("doc/edit.php", $data);
-	}
+        if ($photoData !== null) {
+            $modeldata['photo'] = $photoData;
+        } else {
+            // 🚀 No hay foto → no tocar ese campo
+            unset($modeldata['photo']);
+        }
+
+        if ($this->validated()) {
+            $db->where("doc.id", $rec_id);
+            $bool = $db->update($tablename, $modeldata);
+            $numRows = $db->getRowCount(); // number of affected rows. 0 = no record field updated
+            if ($bool && $numRows) {
+                $this->write_to_log("edit", "true");
+                $this->set_flash_msg("Record updated successfully", "success");
+                return $this->redirect("doc");
+            } else {
+                if ($db->getLastError()) {
+                    $this->set_page_error();
+                    $this->write_to_log("edit", "false");
+                } elseif (!$numRows) {
+                    // not an error, but no record was updated
+                    $page_error = "No record updated";
+                    $this->set_page_error($page_error);
+                    $this->set_flash_msg($page_error, "warning");
+                    $this->write_to_log("edit", "false");
+                    return $this->redirect("doc");
+                }
+            }
+        }
+    }
+
+    $db->where("doc.id", $rec_id);
+    $data = $db->getOne($tablename, $fields);
+    $page_title = $this->view->page_title = "Edit Doctors";
+    if (!$data) {
+        $this->set_page_error();
+    }
+    return $this->render_view("doc/edit.php", $data);
+}
+
 	/**
 	 * Update single field
 	 * @param $rec_id (select record by table primary key)

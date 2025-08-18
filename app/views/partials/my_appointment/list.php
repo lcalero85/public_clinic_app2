@@ -78,16 +78,20 @@ $field_value = $this->route->field_value;
                         <div class=" border-top mt-2">
                             <div class="row justify-content-center">
                                 <div class="col-md-auto">
-                                    <?php
-
-                                    $pager = new Pagination($total_records, $record_count);
-                                    $pager->show_page_count = true;
-                                    $pager->show_record_count = true;
-                                    $pager->show_page_limit = true;
-                                    $pager->limit = !empty($this->limit) ? (int)$this->limit : 10; // ✅ corregido
-                                    $pager->show_pagination = true;
-                                    $pager->render();
-                                    ?>
+                               
+                                            <?php
+                                            if (@$show_pagination == true) {
+                                                $pager = new Pagination($total_records, $record_count);
+                                                $pager->route = $this->route;
+                                                $pager->show_page_count = true;
+                                                $pager->show_record_count = true;
+                                                $pager->show_page_limit = true;
+                                                $pager->limit_count = $this->limit_count;
+                                                $pager->show_page_number_list = true;
+                                                $pager->pager_link_range = 5;
+                                                $pager->render();
+                                            }
+                                            ?>
 
                                 </div>
                             </div>

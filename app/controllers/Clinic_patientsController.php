@@ -97,9 +97,11 @@ class Clinic_patientsController extends SecureController
 		$data->record_count = $records_count;
 		$data->total_records = $total_records;
 		$data->total_page = $total_pages;
-		if ($db->getLastError()) {
-			$this->set_page_error();
-		}
+		$data->show_pagination = true;
+
+    if ($db->getLastError()) {
+        $this->set_page_error();
+    }
 		$page_title = $this->view->page_title = "Patients";
 		$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
 		$this->view->report_title = $page_title;

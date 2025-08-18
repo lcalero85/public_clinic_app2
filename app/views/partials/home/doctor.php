@@ -58,7 +58,7 @@ $current_page = $this->set_current_page_link();
                              <i class="fa fa-calendar-check fa-2x text-primary"></i>
                         </div>
                         <h5 class="card-title">Today's Appointments</h5>
-                        <a href="<?php print_link('my_appointment'); ?>" class="btn btn-primary btn-sm mt-2">
+                        <a href="<?php print_link('my_appointment?today=1'); ?>" class="btn btn-primary btn-sm mt-2">
                             View My Appointments today
                         </a>
                     </div>

@@ -400,6 +400,18 @@ public function get_all_roles(){
     return $result;
 }
 
+/**
+ * Contar citas pendientes de aprobación (estado = 2)
+ */
+function getcount_pending_appointments()
+{
+    $db = $this->GetModel();
+    $db->where("id_status_appointment", 2); // Pending Confirmation
+    $count = $db->getValue("appointment_new", "count(*)");
+    return $count ? $count : 0;
+}
+
+
 
 
 }

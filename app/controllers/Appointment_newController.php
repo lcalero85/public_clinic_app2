@@ -212,10 +212,10 @@ class Appointment_newController extends SecureController
 				'descritption' => 'required',
 				'appointment_date' => 'required',
 				'id_status_appointment' => '',
-				'id_appointment_type'=> 'required',
-				'priority'=> 'required',
-				'reminder_preference'=> 'required',
-				'follow_up_required'=> 'required',
+				'id_appointment_type' => 'required',
+				'priority' => 'required',
+				'reminder_preference' => 'required',
+				'follow_up_required' => 'required',
 
 			);
 			$this->sanitize_array = array(
@@ -226,9 +226,9 @@ class Appointment_newController extends SecureController
 				'appointment_date' => 'sanitize_string',
 				'id_status_appointment' => 'sanitize_string',
 				'id_appointment_type' => 'sanitize_string',
-				'priority'=> 'sanitize_string',
-				'reminder_preference'=> 'sanitize_string',
-				'follow_up_required'=> 'sanitize_string',
+				'priority' => 'sanitize_string',
+				'reminder_preference' => 'sanitize_string',
+				'follow_up_required' => 'sanitize_string',
 
 			);
 			$this->filter_vals = true; //set whether to remove empty fields
@@ -286,7 +286,7 @@ class Appointment_newController extends SecureController
 			$modeldata['register_date'] = datetime_now();
 			$modeldata['update_date'] = datetime_now();
 			$modeldata['id_user'] = USER_ID;
-		
+
 			if ($this->validated()) {
 				$db->where("appointment_new.id_appointment", $rec_id);;
 				$bool = $db->update($tablename, $modeldata);
@@ -412,6 +412,162 @@ class Appointment_newController extends SecureController
 		return	$this->redirect("appointment_new");
 	}
 
-    
+	public function request($formdata = null)
+	{
+		$this->view->page_title = "Request Appointment";
+		return $this->render_view("my_appointment/request.php");
+	}
 
+	public function request_submit($formdata = null): bool
+	{
+		if ($formdata) {
+			$db = $this->GetModel();
+			$tablename = "appointment_new";
+
+			$postdata = $this->format_request_data($formdata);
+
+			// 🔹 Buscar el id_patient real a partir del usuario logueado
+			$patient = $db->rawQueryOne("SELECT id_patient FROM clinic_patients WHERE id_user = ?", array(USER_ID));
+
+			if (!$patient) {
+				$this->set_flash_msg("No patient record found for this user", "danger");
+				return false;
+			}
+
+			$modeldata = array();
+			$modeldata['id_patient'] = $patient['id_patient']; // ✅ Guardar id_patient correcto
+			$modeldata['motive'] = $postdata['motive'];
+			$modeldata['descritption'] = $postdata['descritption'];
+			$modeldata['requested_date'] = $postdata['requested_date'];
+			$modeldata['register_date'] = date("Y-m-d");
+			$modeldata['update_date'] = date("Y-m-d");
+			$modeldata['id_status_appointment'] = 2; // Pending Confirmation
+			$modeldata['created_by'] = USER_ID;
+
+			$rec_id = $db->insert($tablename, $modeldata);
+
+			if ($rec_id) {
+				$this->set_flash_msg("Appointment request submitted successfully", "success");
+				return $this->redirect("my_appointment");
+			} else {
+				$this->set_flash_msg("Error saving request", "danger");
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Mostrar solicitudes pendientes (solo admin)
+	 */
+	public function request_manage(): ?string
+	{
+		$db = $this->GetModel();
+
+		// Consulta mejorada con JOINs y orden
+		$sql = "SELECT 
+                app.id_appointment,
+                cp.full_names AS patient_name,
+                app.motive,
+                app.descritption,
+                app.appointment_date,
+                app.register_date,
+                st.status AS appointment_status
+            FROM appointment_new AS app
+            INNER JOIN clinic_patients AS cp 
+                ON app.id_patient = cp.id_patient
+            INNER JOIN appointment_status AS st
+                ON app.id_status_appointment = st.id
+            WHERE app.id_status_appointment = 2
+            ORDER BY app.register_date DESC";
+
+		$records = $db->rawQuery($sql);
+
+		$this->view->page_title = "Pending Appointment Requests";
+		return $this->render_view("appointment_new/request_manage.php", ["data" => $records]);
+	}
+
+
+	/**
+	 * Aprobar cita (fecha solicitada = fecha aprobada)
+	 */
+	public function approve($id = null)
+	{
+		$db = $this->GetModel();
+		$tablename = "appointment_new";
+
+		$update = array(
+			"approved_date" => $db->now(),
+			"id_status_appointment" => 1, // Scheduled
+			"updated_by" => USER_ID
+		);
+
+		$db->where("id_appointment", $id);
+		$result = $db->update($tablename, $update);
+
+		if ($result) {
+			$this->set_flash_msg("Appointment approved successfully", "success");
+		} else {
+			$this->set_flash_msg("Error approving appointment", "danger");
+		}
+		return $this->redirect("appointment_new/request_manage");
+	}
+
+	/**
+	 * Denegar cita con comentario
+	 */
+	public function deny($id = null, $formdata = null)
+	{
+		$db = $this->GetModel();
+		$tablename = "appointment_new";
+
+		if ($formdata) {
+			$postdata = $this->format_request_data($formdata);
+			$update = array(
+				"id_status_appointment" => 7, // Cancelled
+				"admin_response" => $postdata['admin_response'],
+				"updated_by" => USER_ID
+			);
+
+			$db->where("id_appointment", $id);
+			$db->update($tablename, $update);
+
+			$this->set_flash_msg("Appointment denied", "danger");
+			return $this->redirect("appointment_new/request_manage");
+		}
+
+		// Renderizar formulario simple de rechazo
+		$this->view->page_title = "Deny Appointment";
+		return $this->render_view("appointment_new/deny.php", array("id" => $id));
+	}
+
+	/**
+	 * Reprogramar cita con nueva fecha
+	 */
+	public function reschedule($id = null, $formdata = null)
+	{
+		$db = $this->GetModel();
+		$tablename = "appointment_new";
+
+		if ($formdata) {
+			$postdata = $this->format_request_data($formdata);
+
+			$update = array(
+				"approved_date" => $postdata['approved_date'],
+				"id_status_appointment" => 5, // Rescheduled
+				"admin_response" => $postdata['admin_response'],
+				"updated_by" => USER_ID
+			);
+
+			$db->where("id_appointment", $id);
+			$db->update($tablename, $update);
+
+			$this->set_flash_msg("Appointment rescheduled successfully", "success");
+			return $this->redirect("appointment_new/request_manage");
+		}
+
+		// Renderizar formulario de reprogramación
+		$this->view->page_title = "Reschedule Appointment";
+		return $this->render_view("appointment_new/reschedule.php", array("id" => $id));
+	}
 }

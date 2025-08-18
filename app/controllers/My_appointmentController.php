@@ -127,4 +127,9 @@ class My_appointmentController extends SecureController
 
     $this->render_view("my_appointment/list.php", $data);
 }
+
+    
+
+
+
 }

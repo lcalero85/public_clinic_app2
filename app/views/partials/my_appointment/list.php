@@ -20,7 +20,7 @@ $field_value = $this->route->field_value;
                 <div class="col-sm-4 ">
                     <div class="">
                         <?php if (USER_ROLE_ID == 4): ?>
-                            <a href="<?php print_link('appointment_new/add'); ?>" class="btn btn-sm btn-success">
+                            <a href="<?php print_link('appointment_new/request'); ?>" class="btn btn-sm btn-success">
                                 <i class="fa fa-plus"></i> Request Appointment
                             </a>
                         <?php endif; ?>

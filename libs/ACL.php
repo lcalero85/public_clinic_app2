@@ -12,57 +12,66 @@ class ACL
      * Use "*" to grant all access rights to particular user role
      * @var array
      */
-    public static $role_pages = array(
-        1 => // Admin
-            array(
-                'users' => array('list','view','add','edit', 'editfield','delete','import_data','accountedit','accountview'),
-                'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
-                'appointment_new' => array('list','view','add','edit', 'editfield','delete'),
-                'doc' => array('list','view','add','edit', 'editfield','delete'),
-                'clinic_prescription' => array('list','view','add','edit', 'editfield','delete'),
-                'patients_status' => array('list','view','add','edit', 'editfield','delete'),
-                'actives_patients' => array('list','view'),
-                'app_logs' => array('list','view'),
-                'invoice_status' => array('list','view','add','edit', 'editfield','delete'),
-                'invoices_concepts' => array('list','view','add','edit', 'editfield','delete'),
-                'invoices' => array('list','view','add','edit', 'editfield','delete'),
-                'invoice_cancelled' => array('list','view'),
-                'invoice_debt' => array('list','view'),
-                'inactives_patients' => array('list','view'),
-                'appointment_status' => array('list','view','add','edit', 'editfield','delete'),
-                'appointments' => array('list','view')
+public static $role_pages = array(
+    1 => // Admin
+        array(
+            'users' => array('list','view','add','edit', 'editfield','delete','import_data','accountedit','accountview'),
+            'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
+            'appointment_new' => array(
+                'index',             // lista general de citas
+                'view',              // ver detalle
+                'add',               // crear cita directa (ya existente)
+                'edit',              // editar cita
+                'delete',            // borrar cita
+                'request_manage',    // NUEVO: listar solicitudes pendientes
+                'approve',           // NUEVO: aprobar cita en la fecha solicitada
+                'deny',              // NUEVO: rechazar cita
+                'reschedule'         // NUEVO: aprobar con nueva fecha
             ),
+            'doc' => array('list','view','add','edit', 'editfield','delete'),
+            'clinic_prescription' => array('list','view','add','edit', 'editfield','delete'),
+            'patients_status' => array('list','view','add','edit', 'editfield','delete'),
+            'actives_patients' => array('list','view'),
+            'app_logs' => array('list','view'),
+            'invoice_status' => array('list','view','add','edit', 'editfield','delete'),
+            'invoices_concepts' => array('list','view','add','edit', 'editfield','delete'),
+            'invoices' => array('list','view','add','edit', 'editfield','delete'),
+            'invoice_cancelled' => array('list','view'),
+            'invoice_debt' => array('list','view'),
+            'inactives_patients' => array('list','view'),
+            'appointment_status' => array('list','view','add','edit', 'editfield','delete'),
+            'appointments' => array('list','view')
+        ),
 
-        3 => // Doctor
-            array(
-                'users' => array('register'),
-                'clinic_prescription' => array('add','edit', 'editfield','delete'),
-                'my_appointment' => array('list','view')
-            ),
+    3 => // Doctor
+        array(
+            'users' => array('register'),
+            'clinic_prescription' => array('add','edit', 'editfield','delete'),
+            'my_appointment' => array('list','view')
+        ),
 
-        2=> // Assistant
-            array(
-							'users' => array('view','register'),
-							'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
-							'appointment_new' => array('list','view','add','edit', 'editfield','delete'),
-							'doc' => array('list','view','add','edit', 'editfield','delete'),
-							'patients_status' => array('list','view','add','edit', 'editfield','delete'),
-							'actives_patients' => array('list','view'),
-							'invoices' => array('list','view','add','edit', 'editfield','delete'),
-							'invoice_cancelled' => array('list','view'),
-							'invoice_debt' => array('list','view'),
-							'inactives_patients' => array('list','view'),
-							'appointments' => array('list','view')
-							
-						),
+    2 => // Assistant
+        array(
+            'users' => array('view','register'),
+            'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
+            'appointment_new' => array('list','view','add','edit', 'editfield','delete'),
+            'doc' => array('list','view','add','edit', 'editfield','delete'),
+            'patients_status' => array('list','view','add','edit', 'editfield','delete'),
+            'actives_patients' => array('list','view'),
+            'invoices' => array('list','view','add','edit', 'editfield','delete'),
+            'invoice_cancelled' => array('list','view'),
+            'invoice_debt' => array('list','view'),
+            'inactives_patients' => array('list','view'),
+            'appointments' => array('list','view')
+        ),
 
-        4 => // Patients
-            array(
-                'my_appointment' => array('list'),
-                'appointment_new' => array('add')
-            
-            )
-    );
+    4 => // Patients
+        array(
+            'my_appointment'   => array('list'),
+            'appointment_new'  => array('request', 'request_submit')
+        )
+);
+
 
     /**
      * Current user role ID

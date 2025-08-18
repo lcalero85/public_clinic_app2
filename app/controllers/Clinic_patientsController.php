@@ -311,8 +311,22 @@ class Clinic_patientsController extends SecureController
     $db = $this->GetModel();
     $this->rec_id = $rec_id;
     $tablename = $this->tablename;
-    //editable fields
-    $fields = $this->fields = array(
+
+    // Verificar si este paciente está asociado a un user creado por admin
+    $allow_edit_id_user = false;
+    $db->where("id_patient", $rec_id);
+    $id_user = $db->getValue("clinic_patients", "id_user");
+
+    if ($id_user) {
+        $db->where("id_user", $id_user);
+        $created_by = $db->getValue("users", "created_by");
+        if (!empty($created_by)) {
+            $allow_edit_id_user = true; // ✅ Solo editable si created_by no es NULL
+        }
+    }
+
+    // editable fields
+    $fields = array(
         "id_patient",
         "full_names",
         "address",
@@ -325,7 +339,6 @@ class Clinic_patientsController extends SecureController
         "manager",
         "register_date",
         "update_date",
-        "id_user",
         "id_status",
         "email",
         "emergency_contact_phone",
@@ -337,8 +350,16 @@ class Clinic_patientsController extends SecureController
         "document_number"
     );
 
+    // incluir id_user solo si aplica
+    if ($allow_edit_id_user) {
+        $fields[] = "id_user";
+    }
+
+    $this->fields = $fields;
+
     if ($formdata) {
         $postdata = $this->format_request_data($formdata);
+
         $this->rules_array = array(
             'full_names' => 'required|max_len,200',
             'address' => 'required',
@@ -354,11 +375,12 @@ class Clinic_patientsController extends SecureController
             'emergency_contact_phone' => 'required|max_len,100',
             'occupation' => 'required|max_len,100',
             'photo' => '',
-            "workplace" => 'required',
+            'workplace' => 'required',
             'id_document_type' => 'required',
             'id_marital_status' => 'required',
             'document_number' => 'required',
         );
+
         $this->sanitize_array = array(
             'full_names' => 'sanitize_string',
             'address' => 'sanitize_string',
@@ -374,7 +396,7 @@ class Clinic_patientsController extends SecureController
             'emergency_contact_phone' => 'sanitize_string',
             'occupation' => 'sanitize_string',
             'photo' => '',
-            "workplace" => 'sanitize_string',
+            'workplace' => 'sanitize_string',
             'id_document_type' => 'sanitize_string',
             'id_marital_status' => 'sanitize_string',
             'document_number' => 'sanitize_string',
@@ -383,16 +405,17 @@ class Clinic_patientsController extends SecureController
         $modeldata = $this->modeldata = $this->validate_form($postdata);
         $modeldata['register_date'] = date_now();
         $modeldata['update_date'] = date_now();
-        $modeldata['id_user'] = USER_ID;
+
+        // ⚠️ Solo incluir id_user si está permitido
+        if (!$allow_edit_id_user) {
+            unset($modeldata['id_user']);
+        }
 
         // --- Foto: archivo O webcam O nada (NO modificar si no se envía) ---
         $photoData = null;
-
         if (!empty($_FILES['photo_file']['tmp_name'])) {
-            // 1) Imagen desde el selector de archivos
             $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
         } elseif (!empty($_POST['photo_webcam'])) {
-            // 2) Imagen tomada con webcam (dataURL base64)
             $base64 = $_POST['photo_webcam'];
             $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
         }
@@ -400,14 +423,13 @@ class Clinic_patientsController extends SecureController
         if ($photoData !== null) {
             $modeldata['photo'] = $photoData;
         } else {
-            // 🚀 Si no hay foto nueva, no actualizar ese campo
             unset($modeldata['photo']);
         }
 
         if ($this->validated()) {
             $db->where("clinic_patients.id_patient", $rec_id);
             $bool = $db->update($tablename, $modeldata);
-            $numRows = $db->getRowCount(); //number of affected rows. 0 = no record field updated
+            $numRows = $db->getRowCount();
             if ($bool && $numRows) {
                 $this->write_to_log("edit", "true");
                 $this->set_flash_msg("Record updated successfully", "success");
@@ -417,7 +439,6 @@ class Clinic_patientsController extends SecureController
                     $this->set_page_error();
                     $this->write_to_log("edit", "false");
                 } elseif (!$numRows) {
-                    //not an error, but no record was updated
                     $page_error = "No record updated";
                     $this->set_page_error($page_error);
                     $this->set_flash_msg($page_error, "warning");
@@ -430,12 +451,13 @@ class Clinic_patientsController extends SecureController
 
     $db->where("clinic_patients.id_patient", $rec_id);
     $data = $db->getOne($tablename, $fields);
-    $page_title = $this->view->page_title = "Edit  Clinic Patients";
+    $page_title = $this->view->page_title = "Edit Clinic Patients";
     if (!$data) {
         $this->set_page_error();
     }
     return $this->render_view("clinic_patients/edit.php", $data);
 }
+
 	/**
 	 * Update single field
 	 * @param $rec_id (select record by table primary key)

@@ -19,6 +19,11 @@ $field_value = $this->route->field_value;
                 </div>
                 <div class="col-sm-4 ">
                     <div class="">
+                        <?php if (USER_ROLE_ID == 4): ?>
+                            <a href="<?php print_link('appointment_new/add'); ?>" class="btn btn-sm btn-success">
+                                <i class="fa fa-plus"></i> Request Appointment
+                            </a>
+                        <?php endif; ?>
                         <?php if (!empty($_GET['today']) && $_GET['today'] == 1): ?>
                             <a href="<?php print_link('my_appointment'); ?>" class="btn btn-sm btn-secondary">
                                 <i class="fa fa-list"></i> View All Appointments
@@ -28,6 +33,7 @@ $field_value = $this->route->field_value;
                                 <i class="fa fa-calendar-check"></i> View Today's Appointments
                             </a>
                         <?php endif; ?>
+
                     </div>
                 </div>
             </div>
@@ -78,20 +84,20 @@ $field_value = $this->route->field_value;
                         <div class=" border-top mt-2">
                             <div class="row justify-content-center">
                                 <div class="col-md-auto">
-                               
-                                            <?php
-                                            if (@$show_pagination == true) {
-                                                $pager = new Pagination($total_records, $record_count);
-                                                $pager->route = $this->route;
-                                                $pager->show_page_count = true;
-                                                $pager->show_record_count = true;
-                                                $pager->show_page_limit = true;
-                                                $pager->limit_count = $this->limit_count;
-                                                $pager->show_page_number_list = true;
-                                                $pager->pager_link_range = 5;
-                                                $pager->render();
-                                            }
-                                            ?>
+
+                                    <?php
+                                    if (@$show_pagination == true) {
+                                        $pager = new Pagination($total_records, $record_count);
+                                        $pager->route = $this->route;
+                                        $pager->show_page_count = true;
+                                        $pager->show_record_count = true;
+                                        $pager->show_page_limit = true;
+                                        $pager->limit_count = $this->limit_count;
+                                        $pager->show_page_number_list = true;
+                                        $pager->pager_link_range = 5;
+                                        $pager->render();
+                                    }
+                                    ?>
 
                                 </div>
                             </div>

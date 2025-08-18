@@ -411,4 +411,7 @@ class Appointment_newController extends SecureController
 		}
 		return	$this->redirect("appointment_new");
 	}
+
+    
+
 }

@@ -136,7 +136,9 @@ class Menu{
                     'icon' => '<i class="fa fa-folder-open "></i>'
                 )
             )
-        )
+                ),
+
+        
     );
     
     /**

@@ -58,7 +58,9 @@ class ACL
 
         4 => // Patients
             array(
-                'my_appointment' => array('list')
+                'my_appointment' => array('list'),
+                'appointment_new' => array('add')
+            
             )
     );
 

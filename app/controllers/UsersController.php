@@ -189,7 +189,8 @@ class UsersController extends SecureController
                 "photo",
                 "register_date",
                 "update_date",
-                "id_role"
+                "id_role",
+                "created_by"
             );
 
             $postdata = $this->format_request_data($formdata);
@@ -207,6 +208,7 @@ class UsersController extends SecureController
                 'user_name'  => 'required',
                 'password'   => 'required',
                 'email'      => 'required|valid_email',
+              
             );
 
             $this->sanitize_array = array(
@@ -225,7 +227,7 @@ class UsersController extends SecureController
             $modeldata['register_date'] = datetime_now();
             $modeldata['update_date']   = datetime_now();
             $modeldata['rol']           = $labels;
-
+            $modeldata['created_by'] = defined('USER_ID') ? USER_ID : null;
             // --- Foto: archivo O webcam O nada (NULL) ---
             $photoData = null;
 
@@ -503,7 +505,7 @@ class UsersController extends SecureController
                 "update_date",
                 "cel",
                 "id_role",
-                "photo"
+                "photo",
             );
 
             $postdata = $this->format_request_data($formdata);

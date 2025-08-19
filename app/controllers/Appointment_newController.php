@@ -461,10 +461,10 @@ class Appointment_newController extends SecureController
 	 * Mostrar solicitudes pendientes (solo admin)
 	 */
 	public function request_manage(): ?string
-{
-    $db = $this->GetModel();
+	{
+		$db = $this->GetModel();
 
-    $sql = "SELECT 
+		$sql = "SELECT 
                 an.id_appointment,
                 cp.full_names AS patient_name,
                 an.motive,
@@ -480,13 +480,13 @@ class Appointment_newController extends SecureController
             WHERE an.id_status_appointment = 2
             ORDER BY an.register_date DESC";
 
-    $records = $db->rawQuery($sql);
+		$records = $db->rawQuery($sql);
 
-    $this->view->page_title = "Pending Appointment Requests";
-    return $this->render_view("appointment_new/request_manage.php", [
-        "records" => $records
-    ]);
-}
+		$this->view->page_title = "Pending Appointment Requests";
+		return $this->render_view("appointment_new/request_manage.php", [
+			"records" => $records
+		]);
+	}
 
 
 
@@ -572,5 +572,49 @@ class Appointment_newController extends SecureController
 		// Renderizar formulario de reprogramación
 		$this->view->page_title = "Reschedule Appointment";
 		return $this->render_view("appointment_new/reschedule.php", array("id" => $id));
+	}
+
+	// Muestra el formulario
+	public function approve_form($id = null)
+	{
+		$db = $this->GetModel();
+		$record = $db->where("id_appointment", $id)->getOne("appointment_new");
+
+		if (!$record) {
+			$this->set_flash_msg("Appointment not found", "danger");
+			return $this->redirect("appointment_new/request_manage");
+		}
+
+		$this->view->page_title = "Approve Appointment";
+
+		// Pasar $record como $data para que la vista lo use igual que en add/edit
+		return $this->render_view("appointment_new/approve_form.php", ["data" => $record]);
+	}
+
+	// Guarda los cambios
+	public function save_approval($id = null)
+	{
+		$db = $this->GetModel();
+		$tablename = "appointment_new";
+
+		$data = array(
+			"id_doc" => $_POST['id_doc'],   // se guarda el ID del doctor en appointment_new.id_doc
+			"appointment_date" => $_POST['appointment_date'],
+			"notes" => $_POST['notes'],
+			"id_status_appointment" => 1, // Scheduled
+			"approved_date" => $db->now(),
+			"updated_by" => USER_ID
+		);
+
+		$db->where("id_appointment", $id);
+		$result = $db->update($tablename, $data);
+
+		if ($result) {
+			$this->set_flash_msg("Appointment approved successfully", "success");
+		} else {
+			$this->set_flash_msg("Error approving appointment", "danger");
+		}
+
+		return $this->redirect("appointment_new/request_manage");
 	}
 }

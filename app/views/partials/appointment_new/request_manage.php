@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Inicializar controlador compartido
 $comp_model = new SharedController;
 $page_element_id = "request-manage-" . random_str();
@@ -46,30 +46,29 @@ $records = $this->view_data['records'] ?? [];
                                     <td><?php echo htmlspecialchars($record['motive']); ?></td>
                                     <td><?php echo htmlspecialchars($record['description']); ?></td>
                                     <td>
-                                        <?php 
-                                            echo ($record['appointment_date'] != "0000-00-00") 
-                                                ? date("d M Y", strtotime($record['appointment_date'])) 
-                                                : "Not scheduled";
+                                        <?php
+                                        echo ($record['appointment_date'] != "0000-00-00")
+                                            ? date("d M Y", strtotime($record['appointment_date']))
+                                            : "Not scheduled";
                                         ?>
                                     </td>
                                     <td><?php echo date("d M Y H:i", strtotime($record['register_date'])); ?></td>
                                     <td><?php echo htmlspecialchars($record['appointment_status']); ?></td>
                                     <td class="text-center">
                                         <!-- 🔹 Botones de acción -->
-                                        <a class="btn btn-sm btn-success" 
-                                           href="<?php print_link("appointment_new/approve/" . urlencode($record['id_appointment'])); ?>" 
-                                           title="Approve">
+                                        <a class="btn btn-sm btn-success" title="Approve" href="<?php print_link("appointment_new/approve_form/" . urlencode($record['id_appointment'])); ?>">
                                             <i class="fa fa-check"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-danger" 
-                                           href="<?php print_link("appointment_new/deny/" . urlencode($record['id_appointment'])); ?>" 
-                                           title="Reject" 
-                                           onclick="return confirm('Are you sure you want to reject this request?');">
+
+                                        <a class="btn btn-sm btn-danger"
+                                            href="<?php print_link("appointment_new/deny/" . urlencode($record['id_appointment'])); ?>"
+                                            title="Reject"
+                                            onclick="return confirm('Are you sure you want to reject this request?');">
                                             <i class="fa fa-times"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-info" 
-                                           href="<?php print_link("appointment_new/reschedule/" . urlencode($record['id_appointment'])); ?>" 
-                                           title="View">
+                                        <a class="btn btn-sm btn-info"
+                                            href="<?php print_link("appointment_new/reschedule/" . urlencode($record['id_appointment'])); ?>"
+                                            title="View">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                     </td>

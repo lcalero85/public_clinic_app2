@@ -469,7 +469,7 @@ class Appointment_newController extends SecureController
                 app.id_appointment,
                 cp.full_names AS patient_name,
                 app.motive,
-                app.descritption,
+                app.descritption AS description,
                 app.appointment_date,
                 app.register_date,
                 st.status AS appointment_status
@@ -484,7 +484,7 @@ class Appointment_newController extends SecureController
 		$records = $db->rawQuery($sql);
 
 		$this->view->page_title = "Pending Appointment Requests";
-		return $this->render_view("appointment_new/request_manage.php", ["data" => $records]);
+		return $this->render_view("appointment_new/request_manage.php", ["records" => $records]);
 	}
 
 

@@ -18,7 +18,8 @@ public static $role_pages = array(
             'users' => array('list','view','add','edit', 'editfield','delete','import_data','accountedit','accountview'),
             'clinic_patients' => array('list','view','add','edit', 'editfield','delete'),
             'appointment_new' => array(
-                'index',             // lista general de citas
+                'index', 
+                'list',          // lista general de citas
                 'view',              // ver detalle
                 'add',               // crear cita directa (ya existente)
                 'edit',              // editar cita

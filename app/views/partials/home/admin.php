@@ -143,8 +143,8 @@ $current_page = $this->set_current_page_link();
                         </div>
              
                             <div class="col-md-3 col-sm-4 comp-grid">
-                                <?php $pending_count = $comp_model->getcount_pending_appointments(); ?>
-                                <a class="animated zoomIn record-count card bg-warning text-dark"
+                                <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark"
                                     href="<?php print_link("appointment_new/request_manage") ?>">
                                     <div class="row">
                                         <div class="col-2">

@@ -410,6 +410,16 @@ function getcount_pending_appointments()
     $count = $db->getValue("appointment_new", "count(*)");
     return $count ? $count : 0;
 }
+function getcount_pending_appointments2(): int {
+    $db = $this->GetModel();
+    $sql = "SELECT COUNT(*) as total
+            FROM appointment_new AS an
+            INNER JOIN clinic_patients AS cp ON an.id_patient = cp.id_patient
+            INNER JOIN appointment_status AS apps ON apps.id = an.id_status_appointment
+            WHERE an.id_status_appointment = 2";
+    $result = $db->rawQuery($sql);
+    return $result ? $result[0]['total'] : 0;
+}
 
 
 

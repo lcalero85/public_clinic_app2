@@ -65,7 +65,7 @@ $field_value = $this->route->field_value;
                                             <tr>
                                                 <td><?php echo $data['full_names']; ?></td>
                                                 <td><?php echo $data['motive']; ?></td>
-                                                <td><?php echo $data['descritption']; ?></td>
+                                                <td><?php echo $data['description']; ?></td>
                                                 <td><?php echo $data['historial']; ?></td>
                                                 <td><?php echo $data['appointment_date']; ?></td>
                                                 <td><?php echo $data['register_date']; ?></td>

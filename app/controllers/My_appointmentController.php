@@ -25,7 +25,7 @@ class My_appointmentController extends SecureController
         $sqltext = "SELECT SQL_CALC_FOUND_ROWS  
             cp.full_names AS full_names,
             app.motive,
-            app.descritption,
+            app.description,
             app.historial,
             app.appointment_date,
             app.register_date,
@@ -46,7 +46,7 @@ class My_appointmentController extends SecureController
         $sqltext = "SELECT SQL_CALC_FOUND_ROWS  
             cp.full_names AS full_names,
             app.motive,
-            app.descritption,
+            app.description,
             app.historial,
             app.appointment_date,
             app.register_date,
@@ -67,7 +67,7 @@ class My_appointmentController extends SecureController
         $sqltext = "SELECT SQL_CALC_FOUND_ROWS  
             cp.full_names AS full_names,
             app.motive,
-            app.descritption,
+            app.description,
             app.historial,
             app.appointment_date,
             app.register_date,

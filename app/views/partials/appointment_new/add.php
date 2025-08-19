@@ -108,11 +108,11 @@ $redirect_to = $this->redirect_to;
                                 <div class="form-group ">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="descritption">Symptoms Descritption<span class="text-danger">*</span></label>
+                                            <label class="control-label" for="description">Symptoms Descritption<span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <textarea placeholder="Enter Descritption" id="ctrl-descritption" required="" maxlength="255" rows="5" name="descritption" class=" form-control"><?php echo $this->set_field_value('descritption', ""); ?></textarea>
+                                                <textarea placeholder="Enter Descritption" id="ctrl-descritption" required="" maxlength="255" rows="5" name="description" class=" form-control"><?php echo $this->set_field_value('description', ""); ?></textarea>
                                                 <!--<div class="invalid-feedback animated bounceIn text-center">Please enter text</div>-->
                                             </div>
                                         </div>

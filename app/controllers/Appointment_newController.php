@@ -28,7 +28,7 @@ class Appointment_newController extends SecureController
 			"clinic_patients.full_names AS clinic_patients_full_names",
 			"appointment_new.id_doc",
 			"doc.full_names AS doc_full_names",
-			"CONCAT(appointment_new.motive,' - ',IFNULL(appointment_new.descritption,'')) AS motive_summary",
+			"CONCAT(appointment_new.motive,' - ',IFNULL(appointment_new.description,'')) AS motive_summary",
 			"appointment_new.historial",
 			"appointment_new.appointment_date",
 			"appointment_new.register_date",
@@ -51,7 +51,7 @@ class Appointment_newController extends SecureController
         appointment_new.id_appointment LIKE ? OR
         appointment_new.id_patient LIKE ? OR
         appointment_new.id_doc LIKE ? OR
-        CONCAT(appointment_new.motive,' ',IFNULL(appointment_new.descritption,'')) LIKE ? OR
+        CONCAT(appointment_new.motive,' ',IFNULL(appointment_new.description,'')) LIKE ? OR
         appointment_new.historial LIKE ? OR
         appointment_new.appointment_date LIKE ? OR
         appointment_new.register_date LIKE ? OR
@@ -133,7 +133,7 @@ class Appointment_newController extends SecureController
 			"appointment_new.id_patient",
 			"clinic_patients.full_names AS clinic_patients_full_names",
 			"appointment_new.motive",
-			"appointment_new.descritption",
+			"appointment_new.description",
 			"appointment_new.historial",
 			"appointment_new.appointment_date",
 			"appointment_new.register_date",
@@ -194,7 +194,7 @@ class Appointment_newController extends SecureController
 				"id_patient",
 				"id_doc",
 				"motive",
-				"descritption",
+				"description",
 				"appointment_date",
 				"register_date",
 				"id_user",
@@ -209,7 +209,7 @@ class Appointment_newController extends SecureController
 				'id_patient' => 'required',
 				'id_doc' => 'required',
 				'motive' => 'required',
-				'descritption' => 'required',
+				'description' => 'required',
 				'appointment_date' => 'required',
 				'id_status_appointment' => '',
 				'id_appointment_type' => 'required',
@@ -222,7 +222,7 @@ class Appointment_newController extends SecureController
 				'id_patient' => 'sanitize_string',
 				'id_doc' => 'sanitize_string',
 				'motive' => 'sanitize_string',
-				'descritption' => 'sanitize_string',
+				'description' => 'sanitize_string',
 				'appointment_date' => 'sanitize_string',
 				'id_status_appointment' => 'sanitize_string',
 				'id_appointment_type' => 'sanitize_string',
@@ -330,7 +330,7 @@ class Appointment_newController extends SecureController
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "descritption", "historial", "appointment_date", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
+		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "description", "historial", "appointment_date", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
 		$page_error = null;
 		if ($formdata) {
 			$postdata = array();
@@ -342,7 +342,7 @@ class Appointment_newController extends SecureController
 				'id_patient' => 'required',
 				'id_doc' => 'required',
 				'motive' => 'required',
-				'descritption' => 'required',
+				'description' => 'required',
 				'historial' => 'required',
 				'appointment_date' => 'required',
 				'nex_appointment_date' => 'required',
@@ -437,7 +437,7 @@ class Appointment_newController extends SecureController
 			$modeldata = array();
 			$modeldata['id_patient'] = $patient['id_patient']; // ✅ Guardar id_patient correcto
 			$modeldata['motive'] = $postdata['motive'];
-			$modeldata['descritption'] = $postdata['descritption'];
+			$modeldata['description'] = $postdata['description'];
 			$modeldata['requested_date'] = $postdata['requested_date'];
 			$modeldata['register_date'] = date("Y-m-d");
 			$modeldata['update_date'] = date("Y-m-d");
@@ -461,31 +461,34 @@ class Appointment_newController extends SecureController
 	 * Mostrar solicitudes pendientes (solo admin)
 	 */
 	public function request_manage(): ?string
-	{
-		$db = $this->GetModel();
+{
+    $db = $this->GetModel();
 
-		// Consulta mejorada con JOINs y orden
-		$sql = "SELECT 
-                app.id_appointment,
+    $sql = "SELECT 
+                an.id_appointment,
                 cp.full_names AS patient_name,
-                app.motive,
-                app.descritption AS description,
-                app.appointment_date,
-                app.register_date,
-                st.status AS appointment_status
-            FROM appointment_new AS app
+                an.motive,
+                an.description,
+                an.appointment_date,
+                an.register_date,
+                apps.status AS appointment_status
+            FROM appointment_new AS an
             INNER JOIN clinic_patients AS cp 
-                ON app.id_patient = cp.id_patient
-            INNER JOIN appointment_status AS st
-                ON app.id_status_appointment = st.id
-            WHERE app.id_status_appointment = 2
-            ORDER BY app.register_date DESC";
+                ON an.id_patient = cp.id_patient
+            INNER JOIN appointment_status AS apps 
+                ON apps.id = an.id_status_appointment
+            WHERE an.id_status_appointment = 2
+            ORDER BY an.register_date DESC";
 
-		$records = $db->rawQuery($sql);
+    $records = $db->rawQuery($sql);
 
-		$this->view->page_title = "Pending Appointment Requests";
-		return $this->render_view("appointment_new/request_manage.php", ["records" => $records]);
-	}
+    $this->view->page_title = "Pending Appointment Requests";
+    return $this->render_view("appointment_new/request_manage.php", [
+        "records" => $records
+    ]);
+}
+
+
 
 
 	/**

@@ -26,7 +26,7 @@ $csrf_token = Csrf::$token;
                         </div>
                         <div class="form-group">
                             <label class="control-label">Description</label>
-                            <textarea name="descritption" class="form-control"></textarea>
+                            <textarea name="description" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Requested Date</label>

@@ -24,7 +24,7 @@ class AppointmentsController extends SecureController{
 			"appointments.id_doc", 
 			"doc.full_names AS doc_full_names", 
 			"appointments.motive", 
-			"appointments.descritption", 
+			"appointments.description", 
 			"appointments.historial", 
 			"appointments.register_date", 
 			"appointments.id_user", 

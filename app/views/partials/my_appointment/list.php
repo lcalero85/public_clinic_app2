@@ -52,7 +52,7 @@ $field_value = $this->route->field_value;
                                         <th>Patient Name</th>
                                         <th>Motive</th>
                                         <th>Description</th>
-                                        <th>Historial</th>
+                                        <th>Comments</th>
                                         <th>Appointment Date</th>
                                         <th>Register Date</th>
                                         <th>Doctor</th>

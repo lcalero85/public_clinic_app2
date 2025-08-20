@@ -13,7 +13,8 @@ $data = $this->view_data['data'] ?? [];
 <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<section class="page" id="<?php echo $page_element_id; ?>" data-page-type="edit" data-display-type="" data-page-url="<?php print_link($current_page); ?>">
+<section class="page" id="<?php echo $page_element_id; ?>" data-page-type="edit" data-display-type=""
+    data-page-url="<?php print_link($current_page); ?>">
     <?php if ($show_header == true) { ?>
         <div class="bg-light p-3 mb-3">
             <div class="container">
@@ -32,17 +33,18 @@ $data = $this->view_data['data'] ?? [];
                 <div class="col-md-7 comp-grid">
                     <?php $this::display_page_errors(); ?>
                     <div class="bg-light p-3 animated fadeIn page-content">
-                        <form id="appointment-approve-form" role="form" novalidate enctype="multipart/form-data" 
-                              class="form page-form form-horizontal needs-validation" 
-                              action="<?php print_link("appointment_new/save_approval/" . $data['id_appointment']); ?>" 
-                              method="post">
+                        <form id="appointment-approve-form" role="form" novalidate enctype="multipart/form-data"
+                            class="form page-form form-horizontal needs-validation"
+                            action="<?php print_link("appointment_new/save_approval/" . $data['id_appointment'] . "?csrf_token=$csrf_token"); ?>"
+                            method="post">
                             <div>
 
                                 <!-- Assigned Doctor -->
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="id_doc">Assigned Doctor <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="id_doc">Assigned Doctor <span
+                                                    class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
@@ -65,32 +67,43 @@ $data = $this->view_data['data'] ?? [];
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Appointment Date -->
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="appointment_date">Appointment Date <span class="text-danger">*</span></label>
+                                            <label class="control-label" for="appointment_date">
+                                                Appointment Date <span class="text-danger">*</span>
+                                            </label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="input-group">
-                                                <input id="ctrl-appointment_date" class="form-control datepicker" 
-                                                       required 
-                                                       value="<?php echo $data['appointment_date'] ?? ''; ?>" 
-                                                       type="datetime" 
-                                                       name="appointment_date" 
-                                                       placeholder="Enter Appointment Date" 
-                                                       data-enable-time="true" 
-                                                       data-date-format="Y-m-d H:i:S" 
-                                                       data-alt-format="F j, Y - H:i" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                                </div>
+                                                <?php
+                                                // Preparar fecha para input type="datetime-local"
+                                                $appointment_date = '';
+
+                                                if (!empty($_GET['date']) && $_GET['date'] != 'Not scheduled' && $_GET['date'] != '0000-00-00') {
+                                                    $appointment_date = date("Y-m-d\TH:i", strtotime($_GET['date']));
+                                                } elseif (!empty($data['appointment_date'])) {
+                                                    $appointment_date = date("Y-m-d\TH:i", strtotime($data['appointment_date']));
+                                                } else {
+                                                    $appointment_date = date("Y-m-d\TH:i"); // fecha/hora actual
+                                                }
+                                                ?>
+                                                <!-- Input visible, solo lectura -->
+                                                <input id="ctrl-appointment_date"
+                                                    class="form-control"
+                                                    value="<?php echo $appointment_date; ?>"
+                                                    type="datetime-local"
+                                                    readonly />
+
+                                                <!-- Input hidden que se envía al controlador -->
+                                                <input type="hidden"
+                                                    name="appointment_date"
+                                                    value="<?php echo $appointment_date; ?>" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- Notes -->
                                 <div class="form-group">
                                     <div class="row">
@@ -99,7 +112,8 @@ $data = $this->view_data['data'] ?? [];
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <textarea id="ctrl-notes" name="notes" class="form-control"><?php echo $data['notes'] ?? ''; ?></textarea>
+                                                <textarea id="ctrl-notes" name="notes"
+                                                    class="form-control"><?php echo $data['notes'] ?? ''; ?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +127,8 @@ $data = $this->view_data['data'] ?? [];
                                 <button class="btn btn-success" type="submit">
                                     Confirm Approval <i class="fa fa-check"></i>
                                 </button>
-                                <a href="<?php print_link("appointment_new/request_manage") ?>" class="btn btn-secondary">
+                                <a href="<?php print_link("appointment_new/request_manage") ?>"
+                                    class="btn btn-secondary">
                                     Cancel <i class="fa fa-times"></i>
                                 </a>
                             </div>
@@ -124,5 +139,3 @@ $data = $this->view_data['data'] ?? [];
         </div>
     </div>
 </section>
-
-

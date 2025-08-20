@@ -47,16 +47,22 @@ $records = $this->view_data['records'] ?? [];
                                     <td><?php echo htmlspecialchars($record['description']); ?></td>
                                     <td>
                                         <?php
-                                        echo ($record['appointment_date'] != "0000-00-00")
-                                            ? date("d M Y", strtotime($record['appointment_date']))
+                                        echo ($record['requested_date'] != "0000-00-00")
+                                            ? date("d M Y", strtotime($record['requested_date']))
                                             : "Not scheduled";
                                         ?>
                                     </td>
                                     <td><?php echo date("d M Y H:i", strtotime($record['register_date'])); ?></td>
                                     <td><?php echo htmlspecialchars($record['appointment_status']); ?></td>
                                     <td class="text-center">
-                                        <!-- 🔹 Botones de acción -->
-                                        <a class="btn btn-sm btn-success" title="Approve" href="<?php print_link("appointment_new/approve_form/" . urlencode($record['id_appointment'])); ?>">
+                                        <?php
+                                        $approve_url = "appointment_new/approve_form/$record[id_appointment]";
+                                        if (!empty($record['requested_date']) && $record['requested_date'] != 'Not scheduled' && $record['requested_date'] != '0000-00-00') {
+                                            $approve_url .= "?date=" . urlencode($record['requested_date']);
+                                        }
+                                        ?>
+                                        <a href="<?php print_link($approve_url); ?>"
+                                            class="btn btn-sm btn-success">
                                             <i class="fa fa-check"></i>
                                         </a>
 

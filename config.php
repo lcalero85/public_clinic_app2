@@ -78,14 +78,14 @@ define("PAGE_CHARSET", "UTF-8");
 
 // Email Configuration Default Settings
 define("USE_SMTP",true);
-define("SMTP_USERNAME", "");
-define("SMTP_PASSWORD", "");
-define("SMTP_HOST", "smtp.gmail.com");
-define("SMTP_PORT", "456");
-
-//Default Email Sender Details. Please set this even if you are not using SMTP
-define("DEFAULT_EMAIL", "");
-define("DEFAULT_EMAIL_ACCOUNT_NAME", "My Clinic - support");
+define("SMTP_USERNAME", "tiobliss85@outlook.com");
+define("SMTP_PASSWORD", "lrflyezhmbadshkb");
+define("SMTP_HOST", "smtp.office365.com");
+define("SMTP_PORT", "587");
+define("SMTP_SECURE", "tls"); // TLS obligatorio en Outlook
+// Default Email Sender Details
+define("DEFAULT_EMAIL", SMTP_USERNAME); 
+define("DEFAULT_EMAIL_ACCOUNT_NAME", "My Clinic - Support");
 
 // Database Configuration Settings
 define("DB_HOST", "localhost");

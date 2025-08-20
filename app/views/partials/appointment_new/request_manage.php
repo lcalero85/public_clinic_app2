@@ -62,21 +62,17 @@ $records = $this->view_data['records'] ?? [];
                                         }
                                         ?>
                                         <a href="<?php print_link($approve_url); ?>"
-                                            class="btn btn-sm btn-success">
+                                            class="btn btn-sm btn-success" title="Approved">
                                             <i class="fa fa-check"></i>
                                         </a>
 
                                         <a class="btn btn-sm btn-danger"
                                             href="<?php print_link("appointment_new/deny/" . urlencode($record['id_appointment'])); ?>"
-                                            title="Reject"
-                                            onclick="return confirm('Are you sure you want to reject this request?');">
+                                            title="Deny"
+                                            onclick="return confirm('Are you sure you want to deny this request?');">
                                             <i class="fa fa-times"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-info"
-                                            href="<?php print_link("appointment_new/reschedule/" . urlencode($record['id_appointment'])); ?>"
-                                            title="View">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
+                                        
                                     </td>
                                 </tr>
                             <?php } ?>

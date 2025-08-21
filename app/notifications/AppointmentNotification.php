@@ -165,4 +165,43 @@ public function sendPendingAppointmentsReport($adminEmail, $data) {
     ]);
 }
 
+public function notifyPatientCreated($patientEmail, $appointmentData): bool|string
+{
+    $patient = $appointmentData['patient'] ?? [];
+    $appointment = $appointmentData['appointment'] ?? [];
+    $doctor = $appointmentData['doctor'] ?? [];
+
+    ob_start();
+    extract(compact('patient', 'appointment', 'doctor'));
+    include APP_DIR . "views/emails/appointment_created_patient.php";
+    $body = ob_get_clean();
+
+    return $this->send([
+        "to" => $patientEmail,
+        "subject" => "Your Appointment Has Been Created",
+        "body" => $body
+    ]);
+}
+
+public function notifyDoctorCreated($doctorEmail, $appointmentData): bool|string
+{
+    $patient = $appointmentData['patient'] ?? [];
+    $appointment = $appointmentData['appointment'] ?? [];
+    $doctor = $appointmentData['doctor'] ?? [];
+    $status = $appointmentData['status'] ?? '';
+
+    ob_start();
+    extract(compact('patient', 'appointment', 'doctor', 'status'));
+    include APP_DIR . "views/emails/appointment_created_doctor.php";
+    $body = ob_get_clean();
+
+    return $this->send([
+        "to" => $doctorEmail,
+        "subject" => "New Appointment Assigned to You",
+        "body" => $body
+    ]);
+}
+
+
+
 }

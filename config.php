@@ -22,12 +22,22 @@ $site_addr = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off" ? "https" 
 $site_addr = rtrim($site_addr, "/\\") . "/";
 
 // Can Be Set Manually Like "http://localhost/mysite/".
+if (php_sapi_name() === 'cli') {
+    // Si corre desde CLI (cron o batch)
+    $site_addr = "http://localhost/public_clinic_app/";
+} else {
+    // Si corre desde navegador
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+    $site_addr = "http://" . $host . "/public_clinic_app/";
+}
+
 define("SITE_ADDR", $site_addr);
 
 define("APP_ID", "43fbc25307f8808c1df494b2811849f4");
 
 // Application Default Color (Mostly Used By Mobile)
 define("META_THEME_COLOR", "#000000");
+
 
 //Application resource access status
 define("AUTHORIZED", 200);

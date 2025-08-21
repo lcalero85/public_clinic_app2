@@ -89,7 +89,6 @@ class AppointmentNotification
         ]);
     }
 
-    // ✅ Notificación al paciente cuando la cita es APROBADA
    // ✅ Notificación al paciente cuando la cita es APROBADA
 public function notifyPatientApproved($patientEmail, $appointmentData): bool|string
 {
@@ -109,6 +108,28 @@ public function notifyPatientApproved($patientEmail, $appointmentData): bool|str
         "body" => $patientBody
     ]);
 }
+
+public function sendReminderToPatient($patientEmail, $appointmentData): bool|string
+{
+    $patient = $appointmentData['patient'] ?? [];
+    $appointment = $appointmentData['appointment'] ?? [];
+    $doctor = $appointmentData['doctor'] ?? [];
+    $status = "Reminder";
+
+    // Capturamos la vista como plantilla
+    ob_start();
+    extract(compact('patient', 'appointment', 'doctor', 'status'));
+    include APP_DIR . "views/emails/appointment_reminder.php"; 
+    $patientBody = ob_get_clean();
+
+    // Usamos el método interno $this->send que ya existe
+    return $this->send([
+        "to"      => $patientEmail,
+        "subject" => "Appointment Reminder - " . ($appointment['appointment_date'] ?? ''),
+        "body"    => $patientBody
+    ]);
+}
+
 
 
 }

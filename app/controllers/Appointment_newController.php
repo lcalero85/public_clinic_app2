@@ -419,72 +419,71 @@ class Appointment_newController extends SecureController
 		return $this->render_view("my_appointment/request.php");
 	}
 
-	public function request_submit($formdata = null): bool 
-{
-	if ($formdata) {
-		$db = $this->GetModel();
-		$tablename = "appointment_new";
+	public function request_submit($formdata = null): bool
+	{
+		if ($formdata) {
+			$db = $this->GetModel();
+			$tablename = "appointment_new";
 
-		$postdata = $this->format_request_data($formdata);
+			$postdata = $this->format_request_data($formdata);
 
-		// 🔹 Buscar el id_patient real a partir del usuario logueado
-		$patient = $db->rawQueryOne("SELECT id_patient, full_names, email FROM clinic_patients WHERE id_user = ?", array(USER_ID));
+			// 🔹 Buscar el id_patient real a partir del usuario logueado
+			$patient = $db->rawQueryOne("SELECT id_patient, full_names, email FROM clinic_patients WHERE id_user = ?", array(USER_ID));
 
-		if (!$patient) {
-			$this->set_flash_msg("No patient record found for this user", "danger");
-			return false;
+			if (!$patient) {
+				$this->set_flash_msg("No patient record found for this user", "danger");
+				return false;
+			}
+
+			$modeldata = array();
+			$modeldata['id_patient'] = $patient['id_patient']; // ✅ Guardar id_patient correcto
+			$modeldata['motive'] = $postdata['motive'];
+			$modeldata['description'] = $postdata['description'];
+			$modeldata['requested_date'] = $postdata['requested_date'];
+			$modeldata['register_date'] = date("Y-m-d");
+			$modeldata['update_date'] = date("Y-m-d");
+			$modeldata['id_status_appointment'] = 2; // Pending Confirmation
+			$modeldata['created_by'] = USER_ID;
+
+			$rec_id = $db->insert($tablename, $modeldata);
+
+			if ($rec_id) {
+				// 🔹 Armar datos separados
+				$patientData = array(
+					'id' => $patient['id_patient'],
+					'full_names' => $patient['full_names'],
+					'email' => $patient['email']
+				);
+
+				$appointmentInfo = array(
+					'id' => $rec_id,
+					'requested_date' => $modeldata['requested_date'],
+					'motive' => $modeldata['motive'],
+					'description' => $modeldata['description']
+				);
+
+				// 🔹 Estructura correcta para las vistas
+				$appointmentData = array(
+					'patient' => $patientData,
+					'appointment' => $appointmentInfo
+				);
+
+				// Inicializar notificador
+				$notifier = new AppointmentNotification();
+
+				// Enviar notificación al paciente
+				$notifier->notifyPatient($patientData['email'], $appointmentData);
+
+				// Enviar notificación al admin con link
+				$appointmentInfo['request_link'] = SITE_ADDR . "/appointment_requests/view/$rec_id";
+				$appointmentData['appointment'] = $appointmentInfo;
+				$notifier->notifyAdmin($appointmentData);
+
+				$this->set_flash_msg("Appointment request submitted successfully", "success");
+				return $this->redirect("my_appointment");
+			}
 		}
-
-		$modeldata = array();
-		$modeldata['id_patient'] = $patient['id_patient']; // ✅ Guardar id_patient correcto
-		$modeldata['motive'] = $postdata['motive'];
-		$modeldata['description'] = $postdata['description'];
-		$modeldata['requested_date'] = $postdata['requested_date'];
-		$modeldata['register_date'] = date("Y-m-d");
-		$modeldata['update_date'] = date("Y-m-d");
-		$modeldata['id_status_appointment'] = 2; // Pending Confirmation
-		$modeldata['created_by'] = USER_ID;
-
-		$rec_id = $db->insert($tablename, $modeldata);
-
-		if ($rec_id) {
-    // 🔹 Armar datos separados
-    $patientData = array(
-        'id' => $patient['id_patient'],
-        'full_names' => $patient['full_names'],
-        'email' => $patient['email']
-    );
-
-    $appointmentInfo = array(
-        'id' => $rec_id,
-        'requested_date' => $modeldata['requested_date'],
-        'motive' => $modeldata['motive'],
-        'description' => $modeldata['description']
-    );
-
-    // 🔹 Estructura correcta para las vistas
-    $appointmentData = array(
-        'patient' => $patientData,
-        'appointment' => $appointmentInfo
-    );
-
-    // Inicializar notificador
-    $notifier = new AppointmentNotification();
-
-    // Enviar notificación al paciente
-    $notifier->notifyPatient($patientData['email'], $appointmentData);
-
-    // Enviar notificación al admin con link
-    $appointmentInfo['request_link'] = SITE_ADDR . "/appointment_requests/view/$rec_id";
-    $appointmentData['appointment'] = $appointmentInfo;
-    $notifier->notifyAdmin($appointmentData);
-
-    $this->set_flash_msg("Appointment request submitted successfully", "success");
-    return $this->redirect("my_appointment");
-}
-
-}
-}
+	}
 
 	/**
 	 * Mostrar solicitudes pendientes (solo admin)
@@ -546,7 +545,7 @@ class Appointment_newController extends SecureController
 	}
 
 	/**
-	 * Denegar cita con comentario
+	 * Deny appointment with comment and notify patient
 	 */
 	public function deny($id = null)
 	{
@@ -554,19 +553,49 @@ class Appointment_newController extends SecureController
 		$tablename = "appointment_new";
 
 		if ($id) {
-			$update = array(
-				"id_status_appointment" => 7, // Denied
-				"admin_response" => "The appointment has been denied by the administrator.",
-				"updated_by" => USER_ID
-			);
-
+			// Buscar cita y paciente
 			$db->where("id_appointment", $id);
-			$exec = $db->update($tablename, $update);
+			$appointment = $db->getOne($tablename);
 
-			if ($exec) {
-				$this->set_flash_msg("The appointment has been denied successfully", "success");
+			if ($appointment) {
+				// Obtener datos del paciente
+				$db->where("id_patient", $appointment['id_patient']);
+				$patient = $db->getOne("clinic_patients");
+
+				if (!$patient) {
+					$this->set_flash_msg("Patient not found", "danger");
+					return $this->redirect("appointment_new/request_manage");
+				}
+
+				// Comentario del administrador
+				$adminResponse = "For capacity reasons, your appointment request has been denied by the administration.";
+
+				// Actualizar estado en la base
+				$update = array(
+					"id_status_appointment" => 7, // Denied
+					"admin_response" => $adminResponse,
+					"updated_by" => USER_ID,
+					"update_date" => date("Y-m-d H:i:s")
+				);
+
+				$db->where("id_appointment", $id);
+				$exec = $db->update($tablename, $update);
+
+				if ($exec) {
+					// ✅ Usar email del paciente desde clinic_patients
+					$notifier = new AppointmentNotification();
+					$notifier->notifyPatientDenied($patient['email'], [
+						'patient' => $patient,
+						'appointment' => $appointment,
+						'admin_response' => $update['admin_response']
+					]);
+
+					$this->set_flash_msg("The appointment has been denied successfully", "success");
+				} else {
+					$this->set_flash_msg("Failed to deny the appointment", "danger");
+				}
 			} else {
-				$this->set_flash_msg("Failed to deny the appointment", "danger");
+				$this->set_flash_msg("Appointment not found", "danger");
 			}
 		} else {
 			$this->set_flash_msg("Invalid appointment ID", "danger");
@@ -576,43 +605,43 @@ class Appointment_newController extends SecureController
 	}
 
 
-
 	/**
 	 * Reprogramar cita con nueva fecha
 	 */
-	public function reschedule($id = null): bool {
-    $db = $this->GetModel();
-    $tablename = "appointment_new";
+	public function reschedule($id = null): bool
+	{
+		$db = $this->GetModel();
+		$tablename = "appointment_new";
 
-    // Tomar id desde parámetro o query string
-    if (!$id && isset($_GET['id'])) {
-        $id = $_GET['id'];
-    }
+		// Tomar id desde parámetro o query string
+		if (!$id && isset($_GET['id'])) {
+			$id = $_GET['id'];
+		}
 
-    if (!$id) {
-        $this->set_flash_msg("Missing appointment ID", "danger");
-        return $this->redirect("appointment_new/request_manage");
-    }
+		if (!$id) {
+			$this->set_flash_msg("Missing appointment ID", "danger");
+			return $this->redirect("appointment_new/request_manage");
+		}
 
-    $data = array(
-        "id_doc"                => $_POST['id_doc'] ?? null,
-        "approved_date"         => $_POST['approved_date'] ?? null,
-        "id_status_appointment" => 5,
-        "admin_response"        => "The admin has updated the date due to medical scheduling reasons",
-        "updated_by"            => USER_ID
-    );
+		$data = array(
+			"id_doc"                => $_POST['id_doc'] ?? null,
+			"approved_date"         => $_POST['approved_date'] ?? null,
+			"id_status_appointment" => 5,
+			"admin_response"        => "The admin has updated the date due to medical scheduling reasons",
+			"updated_by"            => USER_ID
+		);
 
-    $db->where("id_appointment", $id);
-    $result = $db->update($tablename, $data);
+		$db->where("id_appointment", $id);
+		$result = $db->update($tablename, $data);
 
-    if ($result) {
-        $this->set_flash_msg("Appointment rescheduled successfully", "success");
-    } else {
-        $this->set_flash_msg("Error rescheduling appointment", "danger");
-    }
+		if ($result) {
+			$this->set_flash_msg("Appointment rescheduled successfully", "success");
+		} else {
+			$this->set_flash_msg("Error rescheduling appointment", "danger");
+		}
 
-    return $this->redirect("appointment_new/request_manage");
-}
+		return $this->redirect("appointment_new/request_manage");
+	}
 
 	// Muestra el formulario
 	public function approve_form($id = null)
@@ -642,11 +671,24 @@ class Appointment_newController extends SecureController
 			return $this->redirect("appointment_new/request_manage");
 		}
 
+		// Buscar la cita
+		$db->where("id_appointment", $id);
+		$appointment = $db->getOne($tablename);
+
+		if (!$appointment) {
+			$this->set_flash_msg("Appointment not found", "danger");
+			return $this->redirect("appointment_new/request_manage");
+		}
+
+		// Buscar el paciente
+		$db->where("id_patient", $appointment['id_patient']);
+		$patient = $db->getOne("clinic_patients");
+
 		$data = array(
 			"id_doc" => $_POST['id_doc'] ?? null,
 			"appointment_date" => $_POST['appointment_date'] ?? null,
 			"admin_response" => $_POST['notes'] ?? '',
-			"id_status_appointment" => 1, // Scheduled
+			"id_status_appointment" => 1, // ✅ Approved
 			"approved_date" => $db->now(),
 			"updated_by" => USER_ID
 		);
@@ -654,13 +696,31 @@ class Appointment_newController extends SecureController
 		$db->where("id_appointment", $id);
 		$result = $db->update($tablename, $data);
 
-		if ($result) {
+		// Buscar el doctor asignado
+		// Buscar el doctor asignado
+		$doctor = [];
+		if (!empty($data['id_doc'])) {
+			$db->where("id", $data['id_doc']);
+			$doctor = $db->getOne("doc", ["id", "full_names"]);
+		}
+
+
+		if (!empty($patient['email'])) {
+			$notifier = new AppointmentNotification();
+			$notifier->notifyPatientApproved($patient['email'], [
+				'patient' => $patient,
+				'appointment' => array_merge($appointment, [
+					'appointment_date' => $data['appointment_date'],
+					'id_doc' => $data['id_doc']
+				]),
+				'doctor' => $doctor,
+				'admin_response' => $data['admin_response']
+			]);
 			$this->set_flash_msg("Appointment approved successfully", "success");
 		} else {
 			$this->set_flash_msg("Error approving appointment", "danger");
 		}
 
-		// 👇 Asegúrate que la redirección sea así
 		return $this->redirect("appointment_new/request_manage");
 	}
 }

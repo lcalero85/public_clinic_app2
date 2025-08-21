@@ -69,4 +69,46 @@ class AppointmentNotification
             $params['body']      // mensaje en HTML
         );
     }
+
+     public function notifyPatientDenied($patientEmail, $appointmentData)
+    {
+        $patient = $appointmentData['patient'] ?? [];
+        $appointment = $appointmentData['appointment'] ?? [];
+        $status = "Denied";
+        $adminResponse = $appointmentData['admin_response'] ?? "The appointment has been denied by the administrator.";
+
+        ob_start();
+        extract(compact('patient', 'appointment', 'status', 'adminResponse'));
+        include APP_DIR . "/views/emails/appointment_request_denied.php";; // 🔹 plantilla exclusiva
+        $patientBody = ob_get_clean();
+
+        return $this->send([
+            "to" => $patientEmail,
+            "subject" => "Your Appointment Request Has Been Denied",
+            "body" => $patientBody
+        ]);
+    }
+
+    // ✅ Notificación al paciente cuando la cita es APROBADA
+   // ✅ Notificación al paciente cuando la cita es APROBADA
+public function notifyPatientApproved($patientEmail, $appointmentData): bool|string
+{
+    $patient = $appointmentData['patient'] ?? [];
+    $appointment = $appointmentData['appointment'] ?? [];
+    $doctor = $appointmentData['doctor'] ?? [];
+    $status = "Approved";
+
+    ob_start();
+    extract(compact('patient', 'appointment', 'doctor', 'status'));
+    include APP_DIR . "views/emails/appointment_request_approved.php";
+    $patientBody = ob_get_clean();
+
+    return $this->send([
+        "to" => $patientEmail,
+        "subject" => "Your Appointment Request Has Been Approved",
+        "body" => $patientBody
+    ]);
+}
+
+
 }

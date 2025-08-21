@@ -4,6 +4,7 @@
  * Appointment_new Page Controller
  * @category  Controller
  */
+require_once APP_DIR . "/notifications/AppointmentNotification.php";
 class Appointment_newController extends SecureController
 {
 	function __construct()
@@ -447,37 +448,43 @@ class Appointment_newController extends SecureController
 		$rec_id = $db->insert($tablename, $modeldata);
 
 		if ($rec_id) {
-			// 🔹 Armar datos de la cita
-			$appointmentData = array(
-				'id' => $rec_id,
-				'patient_id' => $patient['id_patient'],
-				'patient_name' => $patient['full_names'],
-				'patient_email' => $patient['email'],
-				'appointment_date' => $modeldata['requested_date'],
-				'motive' => $modeldata['motive'],
-				'description' => $modeldata['description']
-			);
+    // 🔹 Armar datos separados
+    $patientData = array(
+        'id' => $patient['id_patient'],
+        'full_names' => $patient['full_names'],
+        'email' => $patient['email']
+    );
 
-			// 🔹 Inicializar notificador
-			$notifier = new AppointmentNotification();
+    $appointmentInfo = array(
+        'id' => $rec_id,
+        'requested_date' => $modeldata['requested_date'],
+        'motive' => $modeldata['motive'],
+        'description' => $modeldata['description']
+    );
 
-			// Enviar notificación al paciente
-			$notifier->notifyPatient($appointmentData['patient_email'], $appointmentData);
+    // 🔹 Estructura correcta para las vistas
+    $appointmentData = array(
+        'patient' => $patientData,
+        'appointment' => $appointmentInfo
+    );
 
-			// Enviar notificación al admin con link
-			$appointmentData['request_link'] = SITE_ADDR . "/appointment_requests/view/$rec_id";
-			$notifier->notifyAdmin($appointmentData);
+    // Inicializar notificador
+    $notifier = new AppointmentNotification();
 
-			$this->set_flash_msg("Appointment request submitted successfully", "success");
-			return $this->redirect("my_appointment");
-		} else {
-			$this->set_flash_msg("Error saving request", "danger");
-		}
-	}
-	return false;
+    // Enviar notificación al paciente
+    $notifier->notifyPatient($patientData['email'], $appointmentData);
+
+    // Enviar notificación al admin con link
+    $appointmentInfo['request_link'] = SITE_ADDR . "/appointment_requests/view/$rec_id";
+    $appointmentData['appointment'] = $appointmentInfo;
+    $notifier->notifyAdmin($appointmentData);
+
+    $this->set_flash_msg("Appointment request submitted successfully", "success");
+    return $this->redirect("my_appointment");
 }
 
-
+}
+}
 
 	/**
 	 * Mostrar solicitudes pendientes (solo admin)

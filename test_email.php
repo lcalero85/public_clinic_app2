@@ -1,36 +1,36 @@
 <?php
-require_once __DIR__ . "/helpers/Mailer.php";
-require_once __DIR__ ."/config.php";
+// Incluye PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
-$mailer = new Mailer();
+require __DIR__ . '/libs/PHPMailer/src/Exception.php';
+require __DIR__ . '/libs/PHPMailer/src/PHPMailer.php';
+require __DIR__ . '/libs/PHPMailer/src/SMTP.php';
 
-// Activamos el debug SMTP dentro de PHPMailer
-require_once(LIBS_DIR . 'PHPMailer/PHPMailerAutoload.php');
-$mail = new PHPMailer();
-$mail->isSMTP();
-$mail->Host = SMTP_HOST;
-$mail->SMTPAuth = true;
-$mail->Username = SMTP_USERNAME;
-$mail->Password = SMTP_PASSWORD;
-$mail->SMTPSecure = SMTP_SECURE;
-$mail->Port = SMTP_PORT;
+$mail = new PHPMailer(true);
 
-// Debug verbose
-$mail->SMTPDebug = 2; // Cambiar a 3 si quieres aún más detalle
-$mail->Debugoutput = 'html';
+try {
+    // Configuración del servidor SMTP (Gmail)
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'katalontest258@gmail.com'; 
+    $mail->Password   = 'dohpqvtovfyiqyaf'; // no la contraseña normal
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = 587;
 
-// Datos de envío
-$mail->setFrom(SMTP_USERNAME, 'Test Mailer');
-$mail->addAddress("calflores45@gmail.com"); // Cambia por el destinatario real
-$mail->Subject = "Prueba de correo con debug";
-$mail->Body    = "Este es un correo de prueba con salida de debug SMTP.";
+    // Remitente y destinatario
+    $mail->setFrom('katalontest258@gmail.com', 'Mi Sistema');
+    $mail->addAddress('calflores45@gmail.com');
 
-// Enviar y mostrar errores si ocurren
-if(!$mail->send()){
-    echo "<h3 style='color:red'>Error al enviar: " . $mail->ErrorInfo . "</h3>";
-}else{
-    echo "<h3 style='color:green'>Correo enviado correctamente</h3>";
+    // Contenido
+    $mail->isHTML(true);
+    $mail->Subject = 'Prueba de correo con Gmail + PHPMailer';
+    $mail->Body    = '<h1>Funciona!</h1><p>Este es un test enviado con <b>PHPMailer</b>.</p>';
+
+    $mail->send();
+    echo '✅ Correo enviado correctamente';
+} catch (Exception $e) {
+    echo "❌ Error al enviar el correo: {$mail->ErrorInfo}";
 }
-?>
-
-

@@ -77,15 +77,16 @@ define("META_VIEWPORT", "width=device-width, initial-scale=1.0");
 define("PAGE_CHARSET", "UTF-8");
 
 // Email Configuration Default Settings
-define("USE_SMTP",true);
-define("SMTP_USERNAME", "tiobliss85@outlook.com");
-define("SMTP_PASSWORD", "lrflyezhmbadshkb");
-define("SMTP_HOST", "smtp.office365.com");
+define("USE_SMTP", true);
+define("SMTP_USERNAME", "katalontest258@gmail.com");  
+define("SMTP_PASSWORD", "dohpqvtovfyiqyaf"); // App Password generado en Google
+define("SMTP_HOST", "smtp.gmail.com");
 define("SMTP_PORT", "587");
-define("SMTP_SECURE", "tls"); // TLS obligatorio en Outlook
+define("SMTP_SECURE", "tls"); // STARTTLS
+
 // Default Email Sender Details
-define("DEFAULT_EMAIL", SMTP_USERNAME); 
-define("DEFAULT_EMAIL_ACCOUNT_NAME", "My Clinic - Support");
+define("DEFAULT_EMAIL", SMTP_USERNAME);
+define("DEFAULT_EMAIL_ACCOUNT_NAME", "MyClinicSystem - Notificaciones");
 
 // Database Configuration Settings
 define("DB_HOST", "localhost");

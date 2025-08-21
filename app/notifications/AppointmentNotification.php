@@ -130,6 +130,39 @@ public function sendReminderToPatient($patientEmail, $appointmentData): bool|str
     ]);
 }
 
+public function sendExpiredAppointmentsReport($adminEmail, $data) {
+    $appointments = $data['appointments'] ?? [];
+    $reportDate = date("Y-m-d H:i:s");
 
+    // Capturamos plantilla como en las demás notificaciones
+    ob_start();
+    extract(compact('appointments', 'reportDate'));
+    include APP_DIR . "views/emails/expired_appointments_report.php"; 
+    $body = ob_get_clean();
+
+    // Usamos el método interno $this->send
+    return $this->send([
+        "to"      => $adminEmail,
+        "subject" => "Expired Appointments Report - {$reportDate}",
+        "body"    => $body
+    ]);
+}
+public function sendPendingAppointmentsReport($adminEmail, $data) {
+    $appointments = $data['appointments'] ?? [];
+    $reportDate = date("Y-m-d H:i:s");
+
+    // Capturamos la plantilla como en las demás notificaciones
+    ob_start();
+    extract(compact('appointments', 'reportDate'));
+    include APP_DIR . "views/emails/pending_appointments_report.php"; 
+    $body = ob_get_clean();
+
+    // Usamos el método interno $this->send
+    return $this->send([
+        "to"      => $adminEmail,
+        "subject" => "Pending Appointments Report - {$reportDate}",
+        "body"    => $body
+    ]);
+}
 
 }

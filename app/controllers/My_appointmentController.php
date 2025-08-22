@@ -50,6 +50,7 @@ class My_appointmentController extends SecureController
                 app.description,
                 COALESCE(NULLIF(CONCAT_WS(' - ', app.historial, app.admin_response), ''), 'No records available') AS historial,
                 app.appointment_date,
+                app.requested_date,
                 app.register_date,
                 COALESCE(dc.full_names, 'Not available') AS doctor_name,
                 apps.status

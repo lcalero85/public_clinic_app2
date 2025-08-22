@@ -21,18 +21,18 @@ $field_value = $this->route->field_value;
                 <div class="col-sm-4 ">
                     <div class="">
                         <?php if (USER_ROLE_ID == 4): ?>
-                        <a href="<?php print_link('appointment_new/request'); ?>" class="btn btn-sm btn-success">
-                            <i class="fa fa-plus"></i> Request Appointment
-                        </a>
+                            <a href="<?php print_link('appointment_new/request'); ?>" class="btn btn-sm btn-success">
+                                <i class="fa fa-plus"></i> Request Appointment
+                            </a>
                         <?php endif; ?>
                         <?php if (!empty($_GET['today']) && $_GET['today'] == 1): ?>
-                        <a href="<?php print_link('my_appointment'); ?>" class="btn btn-sm btn-secondary">
-                            <i class="fa fa-list"></i> View All Appointments
-                        </a>
+                            <a href="<?php print_link('my_appointment'); ?>" class="btn btn-sm btn-secondary">
+                                <i class="fa fa-list"></i> View All Appointments
+                            </a>
                         <?php else: ?>
-                        <a href="<?php print_link('my_appointment?today=1'); ?>" class="btn btn-sm btn-primary">
-                            <i class="fa fa-calendar-check"></i> View Today's Appointments
-                        </a>
+                            <a href="<?php print_link('my_appointment?today=1'); ?>" class="btn btn-sm btn-primary">
+                                <i class="fa fa-calendar-check"></i> View Today's Appointments
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -55,37 +55,49 @@ $field_value = $this->route->field_value;
                                         <th>Description</th>
                                         <th>Comments</th>
                                         <th>Appointment Date</th>
+                                        <th>Requested Date</th> <!-- 🔹 Nueva columna -->
                                         <th>Register Date</th>
                                         <th>Doctor</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
-if (!empty($records)) {
-    // Obtener número de página actual de forma segura
-    $page_number = isset($this->route->page_number) ? $this->route->page_number : 1;
-    $limit = isset($this->limit_count) ? $this->limit_count : count($records);
+                                    <?php
+                                    if (!empty($records)) {
+                                        // Obtener número de página actual de forma segura
+                                        $page_number = isset($this->route->page_number) ? $this->route->page_number : 1;
+                                        $limit = isset($this->limit_count) ? $this->limit_count : count($records);
 
-    // Calcular correlativo inicial
-    $counter = ($page_number - 1) * $limit + 1;
+                                        // Calcular correlativo inicial
+                                        $counter = ($page_number - 1) * $limit + 1;
 
-    foreach ($records as $data) { ?>
-                                    <tr>
-                                        <td><?php echo $counter++; ?></td>
-                                        <td><?php echo $data['full_names']; ?></td>
-                                        <td><?php echo $data['motive']; ?></td>
-                                        <td><?php echo $data['description']; ?></td>
-                                        <td><?php echo $data['historial']; ?></td>
-                                        <td><?php echo $data['appointment_date']; ?></td>
-                                        <td><?php echo $data['register_date']; ?></td>
-                                        <td><?php echo $data['doctor_name']; ?></td>
-                                        <td><?php echo $data['status']; ?></td>
-                                    </tr>
-                                    <?php } } ?>
+                                        foreach ($records as $data) { ?>
+                                            <tr>
+                                                <td><?php echo $counter++; ?></td>
+                                                <td><?php echo $data['full_names']; ?></td>
+                                                <td><?php echo $data['motive']; ?></td>
+                                                <td><?php echo $data['description']; ?></td>
+                                                <td><?php echo $data['historial']; ?></td>
+                                                <td><?php echo $data['appointment_date']; ?></td>
 
+                                                <!-- 🔹 Requested Date con validación -->
+                                                <td>
+                                                    <?php
+                                                    echo !empty($data['requested_date'])
+                                                        ? $data['requested_date']
+                                                        : "Not provided";
+                                                    ?>
+                                                </td>
+
+                                                <td><?php echo $data['register_date']; ?></td>
+                                                <td><?php echo $data['doctor_name']; ?></td>
+                                                <td><?php echo $data['status']; ?></td>
+                                            </tr>
+                                    <?php }
+                                    } ?>
                                 </tbody>
                             </table>
+
                         </div>
                         <div class=" border-top mt-2">
                             <div class="row justify-content-center">

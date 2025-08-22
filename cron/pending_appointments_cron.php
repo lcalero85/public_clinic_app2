@@ -26,7 +26,11 @@ echo "🔍 Checking pending appointments...\n";
 $sql = $sql = "SELECT
     an.id_appointment,
     cp.full_names AS patient_name,
-    an.requested_date   -- 👈 corregido
+    CASE 
+        WHEN an.requested_date IS NULL OR an.requested_date = '0000-00-00 00:00:00' 
+        THEN 'Not provided'
+        ELSE an.requested_date
+    END AS requested_date
 FROM appointment_new AS an
 INNER JOIN clinic_patients AS cp ON an.id_patient = cp.id_patient
 INNER JOIN appointment_status AS apps ON apps.id = an.id_status_appointment

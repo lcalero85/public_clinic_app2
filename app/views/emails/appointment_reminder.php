@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Appointment Reminder</title>
-    <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+    <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/emails.css"> 
 </head>
 <body>
 <div class="container">

@@ -202,6 +202,22 @@ public function notifyDoctorCreated($doctorEmail, $appointmentData): bool|string
     ]);
 }
 
+public function notifyDoctorPendingAppointments($doctorEmail, $appointments, $period = 'daily')
+{
+    ob_start();
+    $title = ($period == 'monthly') ? "Monthly Pending Appointments" : "Daily Pending Appointments";
+    $data = compact('appointments', 'title');
+    extract($data);
+
+    include APP_DIR . "views/emails/doctor_pending_appointments_report.php";
+    $body = ob_get_clean();
+
+    return $this->send([
+        "to" => $doctorEmail,
+        "subject" => $title,
+        "body" => $body
+    ]);
+}
 
 
 }

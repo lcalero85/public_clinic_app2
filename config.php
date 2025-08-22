@@ -96,7 +96,7 @@ define("SMTP_SECURE", "tls"); // STARTTLS
 
 // Default Email Sender Details
 define("DEFAULT_EMAIL", SMTP_USERNAME);
-define("DEFAULT_EMAIL_ACCOUNT_NAME", "MyClinicSystem - Notificaciones");
+define("DEFAULT_EMAIL_ACCOUNT_NAME", "MyClinicSystem - Notifications");
 
 // Database Configuration Settings
 define("DB_HOST", "localhost");

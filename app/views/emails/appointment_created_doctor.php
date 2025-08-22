@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>New Appointment</title>
+    <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/emails.css"> 
 </head>
 <body>
     <p>Dear Dr. <?= htmlspecialchars($doctor['full_names'] ?? ''); ?>,</p>

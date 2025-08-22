@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/emails.css"> 
 
 <div class="email-container">
     <h3 class="email-header">Appointment Request Denied</h3>

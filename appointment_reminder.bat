@@ -15,6 +15,11 @@ set SCRIPT_PENDING=C:\x\htdocs\public_clinic_app\cron\pending_appointments_cron.
 set LOG_PENDING=C:\x\htdocs\public_clinic_app\cron\logs\pending_appointments.log
 
 
+REM === Cronjob de citas pendientes doctor===
+set SCRIPT_PENDING=C:\x\htdocs\public_clinic_app\cron\doctor_pending_appointments_cron.php
+set DOCTOR_LOG_PENDING=C:\x\htdocs\public_clinic_app\cron\logs\doctor_pending_appointments_cron.log
+
+
 echo ================================================== >> "%LOG_REMINDER%"
 echo Fecha y hora de ejecución (REMINDER): %date% %time% >> "%LOG_REMINDER%"
 "%PHP_PATH%" "%SCRIPT_REMINDER%" >> "%LOG_REMINDER%" 2>&1
@@ -32,6 +37,12 @@ echo Fecha y hora de ejecución (PENDING): %date% %time% >> "%LOG_PENDING%"
 "%PHP_PATH%" "%SCRIPT_PENDING%" >> "%LOG_PENDING%" 2>&1
 echo Ejecución finalizada (PENDING). >> "%LOG_PENDING%"
 echo. >> "%LOG_PENDING%"
+
+echo ================================================== >> "%DOCTOR_LOG_PENDING%"
+echo Fecha y hora de ejecución (PENDING): %date% %time% >> "%DOCTOR_LOG_PENDING%"
+"%PHP_PATH%" "%SCRIPT_PENDING%" >> "%DOCTOR_LOG_PENDING%" 2>&1
+echo Ejecución finalizada (PENDING). >> "%DOCTOR_LOG_PENDING%"
+echo. >> "%DOCTOR_LOG_PENDING%"
 
 pause
 

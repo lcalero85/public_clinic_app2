@@ -18,98 +18,101 @@ class DocController extends SecureController
 	 * @return BaseView
 	 */
 	function index($fieldname = null, $fieldvalue = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$tablename = $this->tablename;
-		$fields = array(
-			"doc.id",
-			"doc.full_names",
-			"doc.address",
-			"doc.birthdate",
-			"doc.gender",
-			"doc.Speciality",
-			"doc.register_date",
-			"doc.id_user",
-			"users.full_names AS users_full_names",
-			"doc.office_phone",
-			"doc.dni",
-			"doc.license_number",
-			"doc.status"
-		);
-		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
-		//search table record
-		if (!empty($request->search)) {
-			$text = trim($request->search);
-			$search_condition = "(
-				doc.id LIKE ? OR 
-				doc.full_names LIKE ? OR 
-				doc.address LIKE ? OR 
-				doc.birthdate LIKE ? OR 
-				doc.gender LIKE ? OR 
-				doc.Speciality LIKE ? OR 
-				doc.register_date LIKE ? OR 
-				doc.update_date LIKE ? OR 
-				doc.office_phone LIKE ? OR 
-				doc.license_number LIKE ? OR 
-				doc.dni LIKE ? OR 
-				doc.status LIKE ? OR 
-				doc.id_user LIKE ? 
-				
-			)";
-			$search_params = array(
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-			);
-			//setting search conditions
-			$db->where($search_condition, $search_params);
-			//template to use when ajax search
-			$this->view->search_template = "doc/search.php";
-		}
-		$db->join("users", "doc.id_user = users.id_user", "INNER");
-		if (!empty($request->orderby)) {
-			$orderby = $request->orderby;
-			$ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
-			$db->orderBy($orderby, $ordertype);
-		} else {
-			$db->orderBy("doc.id", ORDER_TYPE);
-		}
-		if ($fieldname) {
-			$db->where($fieldname, $fieldvalue); //filter by a single field name
-		}
-		$tc = $db->withTotalCount();
-		$records = $db->get($tablename, $pagination, $fields);
-		$records_count = count($records);
-		$total_records = intval($tc->totalCount);
-		$page_limit = $pagination[1];
-		$total_pages = ceil($total_records / $page_limit);
-		$data = new stdClass;
-		$data->records = $records;
-		$data->record_count = $records_count;
-		$data->total_records = $total_records;
-		$data->total_page = $total_pages;
-		if ($db->getLastError()) {
-			$this->set_page_error();
-		}
-		$page_title = $this->view->page_title = "Doctors";
-		$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
-		$this->view->report_title = $page_title;
-		$this->view->report_layout = "report_layout.php";
-		$this->view->report_paper_size = "A4";
-		$this->view->report_orientation = "portrait";
-		$this->render_view("doc/list.php", $data); //render the full page
-	}
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $tablename = $this->tablename;
+    $fields = array(
+        "doc.id",
+        "doc.full_names",
+        "doc.address",
+        "doc.birthdate",
+        "doc.gender",
+        "doc.Speciality",
+        "doc.register_date",
+        "doc.id_user",
+        "users.full_names AS users_full_names",
+        "doc.office_phone",
+        "doc.dni",
+        "doc.license_number",
+        "doc.status"
+    );
+
+    // paginación (page_number, page_limit)
+    $pagination = $this->get_pagination(MAX_RECORD_COUNT);
+
+    // búsqueda
+    if (!empty($request->search)) {
+        $text = trim($request->search);
+        $search_condition = "(
+            doc.id LIKE ? OR 
+            doc.full_names LIKE ? OR 
+            doc.address LIKE ? OR 
+            doc.birthdate LIKE ? OR 
+            doc.gender LIKE ? OR 
+            doc.Speciality LIKE ? OR 
+            doc.register_date LIKE ? OR 
+            doc.update_date LIKE ? OR 
+            doc.office_phone LIKE ? OR 
+            doc.license_number LIKE ? OR 
+            doc.dni LIKE ? OR 
+            doc.status LIKE ? OR 
+            doc.id_user LIKE ? 
+        )";
+        $search_params = array_fill(0, 13, "%$text%");
+        $db->where($search_condition, $search_params);
+        $this->view->search_template = "doc/search.php";
+    }
+
+    // joins
+    $db->join("users", "doc.id_user = users.id_user", "INNER");
+
+    // ordenar
+    if (!empty($request->orderby)) {
+        $orderby = $request->orderby;
+        $ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
+        $db->orderBy($orderby, $ordertype);
+    } else {
+        $db->orderBy("doc.id", ORDER_TYPE);
+    }
+
+    // filtro por campo si aplica
+    if ($fieldname) {
+        $db->where($fieldname, $fieldvalue);
+    }
+
+    // 🔹 forzar que no haya duplicados por el join
+    $db->groupBy("doc.id");
+
+    // consulta principal
+    $tc = $db->withTotalCount();
+    $records = $db->get($tablename, $pagination, $fields);
+    $records_count = count($records);
+    $total_records = intval($tc->totalCount);
+    $page_limit = $pagination[1];
+    $total_pages = ceil($total_records / $page_limit);
+
+    // preparar datos para la vista
+    $data = new stdClass;
+    $data->records = $records;
+    $data->record_count = $records_count;
+    $data->total_records = $total_records;
+    $data->total_page = $total_pages;
+
+    if ($db->getLastError()) {
+        $this->set_page_error();
+    }
+
+    $page_title = $this->view->page_title = "Doctors";
+    $this->view->report_filename = date('Y-m-d') . '-' . $page_title;
+    $this->view->report_title = $page_title;
+    $this->view->report_layout = "report_layout.php";
+    $this->view->report_paper_size = "A4";
+    $this->view->report_orientation = "portrait";
+
+    $this->render_view("doc/list.php", $data);
+}
+
 	/**
 	 * View record detail 
 	 * @param $rec_id (select record by table primary key) 

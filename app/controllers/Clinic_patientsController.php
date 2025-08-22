@@ -18,98 +18,101 @@ class Clinic_patientsController extends SecureController
 	 * @return BaseView
 	 */
 	function index($fieldname = null, $fieldvalue = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$tablename = $this->tablename;
-		$fields = array(
-			"clinic_patients.id_patient",
-			"clinic_patients.full_names",
-			"clinic_patients.address",
-			"clinic_patients.gender",
-			"clinic_patients.phone_patient",
-			"clinic_patients.register_date",
-			"clinic_patients.id_user",
-			"clinic_patients.id_status",
-			"clinic_patients.email",
-			"clinic_patients.document_number",
-			"clinic_patients.age",
-			"clinic_patients.birthdate",
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $tablename = $this->tablename;
+    $fields = array(
+        "clinic_patients.id_patient",
+        "clinic_patients.full_names",
+        "clinic_patients.address",
+        "clinic_patients.gender",
+        "clinic_patients.phone_patient",
+        "clinic_patients.register_date",
+        "clinic_patients.id_user",
+        "clinic_patients.id_status",
+        "clinic_patients.email",
+        "clinic_patients.document_number",
+        "clinic_patients.age",
+        "clinic_patients.birthdate",
+    );
 
-		);
-		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
-		//search table record
-		if (!empty($request->search)) {
-			$text = trim($request->search);
-			$search_condition = "(
-				clinic_patients.id_patient LIKE ? OR 
-				clinic_patients.full_names LIKE ? OR 
-				clinic_patients.address LIKE ? OR 
-				clinic_patients.gender LIKE ? OR 
-				clinic_patients.age LIKE ? OR 
-				clinic_patients.phone_patient LIKE ? OR 
-				clinic_patients.register_date LIKE ? OR 
-				clinic_patients.id_user LIKE ? OR 
-				clinic_patients.id_status LIKE ? OR 
-				clinic_patients.email LIKE ? OR 
-				clinic_patients.document_number LIKE ? OR  
-				clinic_patients.birthdate LIKE ? 
-			)";
-			$search_params = array(
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%",
-				"%$text%"
-			);
-			//setting search conditions
-			$db->where($search_condition, $search_params);
-			//template to use when ajax search
-			$this->view->search_template = "clinic_patients/search.php";
-		}
-		$db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
-		$db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
-		if (!empty($request->orderby)) {
-			$orderby = $request->orderby;
-			$ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
-			$db->orderBy($orderby, $ordertype);
-		} else {
-			$db->orderBy("clinic_patients.id_patient", ORDER_TYPE);
-		}
-		if ($fieldname) {
-			$db->where($fieldname, $fieldvalue); //filter by a single field name
-		}
-		$tc = $db->withTotalCount();
-		$records = $db->get($tablename, $pagination, $fields);
-		$records_count = count($records);
-		$total_records = intval($tc->totalCount);
-		$page_limit = $pagination[1];
-		$total_pages = ceil($total_records / $page_limit);
-		$data = new stdClass;
-		$data->records = $records;
-		$data->record_count = $records_count;
-		$data->total_records = $total_records;
-		$data->total_page = $total_pages;
-		$data->show_pagination = true;
+    // paginación (page_number, page_limit)
+    $pagination = $this->get_pagination(MAX_RECORD_COUNT);
+
+    // búsqueda
+    if (!empty($request->search)) {
+        $text = trim($request->search);
+        $search_condition = "(
+            clinic_patients.id_patient LIKE ? OR 
+            clinic_patients.full_names LIKE ? OR 
+            clinic_patients.address LIKE ? OR 
+            clinic_patients.gender LIKE ? OR 
+            clinic_patients.age LIKE ? OR 
+            clinic_patients.phone_patient LIKE ? OR 
+            clinic_patients.register_date LIKE ? OR 
+            clinic_patients.id_user LIKE ? OR 
+            clinic_patients.id_status LIKE ? OR 
+            clinic_patients.email LIKE ? OR 
+            clinic_patients.document_number LIKE ? OR  
+            clinic_patients.birthdate LIKE ? 
+        )";
+        $search_params = array_fill(0, 12, "%$text%");
+        $db->where($search_condition, $search_params);
+        $this->view->search_template = "clinic_patients/search.php";
+    }
+
+    // joins
+    $db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
+    $db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
+
+    // ordenar
+    if (!empty($request->orderby)) {
+        $orderby = $request->orderby;
+        $ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
+        $db->orderBy($orderby, $ordertype);
+    } else {
+        $db->orderBy("clinic_patients.id_patient", ORDER_TYPE);
+    }
+
+    // filtro por campo si aplica
+    if ($fieldname) {
+        $db->where($fieldname, $fieldvalue);
+    }
+
+    // 🔹 forzar que no haya duplicados por los joins
+    $db->groupBy("clinic_patients.id_patient");
+
+    // consulta principal
+    $tc = $db->withTotalCount();
+    $records = $db->get($tablename, $pagination, $fields);
+    $records_count = count($records);
+    $total_records = intval($tc->totalCount);
+    $page_limit = $pagination[1];
+    $total_pages = ceil($total_records / $page_limit);
+
+    // preparar datos para la vista
+    $data = new stdClass;
+    $data->records = $records;
+    $data->record_count = $records_count;
+    $data->total_records = $total_records;
+    $data->total_page = $total_pages;
+    $data->show_pagination = true;
 
     if ($db->getLastError()) {
         $this->set_page_error();
     }
-		$page_title = $this->view->page_title = "Patients";
-		$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
-		$this->view->report_title = $page_title;
-		$this->view->report_layout = "report_layout.php";
-		$this->view->report_paper_size = "A4";
-		$this->view->report_orientation = "portrait";
-		$this->render_view("clinic_patients/list.php", $data); //render the full page
-	}
+
+    $page_title = $this->view->page_title = "Patients";
+    $this->view->report_filename = date('Y-m-d') . '-' . $page_title;
+    $this->view->report_title = $page_title;
+    $this->view->report_layout = "report_layout.php";
+    $this->view->report_paper_size = "A4";
+    $this->view->report_orientation = "portrait";
+
+    $this->render_view("clinic_patients/list.php", $data);
+}
+
 	/**
 	 * View record detail 
 	 * @param $rec_id (select record by table primary key) 

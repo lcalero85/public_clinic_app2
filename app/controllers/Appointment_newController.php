@@ -496,7 +496,7 @@ function add($formdata = null)
 
         $modeldata = [];
         $modeldata['id_patient'] = $patient['id_patient']; 
-        $modeldata['id_doc'] = $postdata['id_doc'];  // ✅ Guardar doctor
+        $modeldata['id_doc'] = !empty($postdata['id_doc']) ? $postdata['id_doc'] : null;
         $modeldata['motive'] = $postdata['motive'];
         $modeldata['description'] = $postdata['description'];
         $modeldata['requested_date'] = $postdata['requested_date'];

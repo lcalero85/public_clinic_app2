@@ -23,74 +23,74 @@ class My_appointmentController extends SecureController
         if ($userRoleId == 3) {
             // DOCTOR
             $sqltext = "SELECT SQL_CALC_FOUND_ROWS  
-            cp.full_names AS full_names,
-            app.motive,
-            app.description,
-            app.historial,
-            app.appointment_date,
-            app.register_date,
-            dc.full_names AS doctor_name,
-            apps.status
-        FROM appointment_new AS app
-        INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
-        INNER JOIN doc AS dc ON app.id_doc = dc.id
-        INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
-        WHERE dc.id_user = " . USER_ID;
+                app.id_appointment AS appointment_id,
+                cp.full_names AS full_names,
+                app.motive,
+                app.description,
+                app.historial,
+                app.appointment_date,
+                app.register_date,
+                dc.full_names AS doctor_name,
+                apps.status
+            FROM appointment_new AS app
+            INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
+            INNER JOIN doc AS dc ON app.id_doc = dc.id
+            INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
+            WHERE dc.id_user = " . USER_ID;
 
-            // 🔹 DOCTOR → filtrar por citas de HOY si corresponde
             if (!empty($_GET['today']) && $_GET['today'] == 1) {
                 $sqltext .= " AND DATE(app.appointment_date) = CURDATE()";
             }
         } elseif ($userRoleId == 4) {
+            // PACIENTE
             $sqltext = "SELECT SQL_CALC_FOUND_ROWS
-    cp.full_names AS full_names,
-    app.motive,
-    app.description,
-    COALESCE(
-        NULLIF(CONCAT_WS(' - ', app.historial, app.admin_response), ''), 
-        'No records available'
-    ) AS historial,
-    app.appointment_date,
-    app.register_date,
-    COALESCE(dc.full_names, 'Not available') AS doctor_name,
-    apps.status
-FROM appointment_new AS app
-INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
-LEFT JOIN doc AS dc ON app.id_doc = dc.id
-INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
-WHERE cp.id_user = " . USER_ID;
+                app.id_appointment AS appointment_id,
+                cp.full_names AS full_names,
+                app.motive,
+                app.description,
+                COALESCE(NULLIF(CONCAT_WS(' - ', app.historial, app.admin_response), ''), 'No records available') AS historial,
+                app.appointment_date,
+                app.register_date,
+                COALESCE(dc.full_names, 'Not available') AS doctor_name,
+                apps.status
+            FROM appointment_new AS app
+            INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
+            LEFT JOIN doc AS dc ON app.id_doc = dc.id
+            INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
+            WHERE app.created_by = " . USER_ID . "
+              AND cp.id_user = " . USER_ID;
 
-            // 🔹 PACIENTE → también puede ver solo citas de HOY
             if (!empty($_GET['today']) && $_GET['today'] == 1) {
                 $sqltext .= " AND DATE(app.appointment_date) = CURDATE()";
             }
         } else {
             // ADMIN o ASSISTANT
             $sqltext = "SELECT SQL_CALC_FOUND_ROWS  
-            cp.full_names AS full_names,
-            app.motive,
-            app.description,
-            app.historial,
-            app.appointment_date,
-            app.register_date,
-            dc.full_names AS doctor_name,
-            apps.status
-        FROM appointment_new AS app
-        INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
-        INNER JOIN doc AS dc ON app.id_doc = dc.id
-        INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
-        WHERE 1=1";
+                app.id_appointment AS appointment_id,
+                cp.full_names AS full_names,
+                app.motive,
+                app.description,
+                app.historial,
+                app.appointment_date,
+                app.register_date,
+                dc.full_names AS doctor_name,
+                apps.status
+            FROM appointment_new AS app
+            INNER JOIN clinic_patients AS cp ON app.id_patient = cp.id_patient
+            INNER JOIN doc AS dc ON app.id_doc = dc.id
+            INNER JOIN appointment_status AS apps ON apps.id = app.id_status_appointment
+            WHERE 1=1";
         }
 
         $queryparams = null;
 
-        // Ordenamiento
         if (!empty($request->orderby)) {
             $orderby = $request->orderby;
             $ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
-            $db->orderBy($orderby, $ordertype);
+            $sqltext .= " ORDER BY $orderby $ordertype";
         } else {
-            $db->orderBy("app.appointment_date", ORDER_TYPE);
+            // 👇 Ordenar siempre por el último registro creado
+            $sqltext .= " ORDER BY app.id_appointment DESC";
         }
 
         // Paginación
@@ -114,6 +114,7 @@ WHERE cp.id_user = " . USER_ID;
         $data->total_records = $total_records;
         $data->total_page = $total_pages;
         $data->show_pagination = true;
+        $data->pagination = $pagination; // 👈 lo pasamos a la vista
 
         if ($db->getLastError()) {
             $this->set_page_error();

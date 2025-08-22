@@ -45,6 +45,9 @@ $current_page = $this->set_current_page_link();
                     </a>
                     <a class="btn btn-primary" href="<?php print_link("invoices/list") ?>">
                         <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
+                    </a> 
+                    <a class="btn btn-primary" href="<?php echo print_link("report/clinical_historial"); ?>">
+                        <i class="fa fa-notes-medical"></i> See Clinic Historial
                     </a>
                 </div>
             </div>
@@ -141,61 +144,61 @@ $current_page = $this->set_current_page_link();
                                 </div>
                             </a>
                         </div>
-             
-                            <div class="col-md-3 col-sm-4 comp-grid">
-                                <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
-                                <a class="animated zoomIn record-count card bg-light text-dark"
-                                    href="<?php print_link("appointment_new/request_manage") ?>">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <i class="fa fa-calendar-plus-o"></i>
-                                        </div>
-                                        <div class="col-10">
-                                            <div class="flex-column justify-content align-center">
-                                                <div class="title">Pending Requests</div>
-                                                <small class="">Appointments awaiting approval</small>
-                                            </div>
-                                        </div>
-                                        <h4 class="value"><strong><?php echo $pending_count; ?></strong></h4>
-                                    </div>
-                                </a>
-                            </div>
 
-                            <div class="col-md-3 col-sm-4 comp-grid">
-                                <?php $rec_count = $comp_model->getcount_invoices();  ?>
-                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <i class="fa fa-calculator "></i>
-                                        </div>
-                                        <div class="col-10">
-                                            <div class="flex-column justify-content align-center">
-                                                <div class="title">Invoices</div>
-                                                <small class=""></small>
-                                            </div>
-                                        </div>
-                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                        <div class="col-md-3 col-sm-4 comp-grid">
+                            <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
+                            <a class="animated zoomIn record-count card bg-light text-dark"
+                                href="<?php print_link("appointment_new/request_manage") ?>">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <i class="fa fa-calendar-plus-o"></i>
                                     </div>
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-sm-4 comp-grid">
-                                <?php $rec_count = $comp_model->getcount_doctors();  ?>
-                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("doc/") ?>">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <i class="fa fa-user-md "></i>
+                                    <div class="col-10">
+                                        <div class="flex-column justify-content align-center">
+                                            <div class="title">Pending Requests</div>
+                                            <small class="">Appointments awaiting approval</small>
                                         </div>
-                                        <div class="col-10">
-                                            <div class="flex-column justify-content align-center">
-                                                <div class="title">Doctors</div>
-                                                <small class=""></small>
-                                            </div>
-                                        </div>
-                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
                                     </div>
-                                </a>
-                            </div>
+                                    <h4 class="value"><strong><?php echo $pending_count; ?></strong></h4>
+                                </div>
+                            </a>
+                        </div>
+                         
+                        <div class="col-md-3 col-sm-4 comp-grid">
+                            <?php $rec_count = $comp_model->getcount_invoices();  ?>
+                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <i class="fa fa-calculator "></i>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="flex-column justify-content align-center">
+                                            <div class="title">Invoices</div>
+                                            <small class=""></small>
+                                        </div>
+                                    </div>
+                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-4 comp-grid">
+                            <?php $rec_count = $comp_model->getcount_doctors();  ?>
+                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("doc/") ?>">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <i class="fa fa-user-md "></i>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="flex-column justify-content align-center">
+                                            <div class="title">Doctors</div>
+                                            <small class=""></small>
+                                        </div>
+                                    </div>
+                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>

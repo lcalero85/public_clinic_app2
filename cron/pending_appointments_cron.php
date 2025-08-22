@@ -1,11 +1,11 @@
-<?php 
+<?php
 // ================================
 // Pending Appointments Cron Job
 // ================================
 
 // Cargar configuración y clases
 require_once __DIR__ . "/../config.php";
-require_once __DIR__ . "/../app/notifications/AppointmentNotification.php"; 
+require_once __DIR__ . "/../app/notifications/AppointmentNotification.php";
 
 // Conectar a la base
 $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
@@ -23,17 +23,15 @@ echo "🔍 Checking pending appointments...\n";
 // ================================
 // Buscar citas pendientes de confirmación (status = 2)
 // ================================
-$sql = "SELECT 
-                an.id_appointment,
-                cp.full_names AS patient_name,
-                an.requested_date
-            FROM appointment_new AS an
-            INNER JOIN clinic_patients AS cp 
-                ON an.id_patient = cp.id_patient
-            INNER JOIN appointment_status AS apps 
-                ON apps.id = an.id_status_appointment
-            WHERE an.id_status_appointment = 2
-            ORDER BY an.register_date DESC";
+$sql = $sql = "SELECT
+    an.id_appointment,
+    cp.full_names AS patient_name,
+    an.requested_date   -- 👈 corregido
+FROM appointment_new AS an
+INNER JOIN clinic_patients AS cp ON an.id_patient = cp.id_patient
+INNER JOIN appointment_status AS apps ON apps.id = an.id_status_appointment
+WHERE an.id_status_appointment = 2
+ORDER BY an.register_date DESC";
 
 $stmt = $pdo->query($sql);
 $pendingAppointments = $stmt->fetchAll();

@@ -46,7 +46,8 @@ class ACL
             'inactives_patients' => array('list', 'view'),
             'appointment_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'appointments' => array('list', 'view'),
-            'reports' => array('index', 'show')
+            'report' => array('index', 'show', 'clinical_historial')
+
         ),
 
         3 => // Doctor
@@ -54,7 +55,8 @@ class ACL
             'users' => array('register'),
             'clinic_prescription' => array('add', 'edit', 'editfield', 'delete'),
             'my_appointment' => array('list', 'view'),
-            'reports' => array('index', 'show')
+            'report' => array('index', 'show', 'clinical_historial')
+
         ),
 
         2 => // Assistant
@@ -70,7 +72,8 @@ class ACL
             'invoice_debt' => array('list', 'view'),
             'inactives_patients' => array('list', 'view'),
             'appointments' => array('list', 'view'),
-            'reports' => array('index', 'show')
+            'report' => array('index', 'show', 'clinical_historial')
+
         ),
 
         4 => // Patients

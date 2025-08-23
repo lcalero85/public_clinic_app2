@@ -1,15 +1,16 @@
-<?php  
+<?php   
 $records = $this->view_data['records'] ?? [];
+
+// Variables para encabezado
+$clinicName = defined("APP_NAME") ? APP_NAME : "Clinic System";
+$currentDate = date("Y-m-d H:i:s");
+$currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
 ?>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
 <div class="container mt-4">
-
-    <!-- 🔹 Encabezado con mismo estilo que Appointment New -->
-    <div class="bg-light p-3 mb-3 shadow-sm rounded">
-        <h4 class="record-title">Clinical Historial</h4>
-    </div>
+    <h3 class="text-center mb-4">Clinical Historial</h3>
 
     <div class="card shadow">
         <div class="card-body">
@@ -87,25 +88,54 @@ $records = $this->view_data['records'] ?? [];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 $(document).ready(function() {
     let table = $('#reportTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
-            { extend: 'excel', className: 'btn btn-success' },
-            { extend: 'pdf', className: 'btn btn-danger' },
-            { extend: 'csv', className: 'btn btn-info' },
-            { extend: 'print', className: 'btn btn-secondary' }
+            { extend: 'excel', className: 'btn btn-success', exportOptions: { columns: ':not(:last-child)' } },
+            { 
+                extend: 'pdf', 
+                className: 'btn btn-danger',
+                exportOptions: { columns: ':not(:last-child)' },
+                customize: function (doc) {
+                    doc.content.splice(0, 0, {
+                        text: '<?= $clinicName ?>\nGenerated on: <?= $currentDate ?>\nBy: <?= $currentUser ?>',
+                        margin: [0, 0, 0, 12],
+                        alignment: 'left',
+                        fontSize: 10
+                    });
+                    doc.content.splice(1, 0, {
+                        text: 'Clinical Patient History Report',
+                        alignment: 'center',
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 0, 0, 12]
+                    });
+                }
+            },
+            { extend: 'csv', className: 'btn btn-info', exportOptions: { columns: ':not(:last-child)' } },
+            { 
+                extend: 'print', 
+                className: 'btn btn-secondary',
+                exportOptions: { columns: ':not(:last-child)' },
+                customize: function (win) {
+                    $(win.document.body).prepend(
+                        `<h3 style="text-align:center;">Clinical Patient History Report</h3>
+                         <p><b><?= $clinicName ?></b><br>
+                         <b>Generated on:</b> <?= $currentDate ?><br>
+                         <b>By:</b> <?= $currentUser ?></p>`
+                    );
+                }
+            }
         ],
         responsive: true,
         pageLength: 5,
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/en-GB.json"
-        },
-        columnDefs: [
-            { targets: -1, orderable: false, searchable: false } // 🔹 evita que "Actions" se ordene o busque
-        ]
+        }
     });
 
     // Botón "View" -> abre modal con los detalles
@@ -130,7 +160,10 @@ $(document).ready(function() {
         let row = $(this).closest("tr");
         let rowData = table.row(row).data();
 
-        // Construimos un mini dataset solo con esa fila
+        // Quitamos columna de Actions
+        let headers = table.columns().header().toArray().map(h => h.innerText);
+        headers.pop(); // eliminar Actions
+        rowData.pop(); // eliminar columna Actions
         let singleData = [rowData];
 
         if(type === "excel"){
@@ -144,17 +177,31 @@ $(document).ready(function() {
         }
         else if(type === "pdf"){
             let doc = new window.jspdf.jsPDF();
-            doc.text("Patient Information", 10, 10);
+            doc.setFontSize(12);
+            doc.text("<?= $clinicName ?>", 10, 10);
+            doc.text("Generated on: <?= $currentDate ?>", 10, 20);
+            doc.text("By: <?= $currentUser ?>", 10, 30);
+
+            doc.setFontSize(14);
+            doc.text("Clinical Patient History Report", 105, 45, null, null, "center");
+
+            doc.setFontSize(12);
             rowData.forEach((val, i) => {
-                doc.text(`${table.column(i).header().innerText}: ${val}`, 10, 20 + (i*10));
+                doc.text(`${headers[i]}: ${val}`, 10, 60 + (i*10));
             });
             doc.save("patient.pdf");
         }
         else if(type === "print"){
             let printWindow = window.open("", "", "width=800,height=600");
-            let content = "<h3>Patient Information</h3><table border='1' cellspacing='0' cellpadding='5'>";
+            let content = `
+                <h3 style="text-align:center;">Clinical Patient History Report</h3>
+                <p><b><?= $clinicName ?></b><br>
+                <b>Generated on:</b> <?= $currentDate ?><br>
+                <b>By:</b> <?= $currentUser ?></p>
+                <h4>Patient Information</h4>
+                <table border='1' cellspacing='0' cellpadding='5'>`;
             rowData.forEach((val, i) => {
-                content += `<tr><td><b>${table.column(i).header().innerText}</b></td><td>${val}</td></tr>`;
+                content += `<tr><td><b>${headers[i]}</b></td><td>${val}</td></tr>`;
             });
             content += "</table>";
             printWindow.document.write(content);
@@ -171,4 +218,8 @@ $(document).ready(function() {
     }
 });
 </script>
+
+
+
+
 

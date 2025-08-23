@@ -12,7 +12,7 @@ define("ROOT", str_replace("\\", "/", dirname(__FILE__)) . "/");
 // return the application directory name.
 define("ROOT_DIR_NAME", basename(ROOT));
 
-define("SITE_NAME", "My Clinic System 1.3");
+define("SITE_NAME", "My ClinicSystem ");
 
 
 // Get Site Address Dynamically

@@ -39,6 +39,12 @@ class Menu
         ),
 
         array(
+            'path' => 'appointment_new/request_manage',
+            'label' => 'Request Manager',
+            'icon' => '<i class="fa fa-calendar "></i>'
+        ),
+
+        array(
             'path' => 'invoices',
             'label' => 'Invoices',
             'icon' => '<i class="fa fa-dollar "></i>',

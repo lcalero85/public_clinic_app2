@@ -29,10 +29,9 @@ class ACL
                 'approve',        // aprobar cita en la fecha solicitada
                 'deny',           // rechazar cita
                 'reschedule',     // aprobar con nueva fecha
-                'approve_form',   // NUEVO: formulario de aprobación
-                'save_approval',  // NUEVO: guardar aprobación desde formulario
+                'approve_form',   // formulario de aprobación
+                'save_approval',  // guardar aprobación desde formulario
             ),
-
             'doc' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'clinic_prescription' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'patients_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
@@ -47,7 +46,6 @@ class ACL
             'appointment_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'appointments' => array('list', 'view'),
             'report' => array('index', 'show', 'clinical_historial')
-
         ),
 
         3 => // Doctor
@@ -55,15 +53,18 @@ class ACL
             'users' => array('register'),
             'clinic_prescription' => array('add', 'edit', 'editfield', 'delete'),
             'my_appointment' => array('list', 'view'),
-            'report' => array('index', 'show', 'clinical_historial')
-
+            // 🔹 solo historial clínico
+            'report' => array('clinical_historial')
         ),
 
         2 => // Assistant
         array(
             'users' => array('view', 'register'),
             'clinic_patients' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
-            'appointment_new' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
+            'appointment_new' => array(
+                'list', 'view', 'add', 'edit', 'editfield', 'delete',
+                'request_manage' // ✅ nuevo permiso para ver Request Manager
+            ),
             'doc' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'patients_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'actives_patients' => array('list', 'view'),
@@ -72,8 +73,8 @@ class ACL
             'invoice_debt' => array('list', 'view'),
             'inactives_patients' => array('list', 'view'),
             'appointments' => array('list', 'view'),
-            'report' => array('index', 'show', 'clinical_historial')
-
+            // 🔹 solo historial clínico
+            'report' => array('clinical_historial')
         ),
 
         4 => // Patients
@@ -82,7 +83,6 @@ class ACL
             'appointment_new'  => array('request', 'request_submit')
         )
     );
-
 
     /**
      * Current user role ID

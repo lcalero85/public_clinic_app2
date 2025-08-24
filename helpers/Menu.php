@@ -63,6 +63,7 @@ class Menu
             )
         ),
 
+        // 🔹 Reports bloque completo (solo Admin debe verlo)
         array(
             'path' => 'users',
             'label' => 'Reports',
@@ -98,7 +99,7 @@ class Menu
                     'icon' => '<i class="fa fa-calendar "></i>'
                 ),
 
-                // 🔹 Clinical Historial (nuevo item)
+                // 🔹 Clinical Historial
                 array(
                     'path' => 'report/clinical_historial',
                     'label' => 'Clinical Historial',
@@ -106,7 +107,6 @@ class Menu
                 )
             )
         ),
-
 
         array(
             'path' => 'users',
@@ -152,13 +152,11 @@ class Menu
                 )
             )
         ),
-
-
     );
+
 
     /**
      * Lista de roles ahora usando IDs numéricos
-     * Esto debe coincidir con la tabla `roles` de tu base de datos
      */
     public static $rol = array(
         array(
@@ -189,4 +187,38 @@ class Menu
             "label" => "Female",
         ),
     );
+
+
+    /**
+     * Devuelve el menú ya filtrado según el rol
+     */
+    public static function getNavBar()
+    {
+        $menu = self::$navbarsideleft;
+
+        // 🔹 Si el usuario es Doctor (2) o Assistant (3), reemplazamos Reports por uno reducido
+        if (in_array(USER_ROLE_ID, [2,3])) {
+            // quitar el bloque completo de Reports
+            foreach ($menu as $k => $item) {
+                if ($item['label'] === 'Reports') {
+                    unset($menu[$k]);
+                }
+            }
+            // añadir Reports reducido
+            $menu[] = array(
+                'path' => 'report',
+                'label' => 'Reports',
+                'icon' => '<i class="fa fa-pencil-square-o "></i>',
+                'submenu' => array(
+                    array(
+                        'path' => 'report/clinical_historial',
+                        'label' => 'Clinical Historial',
+                        'icon' => '<i class="fa fa-file-medical"></i>'
+                    )
+                )
+            );
+        }
+
+        return $menu;
+    }
 }

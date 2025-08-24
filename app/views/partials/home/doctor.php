@@ -50,6 +50,17 @@ $current_page = $this->set_current_page_link();
                         </a>
                     </div>
                 </div>
+                 <div class="card text-center shadow-sm m-2">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <i class="fa fa-file-prescription fa-2x text-success"></i>
+                        </div>
+                        <h5 class="card-title">Clinical Historial</h5>
+                        <a href="<?php print_link('report/clinical_historial'); ?>" class="btn btn-success btn-sm mt-2">
+                            See Historial
+                        </a>
+                    </div>
+                </div>
 
                 <?php if (USER_ROLE_ID == 3): ?>
                     <div class="card text-center shadow-sm m-2">

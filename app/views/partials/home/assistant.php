@@ -30,6 +30,9 @@ $current_page = $this->set_current_page_link();
                             <a  class="btn btn-primary" href="<?php print_link("clinic_prescription/list") ?>">
                                 New Prescriptions 
                             </a>
+                            <a class="btn btn-primary" href="<?php echo print_link("report/clinical_historial"); ?>">
+                        <i class="fa fa-notes-medical"></i> See Clinic Historial
+                    </a>
                         </div>
                     </div>
                 </div>

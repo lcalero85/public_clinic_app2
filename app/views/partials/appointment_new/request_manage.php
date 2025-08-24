@@ -31,7 +31,7 @@ $systemColor = "#006666";
 <style>
     /* Estilo encabezado tabla */
     #appointmentsTable thead th {
-        background-color: <?= $systemColor ?> !important;
+        background-color: #006680 !important;
         color: white;
         text-align: center;
         vertical-align: middle;

@@ -13,218 +13,151 @@ $csrf_token = Csrf::$token;
 //Page Data From Controller
 $view_data = $this->view_data;
 $records = $view_data->records;
-$record_count = $view_data->record_count;
-$total_records = $view_data->total_records;
-$field_name = $this->route->field_name;
-$field_value = $this->route->field_value;
-$view_title = $this->view_title;
-$show_header = $this->show_header;
-$show_footer = $this->show_footer;
-$show_pagination = $this->show_pagination;
 ?>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list"  data-display-type="table" data-page-url="<?php print_link($current_page); ?>">
-    <?php
-    if( $show_header == true ){
-    ?>
-    <div  class="bg-light p-3 mb-3">
+<section class="page">
+    <div class="bg-light p-3 mb-3">
         <div class="container-fluid">
             <div class="row ">
                 <div class="col ">
-                    <h4 class="record-title">Appointments</h4>
-                </div>
-                <div class="col-sm-4 ">
-                    <form  class="search" action="<?php print_link('appointments'); ?>" method="get">
-                        <div class="input-group">
-                            <input value="<?php echo get_value('search'); ?>" class="form-control" type="text" name="search"  placeholder="Search" />
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md-12 comp-grid">
-                        <div class="">
-                            <!-- Page bread crumbs components-->
-                            <?php
-                            if(!empty($field_name) || !empty($_GET['search'])){
-                            ?>
-                            <hr class="sm d-block d-sm-none" />
-                            <nav class="page-header-breadcrumbs mt-2" aria-label="breadcrumb">
-                                <ul class="breadcrumb m-0 p-1">
-                                    <?php
-                                    if(!empty($field_name)){
-                                    ?>
-                                    <li class="breadcrumb-item">
-                                        <a class="text-decoration-none" href="<?php print_link('appointments'); ?>">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="breadcrumb-item">
-                                        <?php echo (get_value("tag") ? get_value("tag")  :  make_readable($field_name)); ?>
-                                    </li>
-                                    <li  class="breadcrumb-item active text-capitalize font-weight-bold">
-                                        <?php echo (get_value("label") ? get_value("label")  :  make_readable(urldecode($field_value))); ?>
-                                    </li>
-                                    <?php 
-                                    }   
-                                    ?>
-                                    <?php
-                                    if(get_value("search")){
-                                    ?>
-                                    <li class="breadcrumb-item">
-                                        <a class="text-decoration-none" href="<?php print_link('appointments'); ?>">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="breadcrumb-item text-capitalize">
-                                        Search
-                                    </li>
-                                    <li  class="breadcrumb-item active text-capitalize font-weight-bold"><?php echo get_value("search"); ?></li>
-                                    <?php
-                                    }
-                                    ?>
-                                </ul>
-                            </nav>
-                            <!--End of Page bread crumbs components-->
-                            <?php
-                            }
-                            ?>
-                        </div>
-                    </div>
+                    <h4 class="record-title">Appointments Report</h4>
                 </div>
             </div>
         </div>
-        <?php
+    </div>
+
+    <div class="container-fluid">
+        <div class="card card-body">
+            <div class="table-responsive">
+                <table id="appointmentsTable" class="table table-striped table-bordered table-hover">
+                    <thead style="background-color:#006680; color:white;">
+                        <tr>
+                            <th>Clinical File</th>
+                            <th>Patient Name</th>
+                            <th>Gender</th>
+                            <th>Birthdate</th>
+                            <th>Age</th>
+                            <th>Doctor</th>
+                            <th>Motive</th>
+                            <th>Appointment Date</th>
+                            <th>Register Date</th>
+                            <th>Status</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(!empty($records)){ 
+                            foreach($records as $data){ ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($data['clinical_file']); ?></td>
+                                <td><?php echo htmlspecialchars($data['patient_name']); ?></td>
+                                <td><?php echo htmlspecialchars($data['gender']); ?></td>
+                                <td><?php echo htmlspecialchars($data['birthdate']); ?></td>
+                                <td><?php echo htmlspecialchars($data['age']); ?></td>
+                                <td><?php echo htmlspecialchars($data['doctor_name']); ?></td>
+                                <td><?php echo htmlspecialchars($data['motive']); ?></td>
+                                <td><?php echo htmlspecialchars($data['appointment_date']); ?></td>
+                                <td><?php echo htmlspecialchars($data['register_date']); ?></td>
+                                <td><?php echo htmlspecialchars($data['appointment_status']); ?></td>
+                                <td><?php echo htmlspecialchars($data['created_by']); ?></td>
+                            </tr>
+                        <?php } } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DataTables styles & scripts -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+
+<style>
+/* 🔹 Botones personalizados */
+.dt-button.buttons-excel {
+    background-color: #77b300 !important;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+.dt-button.buttons-pdf {
+    background-color: #cc0000 !important;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+.dt-button.buttons-csv {
+    background-color: #0099cc !important;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+.dt-button.buttons-print {
+    background-color: #800080 !important;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+.dt-buttons {
+    margin-bottom: 10px;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#appointmentsTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'Appointments Report',
+                messageTop: 'Clinic: My ClinicSystem | Generated by: <?php echo USER_NAME; ?> | Date: <?php echo date("d/m/Y H:i"); ?>',
+                exportOptions: { columns: ':visible' }
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Appointments Report',
+                messageTop: 'Clinic: My ClinicSystem\nGenerated by: <?php echo USER_NAME; ?>\nDate: <?php echo date("d/m/Y H:i"); ?>',
+                exportOptions: { columns: ':visible' }
+            },
+            {
+                extend: 'csvHtml5',
+                title: 'Appointments Report',
+                messageTop: 'Clinic: My ClinicSystem | Generated by: <?php echo USER_NAME; ?> | Date: <?php echo date("d/m/Y H:i"); ?>',
+                exportOptions: { columns: ':visible' }
+            },
+            {
+                extend: 'print',
+                title: 'Appointments Report',
+                messageTop: '<h5>Clinic: My ClinicSystem</h5><p>Generated by: <?php echo USER_NAME; ?><br>Date: <?php echo date("d/m/Y H:i"); ?></p>',
+                exportOptions: { columns: ':visible' }
+            }
+        ],
+        language: {
+            search: "Search by Patient, Doctor, Clinical File:",
+            lengthMenu: "Show _MENU_ records",
+            zeroRecords: "No matching records found",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            infoEmpty: "No records available",
+            infoFiltered: "(filtered from _MAX_ total records)"
         }
-        ?>
-        <div  class="">
-            <div class="container-fluid">
-                <div class="row ">
-                    <div class="col-md-12 comp-grid">
-                        <?php $this :: display_page_errors(); ?>
-                        <div  class=" animated fadeIn page-content">
-                            <div id="appointments-list-records">
-                                <div id="page-report-body" class="table-responsive">
-                                    <table class="table  table-striped table-sm text-left">
-                                        <thead class="table-header bg-light">
-                                            <tr>
-                                                <th class="td-sno">Appointment No.</th>
-                                                <th  class="td-id_patient">Patient</th>
-                                                <th  class="td-id_doc"> Doctor</th>
-                                                <th  class="td-motive"> Motive</th>
-                                                <th  class="td-descritption"> Description</th>
-                                                <th  class="td-historial"> Historial</th>
-                                                <th  class="td-register_date"> Register Date</th>
-                                                <th  class="td-id_user"> Register User</th>
-                                                <th  class="td-id_status_appointment"> Status </th>
-                                            </tr>
-                                        </thead>
-                                        <?php
-                                        if(!empty($records)){
-                                        ?>
-                                        <tbody class="page-data" id="page-data-<?php echo $page_element_id; ?>">
-                                            <!--record-->
-                                            <?php
-                                            $counter = 0;
-                                            foreach($records as $data){
-                                            $rec_id = (!empty($data['']) ? urlencode($data['']) : null);
-                                            $counter++;
-                                            ?>
-                                            <tr>
-                                                <th class="td-sno"><?php echo $counter; ?></th>
-                                                <td class="td-motive"> <?php echo $data['clinic_patients_full_names']; ?></td>
-                                                <td class="td-motive"> <?php echo $data['doc_full_names']; ?></td>
-                                                <td class="td-motive"> <?php echo $data['motive']; ?></td>
-                                                <td class="td-descritption"> <?php echo $data['description']; ?></td>
-                                                <td class="td-historial"> <?php echo $data['historial']; ?></td>
-                                                <td class="td-register_date"> <?php echo $data['register_date']; ?></td>
-                                                <td class="td-register_date"> <?php echo $data['users_full_names']; ?></td>
-                                                <td class="td-register_date"> <?php echo $data['appointment_status_status']; ?></td>
-                                            </tr>
-                                            <?php 
-                                            }
-                                            ?>
-                                            <!--endrecord-->
-                                        </tbody>
-                                        <tbody class="search-data" id="search-data-<?php echo $page_element_id; ?>"></tbody>
-                                        <?php
-                                        }
-                                        ?>
-                                    </table>
-                                    <?php 
-                                    if(empty($records)){
-                                    ?>
-                                    <h4 class="bg-light text-center border-top text-muted animated bounce  p-3">
-                                        <i class="fa fa-ban"></i> No record found
-                                    </h4>
-                                    <?php
-                                    }
-                                    ?>
-                                </div>
-                                <?php
-                                if( $show_footer && !empty($records)){
-                                ?>
-                                <div class=" border-top mt-2">
-                                    <div class="row justify-content-center">    
-                                        <div class="col-md-auto justify-content-center">    
-                                            <div class="p-3 d-flex justify-content-between">    
-                                                <div class="dropup export-btn-holder mx-1">
-                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fa fa-save"></i> Export
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
-                                                        <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">
-                                                            <img src="<?php print_link('assets/images/print.png') ?>" class="mr-2" /> PRINT
-                                                            </a>
-                                                            <?php $export_pdf_link = $this->set_current_page_link(array('format' => 'pdf')); ?>
-                                                            <a class="dropdown-item export-link-btn" data-format="pdf" href="<?php print_link($export_pdf_link); ?>" target="_blank">
-                                                                <img src="<?php print_link('assets/images/pdf.png') ?>" class="mr-2" /> PDF
-                                                                </a>
-                                                                <?php $export_word_link = $this->set_current_page_link(array('format' => 'word')); ?>
-                                                                <a class="dropdown-item export-link-btn" data-format="word" href="<?php print_link($export_word_link); ?>" target="_blank">
-                                                                    <img src="<?php print_link('assets/images/doc.png') ?>" class="mr-2" /> WORD
-                                                                    </a>
-                                                                    <?php $export_csv_link = $this->set_current_page_link(array('format' => 'csv')); ?>
-                                                                    <a class="dropdown-item export-link-btn" data-format="csv" href="<?php print_link($export_csv_link); ?>" target="_blank">
-                                                                        <img src="<?php print_link('assets/images/csv.png') ?>" class="mr-2" /> CSV
-                                                                        </a>
-                                                                        <?php $export_excel_link = $this->set_current_page_link(array('format' => 'excel')); ?>
-                                                                        <a class="dropdown-item export-link-btn" data-format="excel" href="<?php print_link($export_excel_link); ?>" target="_blank">
-                                                                            <img src="<?php print_link('assets/images/xsl.png') ?>" class="mr-2" /> EXCEL
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col">   
-                                                                <?php
-                                                                if($show_pagination == true){
-                                                                $pager = new Pagination($total_records, $record_count);
-                                                                $pager->route = $this->route;
-                                                                $pager->show_page_count = true;
-                                                                $pager->show_record_count = true;
-                                                                $pager->show_page_limit =true;
-                                                                $pager->limit_count = $this->limit_count;
-                                                                $pager->show_page_number_list = true;
-                                                                $pager->pager_link_range=5;
-                                                                $pager->render();
-                                                                }
-                                                                ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+    });
+});
+</script>

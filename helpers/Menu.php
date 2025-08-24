@@ -80,19 +80,6 @@ class Menu
                     'label' => 'Inactives Patients',
                     'icon' => '<i class="fa fa-user-times "></i>'
                 ),
-
-                array(
-                    'path' => 'invoice_cancelled',
-                    'label' => 'Cancelled invoices',
-                    'icon' => '<i class="bi bi-currency-dollar"></i>'
-                ),
-
-                array(
-                    'path' => 'invoice_debt',
-                    'label' => 'Debts Invoices',
-                    'icon' => '<i class="fa fa-exclamation "></i>'
-                ),
-
                 array(
                     'path' => 'appointments',
                     'label' => 'Appointments',

@@ -63,9 +63,9 @@ $currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
 <div class="modal fade" id="patientModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header" style="background-color:#0d5c63; color:white;">
+            <div class="modal-header" style="background-color:#006680; color:white;">
                 <h5 class="modal-title">Patient Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">x</button>
             </div>
             <div class="modal-body" id="patientDetails">
                 <!-- Se cargan los datos dinámicamente -->

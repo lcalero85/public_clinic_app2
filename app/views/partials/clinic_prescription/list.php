@@ -125,14 +125,15 @@ $show_pagination = $this->show_pagination;
                                                 </th>
                                                 <?php } ?>
                                                 <th class="td-sno">#</th>
-                                                <th  class="td-id_appointment">Appt. Date</th>
-                                                <th  class="td-id_patient">Patient Name</th>
-                                                <th  class="td-id_doctor">Attending Doctor</th>
-                                                <th  class="td-description_prescription">Prescription Details</th>
-                                                <th  class="td-additional_comments">Doctor’s Note</th>
-                                                <th  class="td-id_user">Recorded By</th>
-                                                <th  class="td-register_date">Recorded By</th>
-                                                <th class="td-btn">Actions</th>
+                                                <th  class="td-id_prescription"> Id </th>
+                                                <th  class="td-id_appointment"> Appointment</th>
+                                                <th  class="td-id_patient"> Patient</th>
+                                                <th  class="td-id_doctor"> Doctor</th>
+                                                <th  class="td-description_prescription"> Prescription</th>
+                                                <th  class="td-additional_comments"> Comments</th>
+                                                <th  class="td-id_user"> Register User</th>
+                                                <th  class="td-register_date"> Register Date</th>
+                                                <th class="td-btn"></th>
                                             </tr>
                                         </thead>
                                         <?php
@@ -156,26 +157,70 @@ $show_pagination = $this->show_pagination;
                                                     </th>
                                                     <?php } ?>
                                                     <th class="td-sno"><?php echo $counter; ?></th>
-                                                    <td class="td-appointment_new_appointment_date">
-                                                        <?php echo $data['appointment_new_appointment_date']; ?>
+                                                    <td class="td-id_prescription"><a href="<?php print_link("clinic_prescription/view/$data[id_prescription]") ?>"><?php echo $data['id_prescription']; ?></a></td>
+                                                    <td class="td-id_appointment">
+                                                        <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/clinic_prescription/appointment_new/id_appointment/" . urlencode($data['id_appointment'])) ?>">
+                                                            <i class="fa fa-eye"></i> <?php echo $data['appointment_new_appointment_date'] ?>
+                                                        </a>
                                                     </td>
-                                                    <td class="td-appointment_new_appointment_date">
-                                                        <?php echo $data['clinic_patients_full_names']; ?>
+                                                    <td class="td-id_patient">
+                                                        <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/clinic_prescription/clinic_patients/id_patient/" . urlencode($data['id_patient'])) ?>">
+                                                            <i class="fa fa-eye"></i> <?php echo $data['clinic_patients_full_names'] ?>
+                                                        </a>
                                                     </td>
-                                                     <td class="td-doc_full_names">
-                                                        <?php echo $data['doc_full_names']; ?>
+                                                    <td class="td-id_doctor">
+                                                        <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/clinic_prescription/doc/id/" . urlencode($data['id_doctor'])) ?>">
+                                                            <i class="fa fa-eye"></i> <?php echo $data['doc_full_names'] ?>
+                                                        </a>
                                                     </td>
-                                                    <td class="td-doc_full_names">
-                                                        <?php echo $data['description_prescription']; ?>
+                                                    <td class="td-description_prescription">
+                                                        <span <?php if($can_edit){ ?> data-pk="<?php echo $data['id_prescription'] ?>" 
+                                                            data-url="<?php print_link("clinic_prescription/editfield/" . urlencode($data['id_prescription'])); ?>" 
+                                                            data-name="description_prescription" 
+                                                            data-title="Enter Description " 
+                                                            data-placement="left" 
+                                                            data-toggle="click" 
+                                                            data-type="textarea" 
+                                                            data-mode="popover" 
+                                                            data-showbuttons="left" 
+                                                            class="is-editable" <?php } ?>>
+                                                            <?php echo $data['description_prescription']; ?> 
+                                                        </span>
                                                     </td>
-                                                    <td class="td-doc_full_names">
-                                                        <?php echo $data['additional_comments']; ?>
+                                                    <td class="td-additional_comments">
+                                                        <span <?php if($can_edit){ ?> data-source='<?php print_link('api/json/clinic_prescription_additional_comments_option_list'); ?>' 
+                                                            data-pk="<?php echo $data['id_prescription'] ?>" 
+                                                            data-url="<?php print_link("clinic_prescription/editfield/" . urlencode($data['id_prescription'])); ?>" 
+                                                            data-name="additional_comments" 
+                                                            data-title="Enter Comments" 
+                                                            data-placement="left" 
+                                                            data-toggle="click" 
+                                                            data-type="textarea" 
+                                                            data-mode="popover" 
+                                                            data-showbuttons="left" 
+                                                            class="is-editable" <?php } ?>>
+                                                            <?php echo $data['additional_comments']; ?> 
+                                                        </span>
                                                     </td>
-                                                       <td class="td-doc_full_names">
-                                                        <?php echo $data['users_full_names']; ?>
+                                                    <td class="td-id_user">
+                                                        <a size="sm" class="btn btn-sm btn-primary page-modal" href="<?php print_link("masterdetail/index/clinic_prescription/users/id_user/" . urlencode($data['id_user'])) ?>">
+                                                            <i class="fa fa-eye"></i> <?php echo $data['users_full_names'] ?>
+                                                        </a>
                                                     </td>
-                                                    <td class="td-doc_full_names">
-                                                        <?php echo $data['register_date']; ?>
+                                                    <td class="td-register_date">
+                                                        <span <?php if($can_edit){ ?> data-value="<?php echo $data['register_date']; ?>" 
+                                                            data-pk="<?php echo $data['id_prescription'] ?>" 
+                                                            data-url="<?php print_link("clinic_prescription/editfield/" . urlencode($data['id_prescription'])); ?>" 
+                                                            data-name="register_date" 
+                                                            data-title="Enter Register Date" 
+                                                            data-placement="left" 
+                                                            data-toggle="click" 
+                                                            data-type="text" 
+                                                            data-mode="popover" 
+                                                            data-showbuttons="left" 
+                                                            class="is-editable" <?php } ?>>
+                                                            <?php echo $data['register_date']; ?> 
+                                                        </span>
                                                     </td>
                                                     <td class="page-list-action td-btn">
                                                         <div class="dropdown" >
@@ -193,7 +238,11 @@ $show_pagination = $this->show_pagination;
                                                                     <i class="fa fa-edit"></i> Edit
                                                                 </a>
                                                                 <?php } ?>
-                                                                
+                                                                <?php if($can_delete){ ?>
+                                                                <a  class="dropdown-item record-delete-btn" href="<?php print_link("clinic_prescription/delete/$rec_id/?csrf_token=$csrf_token&redirect=$current_page"); ?>" data-prompt-msg="Are you sure you want to delete this record?" data-display-style="modal">
+                                                                    <i class="fa fa-times"></i> Delete 
+                                                                </a>
+                                                                <?php } ?>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -231,7 +280,9 @@ $show_pagination = $this->show_pagination;
                                                     </button>
                                                     <?php } ?>
                                                     <div class="dropup export-btn-holder mx-1">
-                                                       
+                                                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="fa fa-save"></i> Export
+                                                        </button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                             <?php $export_print_link = $this->set_current_page_link(array('format' => 'print')); ?>
                                                             <a class="dropdown-item export-link-btn" data-format="print" href="<?php print_link($export_print_link); ?>" target="_blank">

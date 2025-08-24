@@ -116,7 +116,7 @@ class SharedController extends BaseController
 	function clinic_prescription_id_appointment_option_list()
 	{
 		$db = $this->GetModel();
-		$sqltext = "SELECT  DISTINCT id_appointment AS value,descritption AS label FROM appointment_new ORDER BY id_appointment ASC";
+		$sqltext = "SELECT  DISTINCT id_appointment AS value,description AS label FROM appointment_new ORDER BY id_appointment ASC";
 		$queryparams = null;
 		$arr = $db->rawQuery($sqltext, $queryparams);
 		return $arr;

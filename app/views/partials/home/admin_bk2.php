@@ -1,0 +1,274 @@
+<?php 
+$page_id = null;
+$comp_model = new SharedController;
+$current_page = $this->set_current_page_link();
+?>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div>
+    <div class="bg-light py-4 mb-4">
+        <div class="container">
+
+            <!-- Encabezado de bienvenida -->
+            <div class="page-header mb-3">
+                <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
+                <small class="text-muted">
+                    Role: <?php echo USER_ROLE_NAME ?> | Last access: <?php echo date_now(); ?>
+                </small>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0 text-primary"><i class="fa fa-bolt me-2"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2 justify-content-center"> 
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php print_link("clinic_patients/list") ?>">
+                                <i class="fa fa-user-plus me-2"></i> New Patient
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php print_link("doc/list") ?>">
+                                <i class="fa fa-user-md me-2"></i> New Doctor
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php print_link("appointment_new/list") ?>">
+                                <i class="fa fa-calendar-plus-o me-2"></i> New Appointment
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php print_link("clinic_prescription/list") ?>">
+                                <i class="fa fa-file-medical me-2"></i> New Prescriptions
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php print_link("invoices/list") ?>">
+                                <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-auto">
+                            <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
+                                <i class="fa fa-notes-medical me-2"></i> See Clinic Historial
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- General Dashboard -->
+            <div class="py-4">
+                <div class="container">
+                    <div class="page-header mb-3">
+                        <h4 class="section-title">📊 General Dashboard</h4>
+                    </div>
+
+                    <!-- Pacientes -->
+                    <div class="mb-4">
+                        <h5 class="section-title">👥 Patients</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_patients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("clinic_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-plus"></i></div>
+                                        <div class="col-10"><div class="title">Patients</div><small>Total registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_activespatients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("actives_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-users"></i></div>
+                                        <div class="col-10"><div class="title">Active Patients</div><small>Currently active</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_inactivespatients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("inactives_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-times"></i></div>
+                                        <div class="col-10"><div class="title">Inactive Patients</div><small>Currently inactive</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Citas -->
+                    <div class="mb-4">
+                        <h5 class="section-title">📅 Appointments</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_appointments();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointments/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calendar-check-o"></i></div>
+                                        <div class="col-10"><div class="title">Appointments</div><small>Total scheduled</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointment_new/request_manage") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calendar-plus-o"></i></div>
+                                        <div class="col-10"><div class="title">Pending Requests</div><small>Awaiting approval</small></div>
+                                        <h4 class="value"><strong><?php echo $pending_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Finanzas -->
+                    <div class="mb-4">
+                        <h5 class="section-title">💵 Finances</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_invoices();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calculator"></i></div>
+                                        <div class="col-10"><div class="title">Invoices</div><small>Total generated</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctores -->
+                    <div class="mb-4">
+                        <h5 class="section-title">🧑‍⚕️ Doctors</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_doctors();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("doc/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-md"></i></div>
+                                        <div class="col-10"><div class="title">Doctors</div><small>Registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usuarios -->
+                    <div class="mb-4">
+                        <h5 class="section-title">👤 Users</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_users();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("users/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-users"></i></div>
+                                        <div class="col-10"><div class="title">Users</div><small>Total registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📈 Sección de Gráficas -->
+                    <div class="mb-4">
+                        <h5 class="section-title">📈 Key Statistics</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white border-0">
+                                        <strong>Patients Growth (Monthly)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="patientsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white border-0">
+                                        <strong>Appointments Trend (Last 6 months)</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="appointmentsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="py-4">
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0 text-primary"><i class="fa fa-bell me-2"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">🧑‍⚕️ Dr. Smith created a new prescription for Patient #1042</li>
+                    <li class="list-group-item">📅 Appointment pending approval – Patient #1001</li>
+                    <li class="list-group-item">💵 Invoice #2034 generated on 25 Aug 2025</li>
+                    <li class="list-group-item">👤 New patient registered: Maria Gonzalez</li>
+                    <li class="list-group-item">🩺 Doctor Lopez updated his availability schedule</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Patients Growth Chart
+    var ctx1 = document.getElementById('patientsChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'New Patients',
+                data: [5, 8, 6, 10, 12, 9], // <-- reemplazar por datos reales desde PHP
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0,123,255,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        }
+    });
+
+    // Appointments Trend Chart
+    var ctx2 = document.getElementById('appointmentsChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+            datasets: [{
+                label: 'Appointments',
+                data: [12, 15, 9, 14, 20, 17], // <-- reemplazar por datos reales desde PHP
+                backgroundColor: '#28a745'
+            }]
+        }
+    });
+});
+</script>

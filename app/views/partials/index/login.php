@@ -53,7 +53,7 @@
                                 <i class="load-indicator">
                                     <clip-loader :loading="loading" color="#fff" size="20px"></clip-loader> 
                                 </i>
-                                Login <i class="fa fa-key"></i>
+                                Login 
                             </button>
                         </div>
                         <a  class="btn btn-primary btn-register" href="<?php print_link("users/register") ?>">

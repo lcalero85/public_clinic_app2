@@ -67,7 +67,52 @@ body {
       font-size: 16px;
     }
 
-    /* ====== BOTÓN LOGIN ====== */
+    
+
+    /* ====== LINKS ====== */
+    .links {
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .links a {
+      color: #0099cc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== ANIMACIÓN ====== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+
+    .input-group-append {
+    display: none !important;
+    }
+
+   .form-control {
+  border-radius: 50px !important; /* ovalado completo */
+  padding: 14px 20px;            /* más espacio interno */
+  border: 1px solid #ccc;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #0099cc;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0, 153, 204, 0.3);
+}
+
+/* ====== BOTÓN LOGIN ====== */
 .login-card .btn-login {
     background: linear-gradient(135deg, #0099cc, #00c4cc);
     color: #fff;
@@ -105,26 +150,4 @@ body {
     transform: translateY(-2px);
 }
 
-
-    /* ====== LINKS ====== */
-    .links {
-      margin-top: 15px;
-      font-size: 13px;
-    }
-
-    .links a {
-      color: #0099cc;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .links a:hover {
-      text-decoration: underline;
-    }
-
-    /* ====== ANIMACIÓN ====== */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
 

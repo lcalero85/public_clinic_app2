@@ -1,5 +1,6 @@
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+ <!-- <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css"> -->
+  <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/login.css">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <div class="container">
     <div class="row justify-content-center">
@@ -7,9 +8,11 @@
             <div class="my-4 p-3 bg-light">
                 
                 <div>
-                    <h2 class="text-capitalize">Welcome To <?php echo SITE_NAME ?></h2>
-                    <p class="text-muted mb-0">Please login to continue</p>
-                     <img src="<?php echo set_img_src('uploads/files/docts.png'); ?>" width="300" height="300" />
+                    <div class="login-card">
+    <h2>Welcome to My ClinicSystem</h2>
+    <p>Access your account to manage your clinic</p>
+    <!-- Aquí tus inputs y botones -->
+     <img src="<?php echo set_img_src('uploads/files/docts.png'); ?>" width="220" height="200" />
                     <h4><i class="fa fa-key"></i> User Login</h4>
                     <hr />
                     <?php 
@@ -32,28 +35,28 @@
                         </div>
                         <div class="row clearfix mt-3 mb-3">
                             
-                            <div class="col-6">
+                            <div class="col-6 links">
                                 <label class="">
                                     <input value="true" type="checkbox" name="rememberme" />
                                     Remember Me
                                 </label>
                             </div>
                             
-                            <div class="col-6">
+                            <div class="col-6 links">
                                 <a href="<?php print_link('passwordmanager') ?>" class="text-danger"> Reset Password?</a>
                             </div>
                             
                         </div>
                         
                         <div class="form-group text-center">
-                            <button class="btn btn-primary btn-block btn-md" type="submit"> 
+                            <button class="btn btn-primary btn-block btn-md btn-login" type="submit"> 
                                 <i class="load-indicator">
                                     <clip-loader :loading="loading" color="#fff" size="20px"></clip-loader> 
                                 </i>
                                 Login <i class="fa fa-key"></i>
                             </button>
                         </div>
-                        <a  class="btn btn-primary" href="<?php print_link("users/register") ?>">
+                        <a  class="btn btn-primary btn-register" href="<?php print_link("users/register") ?>">
                                      <i class="fa fa-hospital-o "></i>                               
                                       Register Patients 
                                      </a>
@@ -65,5 +68,8 @@
                 
             </div>
         </div>
-    </div>
+</div>
+                    
+                     
+</div>
 </div>

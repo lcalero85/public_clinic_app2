@@ -1,0 +1,130 @@
+body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f9ff, #e0f7fa);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 40px 30px;
+      width: 380px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .login-card img {
+      width: 120px;
+      margin-bottom: 15px;
+    }
+
+    .login-card h2 {
+      font-weight: 700;
+      color: #006680;
+      margin-bottom: 8px;
+    }
+
+    .login-card p {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    /* ====== INPUTS CON ICONOS ====== */
+    .input-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+      background: #fafafa;
+    }
+
+    .input-group input:focus {
+      border-color: #0099cc;
+      background: #fff;
+      box-shadow: 0 0 6px rgba(0, 153, 204, 0.3);
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: #0099cc;
+      font-size: 16px;
+    }
+
+    /* ====== BOTÓN LOGIN ====== */
+.login-card .btn-login {
+    background: linear-gradient(135deg, #0099cc, #00c4cc);
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.login-card .btn-login:hover {
+    background: linear-gradient(135deg, #00c4cc, #0099cc);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 153, 204, 0.3);
+}
+
+/* ====== BOTÓN REGISTRO ====== */
+.login-card .btn-register {
+    background: transparent;
+    border: 2px solid #0099cc;
+    color: #0099cc;
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.login-card .btn-register:hover {
+    background: #0099cc;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+
+    /* ====== LINKS ====== */
+    .links {
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .links a {
+      color: #0099cc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    /* ====== ANIMACIÓN ====== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+

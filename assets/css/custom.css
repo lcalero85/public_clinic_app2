@@ -836,5 +836,26 @@ input.photo_file:focus {
     border-top: 1px solid #e0e0e0;
     padding-top: 15px;
 }
+.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #006680; /* color corporativo */
+  margin-bottom: 15px;
+  position: relative;
+  padding-bottom: 8px;
+  display: inline-block; /* hace que el subrayado no ocupe todo el ancho */
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 50px;
+  background: linear-gradient(90deg, #0099cc, #00c4cc);
+  border-radius: 2px;
+}
 
 

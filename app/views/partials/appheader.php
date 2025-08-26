@@ -61,22 +61,20 @@ function get_user_photo_src($photoBlob)
                             ?>
                             <span>Hi <?php echo ucwords(USER_NAME); ?> !</span>
                         </a>
-                       <ul class="dropdown-menu custom-dropdown shadow-lg">
-    <a class="dropdown-item" href="<?php print_link('account') ?>">
-        <i class="fa fa-user-circle"></i> My Account
-    </a>
-    <a class="dropdown-item text-danger" href="<?php print_link('index/logout?csrf_token=' . Csrf::$token) ?>">
-        <i class="fa fa-power-off"></i> Logout
-    </a>
-</ul>
+                        <ul class="dropdown-menu custom-dropdown shadow-lg">
+                            <a class="dropdown-item" href="<?php print_link('account') ?>">
+                                <i class="fa fa-user-circle"></i> My Account
+                            </a>
+                            <a class="dropdown-item text-danger" href="<?php print_link('index/logout?csrf_token=' . Csrf::$token) ?>">
+                                <i class="fa fa-power-off"></i> Logout
+                            </a>
+                        </ul>
                     </li>
                 </ul>
             </div>
         <?php } ?>
     </div>
 </div>
-
-
 <?php if (user_login_status() == true) { ?>
     <nav id="sidebar" class="navbar-light bg-info">
         <ul class="nav navbar-nav w-100 flex-column align-self-start">
@@ -98,14 +96,14 @@ function get_user_photo_src($photoBlob)
                     <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-toggle="dropdown">
                         <i class="fa fa-user"></i>
                     </button>
-                  <ul class="dropdown-menu custom-dropdown shadow-lg">
-    <a class="dropdown-item" href="<?php print_link('account') ?>">
-        <i class="fa fa-user-circle"></i> My Account
-    </a>
-    <a class="dropdown-item text-danger" href="<?php print_link('index/logout?csrf_token=' . Csrf::$token) ?>">
-        <i class="fa fa-power-off"></i> Logout
-    </a>
-</ul>
+                    <ul class="dropdown-menu custom-dropdown shadow-lg">
+                        <a class="dropdown-item" href="<?php print_link('account') ?>">
+                            <i class="fa fa-user-circle"></i> My Account
+                        </a>
+                        <a class="dropdown-item text-danger" href="<?php print_link('index/logout?csrf_token=' . Csrf::$token) ?>">
+                            <i class="fa fa-power-off"></i> Logout
+                        </a>
+                    </ul>
                 </div>
             </li>
         </ul>
@@ -114,54 +112,54 @@ function get_user_photo_src($photoBlob)
 <?php } ?>
 
 <style>
-/* Estilo general del menú */
-.custom-dropdown {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 8px 0;
-    border: none;
-    min-width: 180px;
-}
+    /* Estilo general del menú */
+    .custom-dropdown {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 8px 0;
+        border: none;
+        min-width: 180px;
+    }
 
-/* Estilo de los items */
-.custom-dropdown .dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
-    font-size: 14px;
-    color: #333;
-    padding: 10px 16px;
-    border-radius: 8px;
-    transition: all 0.25s ease-in-out;
-}
+    /* Estilo de los items */
+    .custom-dropdown .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        font-size: 14px;
+        color: #333;
+        padding: 10px 16px;
+        border-radius: 8px;
+        transition: all 0.25s ease-in-out;
+    }
 
-/* Hover con efecto */
-.custom-dropdown .dropdown-item:hover {
-    background: #006680;
-    color: #fff;
-    transform: translateX(4px);
-}
+    /* Hover con efecto */
+    .custom-dropdown .dropdown-item:hover {
+        background: #006680;
+        color: #fff;
+        transform: translateX(4px);
+    }
 
-/* Iconos */
-.custom-dropdown .dropdown-item i {
-    font-size: 16px;
-    color: #006680;
-    transition: all 0.25s ease;
-}
+    /* Iconos */
+    .custom-dropdown .dropdown-item i {
+        font-size: 16px;
+        color: #006680;
+        transition: all 0.25s ease;
+    }
 
-/* Cambiar color de icono al hover */
-.custom-dropdown .dropdown-item:hover i {
-    color: #fff;
-}
+    /* Cambiar color de icono al hover */
+    .custom-dropdown .dropdown-item:hover i {
+        color: #fff;
+    }
 
-/* Botón de logout más destacado */
-.custom-dropdown .dropdown-item.text-danger {
-    color: #c82333;
-}
+    /* Botón de logout más destacado */
+    .custom-dropdown .dropdown-item.text-danger {
+        color: #3a0107ff;
+    }
 
-.custom-dropdown .dropdown-item.text-danger:hover {
-    background: #c82333;
-    color: #fff;
-}
+    .custom-dropdown .dropdown-item.text-danger:hover {
+        background: #c82333;
+        color: #030303ff;
+    }
 </style>

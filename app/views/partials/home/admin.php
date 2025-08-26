@@ -12,7 +12,7 @@ $current_page = $this->set_current_page_link();
     <div class="bg-light py-4 mb-4">
         <div class="container">
             <div class="page-header mb-3">
-                <h4>Welcome back,<?php echo USER_NAME ?> Here’s your summary for today.</h4>
+                <h4 class="section-title">Welcome back,<?php echo USER_NAME ?> Here’s your summary for today.</h4>
             </div>
 
             <div class="row mb-2">
@@ -26,37 +26,42 @@ $current_page = $this->set_current_page_link();
                     </h6>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-md-12 d-flex flex-wrap gap-2 gap-md-4">
-                    <a class="btn btn-primary" href="<?php print_link("clinic_patients/list") ?>">
-                        <i class="fa fa-user-plus me-2"></i> New Patient
-                    </a>
-                    <a class="btn btn-primary" href="<?php print_link("doc/list") ?>">
-                        <i class="fa fa-user-md me-2"></i> New Doctor
-                    </a>
-                    <a class="btn btn-primary" href="<?php print_link("appointment_new/list") ?>">
-                        <i class="fa fa-calendar-plus-o me-2"></i> New appointment
-                    </a>
-                    <a class="btn btn-primary" href="<?php print_link("clinic_prescription/list") ?>">
-                        <i class="fa fa-file-medical me-2"></i> New Prescriptions
-                    </a>
-                    <a class="btn btn-primary" href="<?php print_link("app_logs/list") ?>">
-                        <i class="fa fa-file-alt me-2"></i> View Logs
-                    </a>
-                    <a class="btn btn-primary" href="<?php print_link("invoices/list") ?>">
-                        <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
-                    </a> 
-                    <a class="btn btn-primary" href="<?php echo print_link("report/clinical_historial"); ?>">
-                        <i class="fa fa-notes-medical"></i> See Clinic Historial
-                    </a>
-                </div>
-            </div>
-
-
+          <div class="row g-2 mb-3"> 
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php print_link("clinic_patients/list") ?>">
+            <i class="fa fa-user-plus me-2"></i> New Patient
+        </a>
+    </div>
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php print_link("doc/list") ?>">
+            <i class="fa fa-user-md me-2"></i> New Doctor
+        </a>
+    </div>
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php print_link("appointment_new/list") ?>">
+            <i class="fa fa-calendar-plus-o me-2"></i> New appointment
+        </a>
+    </div>
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php print_link("clinic_prescription/list") ?>">
+            <i class="fa fa-file-medical me-2"></i> New Prescriptions
+        </a>
+    </div>
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php print_link("invoices/list") ?>">
+            <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
+        </a>
+    </div>
+    <div class="col-6 col-md-auto">
+        <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
+            <i class="fa fa-notes-medical me-2"></i> See Clinic Historial
+        </a>
+    </div>
+</div>
             <div class="py-5">
                 <div class="container">
                     <div class="page-header">
-                        <h4>General Dashboard</h4>
+                        <h4 class="section-title">General Dashboard</h4>
                     </div>
                     <div class="row ">
                         <div class="col-md-3 col-sm-4 comp-grid">

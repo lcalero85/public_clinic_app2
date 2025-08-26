@@ -60,158 +60,128 @@ $current_page = $this->set_current_page_link();
                 </div>
             </div>
 
-            <!-- Dashboard General -->
+            <!-- General Dashboard -->
             <div class="py-4">
                 <div class="container">
                     <div class="page-header mb-3">
                         <h4 class="section-title">📊 General Dashboard</h4>
                     </div>
-                    <div class="row ">
-                        <!-- Tarjetas con KPIs -->
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_users();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("users/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-users"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Users</div>
-                                            <small>Total registered</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
 
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_patients();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("clinic_patients/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-user-plus"></i>
+                    <!-- Pacientes -->
+                    <div class="mb-4">
+                        <h5 class="section-title">👥 Patients</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_patients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("clinic_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-plus"></i></div>
+                                        <div class="col-10"><div class="title">Patients</div><small>Total registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
                                     </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Patients</div>
-                                            <small>Total registered</small>
-                                        </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_activespatients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("actives_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-users"></i></div>
+                                        <div class="col-10"><div class="title">Active Patients</div><small>Currently active</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
                                     </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_inactivespatients();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("inactives_patients/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-user-times"></i>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_inactivespatients();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("inactives_patients/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-times"></i></div>
+                                        <div class="col-10"><div class="title">Inactive Patients</div><small>Currently inactive</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
                                     </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Inactive Patients</div>
-                                            <small>Currently inactive</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_activespatients();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("actives_patients/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-users"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Active Patients</div>
-                                            <small>Currently active</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_appointments();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointments/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-calendar-check-o"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Appointments</div>
-                                            <small>Total scheduled</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointment_new/request_manage") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-calendar-plus-o"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Pending Requests</div>
-                                            <small>Awaiting approval</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $pending_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_invoices();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-calculator"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Invoices</div>
-                                            <small>Total generated</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 comp-grid">
-                            <?php $rec_count = $comp_model->getcount_doctors();  ?>
-                            <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("doc/") ?>">
-                                <div class="row">
-                                    <div class="col-2">
-                                        <i class="fa fa-user-md"></i>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="flex-column">
-                                            <div class="title">Doctors</div>
-                                            <small>Registered</small>
-                                        </div>
-                                    </div>
-                                    <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Citas -->
+                    <div class="mb-4">
+                        <h5 class="section-title">📅 Appointments</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_appointments();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointments/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calendar-check-o"></i></div>
+                                        <div class="col-10"><div class="title">Appointments</div><small>Total scheduled</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $pending_count = $comp_model->getcount_pending_appointments2(); ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("appointment_new/request_manage") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calendar-plus-o"></i></div>
+                                        <div class="col-10"><div class="title">Pending Requests</div><small>Awaiting approval</small></div>
+                                        <h4 class="value"><strong><?php echo $pending_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Finanzas -->
+                    <div class="mb-4">
+                        <h5 class="section-title">💵 Finances</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_invoices();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-calculator"></i></div>
+                                        <div class="col-10"><div class="title">Invoices</div><small>Total generated</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctores -->
+                    <div class="mb-4">
+                        <h5 class="section-title">🧑‍⚕️ Doctors</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_doctors();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("doc/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-user-md"></i></div>
+                                        <div class="col-10"><div class="title">Doctors</div><small>Registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usuarios -->
+                    <div class="mb-4">
+                        <h5 class="section-title">👤 Users</h5>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 comp-grid">
+                                <?php $rec_count = $comp_model->getcount_users();  ?>
+                                <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("users/") ?>">
+                                    <div class="row">
+                                        <div class="col-2"><i class="fa fa-users"></i></div>
+                                        <div class="col-10"><div class="title">Users</div><small>Total registered</small></div>
+                                        <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -228,21 +198,11 @@ $current_page = $this->set_current_page_link();
             </div>
             <div class="card-body">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        🧑‍⚕️ Dr. Smith created a new prescription for Patient #1042
-                    </li>
-                    <li class="list-group-item">
-                        📅 Appointment pending approval – Patient #1001
-                    </li>
-                    <li class="list-group-item">
-                        💵 Invoice #2034 generated on 25 Aug 2025
-                    </li>
-                    <li class="list-group-item">
-                        👤 New patient registered: Maria Gonzalez
-                    </li>
-                    <li class="list-group-item">
-                        🩺 Doctor Lopez updated his availability schedule
-                    </li>
+                    <li class="list-group-item">🧑‍⚕️ Dr. Smith created a new prescription for Patient #1042</li>
+                    <li class="list-group-item">📅 Appointment pending approval – Patient #1001</li>
+                    <li class="list-group-item">💵 Invoice #2034 generated on 25 Aug 2025</li>
+                    <li class="list-group-item">👤 New patient registered: Maria Gonzalez</li>
+                    <li class="list-group-item">🩺 Doctor Lopez updated his availability schedule</li>
                 </ul>
             </div>
         </div>

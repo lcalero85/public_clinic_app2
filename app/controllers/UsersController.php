@@ -208,7 +208,7 @@ class UsersController extends SecureController
                 'user_name'  => 'required',
                 'password'   => 'required',
                 'email'      => 'required|valid_email',
-              
+
             );
 
             $this->sanitize_array = array(
@@ -362,100 +362,100 @@ class UsersController extends SecureController
      * @return array
      */
     function edit($rec_id = null, $formdata = null)
-{
-    $request = $this->request;
-    $db = $this->GetModel();
-    $this->rec_id = $rec_id;
-    $tablename = $this->tablename;
-    //editable fields
-    $fields = $this->fields = array(
-        "id_user",
-        "full_names",
-        "id_role",
-        "user_name",
-        "photo",
-        "register_date",
-        "update_date"
-    );
-
-    if ($formdata) {
-        $postdata = $this->format_request_data($formdata);
-        $this->rules_array = array(
-            'full_names' => 'required',
-            'id_role' => 'required',
-            'user_name' => 'required',
-            'photo' => '',
-        );
-        $this->sanitize_array = array(
-            'full_names' => 'sanitize_string',
-            'id_role' => 'sanitize_string',
-            'user_name' => 'sanitize_string',
-            'photo' => '',
+    {
+        $request = $this->request;
+        $db = $this->GetModel();
+        $this->rec_id = $rec_id;
+        $tablename = $this->tablename;
+        //editable fields
+        $fields = $this->fields = array(
+            "id_user",
+            "full_names",
+            "id_role",
+            "user_name",
+            "photo",
+            "register_date",
+            "update_date"
         );
 
-        $modeldata = $this->modeldata = $this->validate_form($postdata);
-        $modeldata['register_date'] = datetime_now();
-        $modeldata['update_date'] = datetime_now();
+        if ($formdata) {
+            $postdata = $this->format_request_data($formdata);
+            $this->rules_array = array(
+                'full_names' => 'required',
+                'id_role' => 'required',
+                'user_name' => 'required',
+                'photo' => '',
+            );
+            $this->sanitize_array = array(
+                'full_names' => 'sanitize_string',
+                'id_role' => 'sanitize_string',
+                'user_name' => 'sanitize_string',
+                'photo' => '',
+            );
 
-        // --- Foto: archivo O webcam O nada (NO modificar si no se envía) ---
-        $photoData = null;
+            $modeldata = $this->modeldata = $this->validate_form($postdata);
+            $modeldata['register_date'] = datetime_now();
+            $modeldata['update_date'] = datetime_now();
 
-        if (!empty($_FILES['photo_file']['tmp_name'])) {
-            // 1) Imagen desde el selector de archivos
-            $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
-        } elseif (!empty($_POST['photo_webcam'])) {
-            // 2) Imagen tomada con webcam (dataURL base64)
-            $base64 = $_POST['photo_webcam'];
-            $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
-        }
+            // --- Foto: archivo O webcam O nada (NO modificar si no se envía) ---
+            $photoData = null;
 
-        if ($photoData !== null) {
-            $modeldata['photo'] = $photoData;
-        } else {
-            // 🚀 No llegó foto → no actualizar el campo
-            unset($modeldata['photo']);
-        }
-
-        //Check if Duplicate Record Already Exists In The Database
-        if (isset($modeldata['user_name'])) {
-            $db->where("user_name", $modeldata['user_name'])->where("id_user", $rec_id, "!=");
-            if ($db->has($tablename)) {
-                $this->view->page_error[] = $modeldata['user_name'] . " Already exist!";
+            if (!empty($_FILES['photo_file']['tmp_name'])) {
+                // 1) Imagen desde el selector de archivos
+                $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+            } elseif (!empty($_POST['photo_webcam'])) {
+                // 2) Imagen tomada con webcam (dataURL base64)
+                $base64 = $_POST['photo_webcam'];
+                $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
             }
-        }
 
-        if ($this->validated()) {
-            $db->where("users.id_user", $rec_id);
-            $bool = $db->update($tablename, $modeldata);
-            $numRows = $db->getRowCount(); // number of affected rows. 0 = no record field updated
-            if ($bool && $numRows) {
-                $this->write_to_log("edit", "true");
-                $this->set_flash_msg("Record updated successfully", "success");
-                return $this->redirect("users");
+            if ($photoData !== null) {
+                $modeldata['photo'] = $photoData;
             } else {
-                if ($db->getLastError()) {
-                    $this->set_page_error();
-                    $this->write_to_log("edit", "false");
-                } elseif (!$numRows) {
-                    // not an error, but no record was updated
-                    $page_error = "No record updated";
-                    $this->set_page_error($page_error);
-                    $this->set_flash_msg($page_error, "warning");
-                    $this->write_to_log("edit", "false");
+                // 🚀 No llegó foto → no actualizar el campo
+                unset($modeldata['photo']);
+            }
+
+            //Check if Duplicate Record Already Exists In The Database
+            if (isset($modeldata['user_name'])) {
+                $db->where("user_name", $modeldata['user_name'])->where("id_user", $rec_id, "!=");
+                if ($db->has($tablename)) {
+                    $this->view->page_error[] = $modeldata['user_name'] . " Already exist!";
+                }
+            }
+
+            if ($this->validated()) {
+                $db->where("users.id_user", $rec_id);
+                $bool = $db->update($tablename, $modeldata);
+                $numRows = $db->getRowCount(); // number of affected rows. 0 = no record field updated
+                if ($bool && $numRows) {
+                    $this->write_to_log("edit", "true");
+                    $this->set_flash_msg("Record updated successfully", "success");
                     return $this->redirect("users");
+                } else {
+                    if ($db->getLastError()) {
+                        $this->set_page_error();
+                        $this->write_to_log("edit", "false");
+                    } elseif (!$numRows) {
+                        // not an error, but no record was updated
+                        $page_error = "No record updated";
+                        $this->set_page_error($page_error);
+                        $this->set_flash_msg($page_error, "warning");
+                        $this->write_to_log("edit", "false");
+                        return $this->redirect("users");
+                    }
                 }
             }
         }
-    }
 
-    $db->where("users.id_user", $rec_id);
-    $data = $db->getOne($tablename, $fields);
-    $page_title = $this->view->page_title = "Edit  Users";
-    if (!$data) {
-        $this->set_page_error();
+        $db->where("users.id_user", $rec_id);
+        $data = $db->getOne($tablename, $fields);
+        $page_title = $this->view->page_title = "Edit  Users";
+        if (!$data) {
+            $this->set_page_error();
+        }
+        return $this->render_view("users/edit.php", $data);
     }
-    return $this->render_view("users/edit.php", $data);
-}
 
     /**
      * Delete record from the database
@@ -604,9 +604,18 @@ class UsersController extends SecureController
                     );
 
                     $db->insert("clinic_patients", $table_data);
+                    # 🔔 Disparar notificación de registro individual (Paciente + Admin)
+                    require_once APP_DIR . "../helpers/NotificationHelper.php";
+                    NotificationHelper::sendNotification(
+                        eventName: "patient_registered_self",
+                        data: [
+                            "patient_name" => $modeldata['full_names'],
+                            "id_user"      => $rec_id  // <-- ID del paciente recién creado
+                        ]
+                    );
 
-                    $this->set_flash_msg("Patient registered successfully", "success");
-                    return $this->redirect("home");
+                    $this->set_flash_msg("Grabar agregado exitosamente", "success");
+					 return $this->redirect("home");
                 } else {
                     $this->set_page_error();
                     $this->write_to_log("add", "false");
@@ -615,6 +624,6 @@ class UsersController extends SecureController
         }
 
         $page_title = $this->view->page_title = "Add New Patient";
-        $this->render_view("users/register.php");
+		$this->render_view("users/register.php");
     }
 }

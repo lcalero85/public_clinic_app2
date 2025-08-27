@@ -81,7 +81,15 @@ class ACL
         array(
             'my_appointment'   => array('list'),
             'appointment_new'  => array('request', 'request_submit')
-        )
+        ),
+        // 👇 Aquí agregamos notifications
+       "notifications" => array(
+        "index"     => array("admin", "assistant", "doctor", "Patients"),
+        "mark_read" => array("admin", "assistant", "doctor", "Patients"),
+        "mark_all"  => array("admin", "assistant", "doctor", "Patients")
+    )
+
+        
     );
 
     /**

@@ -104,8 +104,9 @@ define("DB_USERNAME", "root");
 define("DB_PASSWORD", "");
 define("DB_NAME", "clinicdb");
 define("DB_TYPE", "mysql");
-define("DB_PORT", "");
+define("DB_PORT", "3306");
 define("DB_CHARSET", "utf8");
+
 
 define("MAX_RECORD_COUNT", 20); //Default Max Records to Retrieve  per Page
 define("ORDER_TYPE", "DESC");  //Default Order Type

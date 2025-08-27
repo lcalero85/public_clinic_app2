@@ -90,27 +90,44 @@ function get_user_photo_src($photoBlob)
 <!-- 📌 Modal de Notificaciones -->
 <div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
-    <div class="modal-content">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:15px; overflow:hidden;">
+      
+      <!-- Header con color de la app -->
       <div class="modal-header bg-info text-white">
-        <h5 class="modal-title" id="notificationsLabel"><i class="fa fa-bell"></i> Notifications</h5>
+        <h5 class="modal-title font-weight-bold" id="notificationsLabel">
+          <i class="fa fa-bell"></i> Notifications
+        </h5>
         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <!-- Ejemplo de notificaciones -->
+
+      <!-- Body con fondo suave -->
+      <div class="modal-body" style="background:#e6f7fa;">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><i class="fa fa-user-plus text-info"></i> New patient registered</li>
-          <li class="list-group-item"><i class="fa fa-calendar text-success"></i> Appointment scheduled</li>
-          <li class="list-group-item"><i class="fa fa-file-invoice text-warning"></i> New invoice created</li>
+          <li class="list-group-item d-flex align-items-center">
+            <i class="fa fa-user-plus text-info mr-2"></i>
+            New patient registered
+          </li>
+          <li class="list-group-item d-flex align-items-center">
+            <i class="fa fa-calendar text-success mr-2"></i>
+            Appointment scheduled
+          </li>
+          <li class="list-group-item d-flex align-items-center">
+            <i class="fa fa-file-invoice text-warning mr-2"></i>
+            New invoice created
+          </li>
         </ul>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">Close</button>
+
+      <!-- Footer con botón -->
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-info btn-sm px-4" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <?php if (user_login_status() == true) { ?>
     <nav id="sidebar" class="navbar-light bg-info">

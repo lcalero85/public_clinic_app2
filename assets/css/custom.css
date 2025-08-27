@@ -878,3 +878,79 @@ footer {
     padding: 10px;
 }
 
+
+/* 🔔 Modal de Notificaciones */
+#notificationsModal .modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Header */
+#notificationsModal .modal-header {
+    background-color: #006680; /* mismo tono que navbar bg-info */
+    color: #fff;
+    font-weight: bold;
+}
+
+#notificationsModal .modal-header .close {
+    color: #fff;
+    opacity: 0.9;
+}
+
+#notificationsModal .modal-header .close:hover {
+    opacity: 1;
+}
+
+/* Body */
+#notificationsModal .modal-body {
+    background: #e6f7fa; /* azul claro suave */
+    padding: 0;
+}
+
+#notificationsModal .list-group-item {
+    border: none;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+#notificationsModal .list-group-item i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+/* Footer */
+#notificationsModal .modal-footer {
+    background-color: #f8f9fa; /* gris muy claro */
+    border-top: 1px solid #ddd;
+}
+
+#notificationsModal .modal-footer .btn-info {
+    background-color: #006680;
+    border-color: #006680;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    padding: 6px 18px;
+    transition: all 0.2s ease-in-out;
+}
+
+#notificationsModal .modal-footer .btn-info:hover {
+    background-color: #004d66;
+    border-color: #004d66;
+}
+
+/* 🔴 Animación para el badge */
+#notif-count {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+

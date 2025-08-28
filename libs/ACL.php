@@ -46,7 +46,7 @@ class ACL
             'appointment_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'appointments' => array('list', 'view'),
             'report' => array('index', 'show', 'clinical_historial'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
         ),
 
         3 => // Doctor
@@ -56,7 +56,7 @@ class ACL
             'my_appointment' => array('list', 'view'),
             // 🔹 solo historial clínico
             'report' => array('clinical_historial'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
         ),
 
         2 => // Assistant
@@ -77,14 +77,14 @@ class ACL
             'appointments' => array('list', 'view'),
             // 🔹 solo historial clínico
             'report' => array('clinical_historial'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
         ),
 
         4 => // Patients
         array(
             'my_appointment'   => array('list'),
             'appointment_new'  => array('request', 'request_submit'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
         ),
        
 

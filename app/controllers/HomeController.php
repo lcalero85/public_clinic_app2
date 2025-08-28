@@ -1,32 +1,36 @@
-<?php 
-
+<?php  
 /**
  * Home Page Controller
  * @category  Controller
  */
 class HomeController extends SecureController{
+
     /**
      * Acción principal (Index)
      * @return View
      */
-    function index(){
-        // Obtenemos el nombre del rol desde la constante que creamos en login_user()
-        // Se convierte a minúsculas para evitar problemas con mayúsculas/minúsculas
-        $role_name = strtolower(USER_ROLE_NAME);
+    function index(): void {
+        // Obtenemos el rol desde la constante definida en login_user()
+        $role_name = strtolower(USER_ROLE_NAME ?? '');
 
-        // Definimos un mapeo de roles a las vistas que debe cargar cada uno
+        // Mapeo de roles a vistas específicas
         $role_views = [
             'admin'     => 'home/admin.php',     // Vista para Administrador
             'doctor'    => 'home/doctor.php',    // Vista para Doctor
             'assistant' => 'home/assistant.php', // Vista para Asistente
-            'patients'  => 'home/patients.php'   // Vista para Pacientes
+            'patients'  => 'home/patients.php',  // Vista para Pacientes
         ];
 
-        // Si el rol existe en el mapeo, asignamos la vista correspondiente
-        // Si no existe, asignamos la vista por defecto "home/index.php"
-        $view = isset($role_views[$role_name]) ? $role_views[$role_name] : 'home/index.php';
+        // Seleccionar la vista según el rol, o una vista por defecto
+        if(isset($role_views[$role_name])){
+            $view = $role_views[$role_name];
+        } else {
+            // Si el rol no existe o está vacío, carga la vista genérica
+            $view = 'home/index.php';
+        }
 
-        // Renderizamos la vista elegida usando el layout principal
+        // Renderizar la vista usando el layout principal
         $this->render_view($view, null, "main_layout.php");
     }
 }
+

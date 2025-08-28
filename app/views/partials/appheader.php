@@ -35,20 +35,18 @@ function get_user_photo_src($photoBlob)
 
 <div id="topbar" class="navbar navbar-expand-sm fixed-top navbar-light bg-info">
     <div class="container-fluid">
-        
         <a class="navbar-brand" href="<?php print_link(HOME_PAGE) ?>">
             <img class="img-responsive" src="<?php print_link(SITE_LOGO); ?>" /> <?php echo SITE_NAME ?>
         </a>
 
         <?php if (user_login_status() == true) { ?>
             <div class="navbar-collapse collapse navbar-responsive-collapse">
-                 <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
             <button type="button" id="sidebarCollapse" class="btn btn-info">
             <span class="navbar-toggler-icon"></span>
             </button>
             </button>
                 <ul class="navbar-nav ml-auto align-items-center">
-      
                     <!-- 🔔 Notificaciones -->
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="#" data-toggle="modal" data-target="#notificationsModal">
@@ -84,9 +82,6 @@ function get_user_photo_src($photoBlob)
         <?php } ?>
     </div>
 </div>
-
-
-
 <!-- 📌 Modal de Notificaciones -->
 <div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
@@ -219,6 +214,7 @@ function get_user_photo_src($photoBlob)
         color: #030303ff;
     }
 </style>
+<?php if(user_login_status()): ?>
 <script>
 $(document).ready(function(){
 
@@ -295,5 +291,5 @@ $(document).ready(function(){
     setInterval(refreshNotificationCount, 30000);
 });
 </script>
-
+<?php endif; ?>
 

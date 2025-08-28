@@ -208,7 +208,6 @@ class UsersController extends SecureController
                 'user_name'  => 'required',
                 'password'   => 'required',
                 'email'      => 'required|valid_email',
-
             );
 
             $this->sanitize_array = array(
@@ -227,35 +226,29 @@ class UsersController extends SecureController
             $modeldata['register_date'] = datetime_now();
             $modeldata['update_date']   = datetime_now();
             $modeldata['rol']           = $labels;
-            $modeldata['created_by'] = defined('USER_ID') ? USER_ID : null;
-            // --- Foto: archivo O webcam O nada (NULL) ---
-            $photoData = null;
+            $modeldata['created_by']    = defined('USER_ID') ? USER_ID : null;
 
+            // --- Foto ---
+            $photoData = null;
             if (!empty($_FILES['photo_file']['tmp_name'])) {
-                // 1) Imagen desde el selector de archivos
                 $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
             } elseif (!empty($_POST['photo_webcam'])) {
-                // 2) Imagen tomada con webcam (dataURL base64)
                 $base64 = $_POST['photo_webcam'];
                 $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
             }
-
-            // Asignar al campo real de la tabla
             $modeldata['photo'] = $photoData ?: null;
 
-            // 🔎 Validar duplicados en user_name
+            // Validar duplicados
             $db->where("LOWER(user_name)", strtolower($modeldata['user_name']));
             if ($db->has($tablename)) {
                 $this->view->page_error[] = "The username '" . $modeldata['user_name'] . "' already exists.";
             }
 
-            // 🔎 Validar duplicados en email
             $db->where("LOWER(email)", strtolower($modeldata['email']));
             if ($db->has($tablename)) {
                 $this->view->page_error[] = "The email '" . $modeldata['email'] . "' already exists.";
             }
 
-            // ⚡ Identificar rol por id_role
             $id_role   = (int) $modeldata['id_role'];
             $full_name = strtolower(trim($modeldata['full_names']));
             $email     = strtolower(trim($modeldata['email']));
@@ -265,79 +258,75 @@ class UsersController extends SecureController
             $doctor         = null;
             $patient        = null;
 
-            // Doctor = 3
-            if ($id_role === 3) {
-                $db->where("LOWER(full_names)", $full_name);
-                $doctor = $db->getOne('doc');
-
-                if ($doctor) {
-                    // Si ya existe → actualizar correo y foto
-                    $updateData = [
-                        'work_email'  => $email,
-                        'update_date' => datetime_now()
-                    ];
-                    if (!empty($modeldata['photo'])) {
-                        $updateData['photo'] = $modeldata['photo'];
-                    }
-                    $db->where('id', $doctor['id'])->update('doc', $updateData);
-                } else {
-                    // Si no existe → crear nuevo
-                    $new_doc_id = $db->insert('doc', [
-                        'full_names'    => ucwords($full_name),
-                        'work_email'    => $email,
-                        'photo'         => $modeldata['photo'] ?: null,
-                        'register_date' => datetime_now(),
-                        'update_date'   => datetime_now()
-                    ]);
-                }
-            }
-
-            // Patients = 4
-            if ($id_role === 4) {
-                $db->where("LOWER(full_names)", $full_name);
-                $patient = $db->getOne('clinic_patients');
-
-                if ($patient) {
-                    // Si ya existe → actualizar correo y foto
-                    $updateData = [
-                        'email'       => $email,
-                        'update_date' => datetime_now()
-                    ];
-                    if (!empty($modeldata['photo'])) {
-                        $updateData['photo'] = $modeldata['photo'];
-                    }
-                    $db->where('id_patient', $patient['id_patient'])->update('clinic_patients', $updateData);
-                } else {
-                    // Si no existe → crear nuevo
-                    $new_patient_id = $db->insert('clinic_patients', [
-                        'full_names'    => ucwords($full_name),
-                        'email'         => $email,
-                        'photo'         => $modeldata['photo'] ?: null,
-                        'register_date' => datetime_now(),
-                        'update_date'   => datetime_now()
-                    ]);
-                }
-            }
-
             // ✅ Guardar usuario si pasó validaciones
             if ($this->validated() && empty($this->view->page_error)) {
                 $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+
                 if ($rec_id) {
-                    // Asociar usuario en doc
+                    // Doctor = 3
                     if ($id_role === 3) {
+                        $db->where("LOWER(full_names)", $full_name);
+                        $doctor = $db->getOne('doc');
+
                         if ($doctor) {
+                            $updateData = [
+                                'work_email'  => $email,
+                                'update_date' => datetime_now()
+                            ];
+                            if (!empty($modeldata['photo'])) {
+                                $updateData['photo'] = $modeldata['photo'];
+                            }
+                            $db->where('id', $doctor['id'])->update('doc', $updateData);
                             $db->where('id', $doctor['id'])->update('doc', ['id_user' => $rec_id]);
-                        } elseif ($new_doc_id) {
-                            $db->where('id', $new_doc_id)->update('doc', ['id_user' => $rec_id]);
+                        } else {
+                            $new_doc_id = $db->insert('doc', [
+                                'full_names'    => ucwords($full_name),
+                                'work_email'    => $email,
+                                'photo'         => $modeldata['photo'] ?: null,
+                                'register_date' => datetime_now(),
+                                'update_date'   => datetime_now(),
+                                'id_user'       => $rec_id
+                            ]);
+
+                            require_once APP_DIR . "../helpers/NotificationHelper.php";
+
+                            // 1) Notificación a Admin y Asistente
+                            NotificationHelper::sendNotification("doctor_registered", [
+                                "doctor_name" => $formdata['full_names']
+                            ]);
+
+                            // 2) Notificación de bienvenida solo para el Doctor
+                            NotificationHelper::sendNotification("doctor_welcome", [
+                                "doctor_name" => $formdata['full_names'],
+                                "id_user"     => $rec_id   // 👈 se asegura que llegue SOLO al nuevo doctor
+                            ]);
                         }
                     }
 
-                    // Asociar usuario en clinic_patients
+                    // Patients = 4
                     if ($id_role === 4) {
+                        $db->where("LOWER(full_names)", $full_name);
+                        $patient = $db->getOne('clinic_patients');
+
                         if ($patient) {
+                            $updateData = [
+                                'email'       => $email,
+                                'update_date' => datetime_now()
+                            ];
+                            if (!empty($modeldata['photo'])) {
+                                $updateData['photo'] = $modeldata['photo'];
+                            }
+                            $db->where('id_patient', $patient['id_patient'])->update('clinic_patients', $updateData);
                             $db->where('id_patient', $patient['id_patient'])->update('clinic_patients', ['id_user' => $rec_id]);
-                        } elseif ($new_patient_id) {
-                            $db->where('id_patient', $new_patient_id)->update('clinic_patients', ['id_user' => $rec_id]);
+                        } else {
+                            $new_patient_id = $db->insert('clinic_patients', [
+                                'full_names'    => ucwords($full_name),
+                                'email'         => $email,
+                                'photo'         => $modeldata['photo'] ?: null,
+                                'register_date' => datetime_now(),
+                                'update_date'   => datetime_now(),
+                                'id_user'       => $rec_id
+                            ]);
                         }
                     }
 
@@ -615,7 +604,7 @@ class UsersController extends SecureController
                     );
 
                     $this->set_flash_msg("Grabar agregado exitosamente", "success");
-					 return $this->redirect("home");
+                    return $this->redirect("home");
                 } else {
                     $this->set_page_error();
                     $this->write_to_log("add", "false");
@@ -624,6 +613,6 @@ class UsersController extends SecureController
         }
 
         $page_title = $this->view->page_title = "Add New Patient";
-		$this->render_view("users/register.php");
+        $this->render_view("users/register.php");
     }
 }

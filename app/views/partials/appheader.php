@@ -82,29 +82,38 @@ function get_user_photo_src($photoBlob)
         <?php } ?>
     </div>
 </div>
-<!-- 📌 Modal de Notificaciones -->
-<div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
-        <div class="modal-content border-0 shadow-lg" style="border-radius:15px; overflow:hidden;">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title font-weight-bold" id="notificationsLabel">
-                    <i class="fa fa-bell"></i> Notifications
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" style="background:#e6f7fa;">
-                <ul class="list-group list-group-flush" id="notificationsList">
-                    <li class="list-group-item text-center text-muted">Loading...</li>
-                </ul>
-            </div>
-            <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-info btn-sm px-4" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+<!-- 🔔 Modal de Notificaciones -->
+<div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document"> <!-- 👈 más ancho -->
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">
+          <i class="fa fa-bell"></i> Notifications
+        </h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body p-0">
+        <ul id="notificationsList" class="list-group list-group-flush">
+          <li class="list-group-item text-center text-muted">Loading...</li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <!-- 🗑 Botón Clear All -->
+        <button id="clearAllBtn" class="btn btn-danger">
+          <i class="fa fa-trash"></i> Clear All
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
 </div>
+
+
+
 
 <!-- 🎨 Estilos -->
 <style>
@@ -218,78 +227,91 @@ function get_user_photo_src($photoBlob)
 <script>
 $(document).ready(function(){
 
-    // 🔄 Función para refrescar contador de notificaciones
+    // 🔄 Refrescar contador
     function refreshNotificationCount() {
-        $.ajax({
-            url: "<?php echo SITE_ADDR; ?>notifications/unread_count",
-            method: "GET",
-            dataType: "json",
-            success: function(data){
-                let count = data.count || 0;
+        $.get("<?php echo SITE_ADDR; ?>notifications/unread_count", function(data){
+            let count = data.count || 0;
+            $("#notif-count").text(count);
 
-                // Actualizar badge
-                $("#notif-count").text(count);
-
-                if(count > 0){
-                    $("#notif-count")
-                        .removeClass("badge-secondary")
-                        .addClass("badge-danger");
-                } else {
-                    $("#notif-count")
-                        .removeClass("badge-danger")
-                        .addClass("badge-secondary");
-                }
-            },
-            error: function(xhr){
-                console.error("⚠️ Error cargando contador:", xhr.responseText);
+            if(count > 0){
+                $("#notif-count")
+                    .removeClass("badge-secondary")
+                    .addClass("badge-danger");
+            } else {
+                $("#notif-count")
+                    .removeClass("badge-danger")
+                    .addClass("badge-secondary");
             }
-        });
+        }, 'json');
     }
 
-    // ▶️ Al abrir el modal de notificaciones
+    // ▶️ Al abrir modal
     $('#notificationsModal').on('shown.bs.modal', function () {
+        // Marcar todas como leídas
         $.post('<?php echo SITE_ADDR; ?>notifications/mark_all', {
             csrf_token: "<?php echo Csrf::$token; ?>"
         }, function(){
-            // Resetear badge a 0
+            // Resetear badge
             $("#notif-count").text("0")
                 .removeClass("badge-danger")
                 .addClass("badge-secondary");
 
-            // 🔄 Recargar listado de notificaciones (👉 usar get_all)
-            $.get('<?php echo SITE_ADDR; ?>notifications/get_all', function(data){
-                let html = "";
-
-                if (data.length > 0) {
-                    data.forEach(function(n){
-                        html += `
-                            <li class="list-group-item d-flex flex-column" style="font-size:0.85rem;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <i class="fa ${n.is_read == 1 ? 'fa-envelope-open text-secondary' : 'fa-envelope text-info'} mr-2"></i>
-                                        <strong>${n.title}</strong>
-                                    </span>
-                                    <small class="text-muted">${n.created_at}</small>
-                                </div>
-                                <div class="mt-1 text-muted">${n.message}</div>
-                            </li>
-                        `;
-                    });
-                } else {
-                    html = `<li class="list-group-item text-center text-muted">No notifications yet</li>`;
-                }
-
-                $("#notificationsList").html(html);
-            }, 'json');
+            // Cargar notificaciones
+            loadNotifications();
         }, 'json');
+    });
+
+    // ▶️ Función para cargar listado
+    function loadNotifications() {
+        $.get('<?php echo SITE_ADDR; ?>notifications/get_all', function(data){
+            let html = "";
+
+            if (data.success && data.data.length > 0) {
+                data.data.forEach(function(n){
+                    html += `
+                        <li class="list-group-item d-flex flex-column" style="font-size:0.9rem;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="fa ${n.is_read == 1 ? 'fa-envelope-open text-secondary' : 'fa-envelope text-info'} mr-2"></i>
+                                    <strong>${n.title}</strong>
+                                </span>
+                                <small class="text-muted">${n.created_at}</small>
+                            </div>
+                            <div class="mt-1 text-muted">${n.message}</div>
+                        </li>
+                    `;
+                });
+            } else {
+                html = `<li class="list-group-item text-center text-muted">No notifications yet</li>`;
+            }
+
+            $("#notificationsList").html(html);
+        }, 'json');
+    }
+
+    // ▶️ Botón Clear All
+    $("#clearAllBtn").click(function(){
+        if(confirm("⚠️ Are you sure you want to clear all notifications?")){
+            $.post('<?php echo SITE_ADDR; ?>notifications/clear_all', {
+                csrf_token: "<?php echo Csrf::$token; ?>"
+            }, function(resp){
+                if(resp.success){
+                    $("#notificationsList").html(`<li class="list-group-item text-center text-muted">No notifications yet</li>`);
+                    $("#notif-count").text("0")
+                        .removeClass("badge-danger")
+                        .addClass("badge-secondary");
+                } else {
+                    alert("❌ Error clearing notifications");
+                }
+            }, 'json');
+        }
     });
 
     // ▶️ Llamada inicial al cargar página
     refreshNotificationCount();
 
-    // ⏱ Refrescar cada 30 segundos
+    // ⏱ Refrescar contador cada 30 seg
     setInterval(refreshNotificationCount, 30000);
 });
 </script>
 <?php endif; ?>
-

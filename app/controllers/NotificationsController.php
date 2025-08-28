@@ -1,40 +1,77 @@
 <?php
 class NotificationsController extends SecureController {
 
-    function index() {
+    /**
+     * 📌 Obtener todas las notificaciones del usuario logueado
+     */
+    public function index() {
         $db = $this->GetModel();
         $user_id = USER_ID;
 
         $db->where("id_user", $user_id);
-        $records = $db->get("notifications", null, "id_notification, title, message, is_read, created_at");
+        $records = $db->get("notifications", null, 
+            ["id_notification", "title", "message", "is_read", "created_at"]
+        );
 
         header('Content-Type: application/json');
         echo json_encode($records);
         exit;
     }
 
-    function mark_read($id) {
+    /**
+     * 📌 Marcar todas las notificaciones como leídas
+     */
+    public function mark_all() {
         $db = $this->GetModel();
-        $db->where("id_notification", $id)->where("id_user", USER_ID);
-        $db->update("notifications", ["is_read" => 1]);
+        $user_id = USER_ID;
+
+        $db->where("id_user", $user_id);
+        $updated = $db->update("notifications", ["is_read" => 1]);
+        $affected_rows = $db->getRowCount();
 
         header('Content-Type: application/json');
-        echo json_encode(["success" => true]);
+        echo json_encode([
+            "success"   => $updated !== false,
+            "rows"      => $affected_rows,
+            "user_id"   => $user_id,
+            "sql"       => $db->getLastQuery() // debug opcional
+        ]);
         exit;
     }
-function mark_all() {
+
+    /**
+     * 📌 Obtener el número de notificaciones NO leídas
+     */
+    public function unread_count() {
+        $db = $this->GetModel();
+        $user_id = USER_ID;
+
+        $db->where("id_user", $user_id);
+        $db->where("is_read", 0);
+        $count = $db->getValue("notifications", "count(*)");
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "count" => (int)$count
+        ]);
+        exit;
+    }
+    public function get_all() {
     $db = $this->GetModel();
     $user_id = USER_ID;
 
     $db->where("id_user", $user_id);
-    $updated = $db->update("notifications", ["is_read" => 1]);
+    $db->orderBy("created_at", "DESC");
+
+    // 👇 columnas como string separado por comas
+    $rows = $db->get("notifications", null, "id_notification, title, message, is_read, created_at");
 
     header('Content-Type: application/json');
-    echo json_encode([
-        "success" => $updated !== false
-    ]);
+    echo json_encode($rows);
     exit;
 }
 
 
 }
+
+

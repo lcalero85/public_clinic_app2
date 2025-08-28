@@ -45,7 +45,8 @@ class ACL
             'inactives_patients' => array('list', 'view'),
             'appointment_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'appointments' => array('list', 'view'),
-            'report' => array('index', 'show', 'clinical_historial')
+            'report' => array('index', 'show', 'clinical_historial'),
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
         ),
 
         3 => // Doctor
@@ -54,7 +55,8 @@ class ACL
             'clinic_prescription' => array('add', 'edit', 'editfield', 'delete'),
             'my_appointment' => array('list', 'view'),
             // 🔹 solo historial clínico
-            'report' => array('clinical_historial')
+            'report' => array('clinical_historial'),
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
         ),
 
         2 => // Assistant
@@ -74,20 +76,17 @@ class ACL
             'inactives_patients' => array('list', 'view'),
             'appointments' => array('list', 'view'),
             // 🔹 solo historial clínico
-            'report' => array('clinical_historial')
+            'report' => array('clinical_historial'),
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
         ),
 
         4 => // Patients
         array(
             'my_appointment'   => array('list'),
-            'appointment_new'  => array('request', 'request_submit')
+            'appointment_new'  => array('request', 'request_submit'),
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all')
         ),
-        // 👇 Aquí agregamos notifications
-       "notifications" => array(
-        "index"     => array("admin", "assistant", "doctor", "Patients"),
-        "mark_read" => array("admin", "assistant", "doctor", "Patients"),
-        "mark_all"  => array("admin", "assistant", "doctor", "Patients")
-    )
+       
 
         
     );

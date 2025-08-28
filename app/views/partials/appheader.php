@@ -1,48 +1,6 @@
 <?php
 require_once __DIR__ . "/../../../config.php";
 
-
-try {
-    // Crear conexión PDO usando las constantes del config.php
-    $db = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
-        DB_USERNAME,
-        DB_PASSWORD
-    );
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $current_user = USER_ID;
-
-    // Si se abre el modal con mark_read=1, marcar todas como leídas
-    if (isset($_GET['mark_read']) && $_GET['mark_read'] == 1) {
-        $stmt = $db->prepare("UPDATE notifications SET is_read = 1 WHERE id_user = ?");
-        $stmt->execute([$current_user]);
-    }
-
-    // Contador de notificaciones no leídas
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM notifications WHERE id_user = ? AND is_read = 0");
-    $stmt->execute([$current_user]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $unread_count = $row ? (int)$row['total'] : 0;
-
-    // Obtener últimas 10 notificaciones
-    $stmt = $db->prepare("SELECT title, message, created_at, is_read 
-                          FROM notifications 
-                          WHERE id_user = ? 
-                          ORDER BY created_at DESC 
-                          LIMIT 10");
-    $stmt->execute([$current_user]);
-    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $unread_count = 0;
-    $notifications = [];
-}
-?>
-
-
-
-<?php
-
 function get_user_photo_src($photoBlob)
 {
     if (!empty($photoBlob)) {
@@ -77,23 +35,28 @@ function get_user_photo_src($photoBlob)
 
 <div id="topbar" class="navbar navbar-expand-sm fixed-top navbar-light bg-info">
     <div class="container-fluid">
+        
         <a class="navbar-brand" href="<?php print_link(HOME_PAGE) ?>">
             <img class="img-responsive" src="<?php print_link(SITE_LOGO); ?>" /> <?php echo SITE_NAME ?>
         </a>
 
         <?php if (user_login_status() == true) { ?>
             <div class="navbar-collapse collapse navbar-responsive-collapse">
+                 <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            </button>
                 <ul class="navbar-nav ml-auto align-items-center">
-
-                    <!-- 🔔 Badge Notificaciones -->
-
+      
+                    <!-- 🔔 Notificaciones -->
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="#" data-toggle="modal" data-target="#notificationsModal">
                             <i class="fa fa-bell fa-lg text-white"></i>
                             <span id="notif-count"
-                                class="badge position-absolute <?php echo ($unread_count > 0) ? 'badge-danger' : 'badge-secondary'; ?>"
+                                class="badge position-absolute badge-secondary"
                                 style="top:0; right:0; font-size:0.7rem;">
-                                <?php echo (int)$unread_count; ?>
+                                0
                             </span>
                         </a>
                     </li>
@@ -123,11 +86,11 @@ function get_user_photo_src($photoBlob)
 </div>
 
 
+
 <!-- 📌 Modal de Notificaciones -->
 <div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
         <div class="modal-content border-0 shadow-lg" style="border-radius:15px; overflow:hidden;">
-
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title font-weight-bold" id="notificationsLabel">
                     <i class="fa fa-bell"></i> Notifications
@@ -136,28 +99,11 @@ function get_user_photo_src($photoBlob)
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
             <div class="modal-body" style="background:#e6f7fa;">
-                <ul class="list-group list-group-flush">
-                    <?php if (!empty($notifications)): ?>
-                        <?php foreach ($notifications as $notif): ?>
-                            <li class="list-group-item d-flex flex-column" style="font-size:0.85rem;">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <i class="fa <?php echo $notif['is_read'] ? 'fa-envelope-open text-secondary' : 'fa-envelope text-info'; ?> mr-2"></i>
-                                        <strong><?php echo htmlspecialchars($notif['title']); ?></strong>
-                                    </span>
-                                    <small class="text-muted"><?php echo date("d M H:i", strtotime($notif['created_at'])); ?></small>
-                                </div>
-                                <div class="mt-1 text-muted"><?php echo htmlspecialchars($notif['message']); ?></div>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="list-group-item text-center text-muted">No notifications yet</li>
-                    <?php endif; ?>
+                <ul class="list-group list-group-flush" id="notificationsList">
+                    <li class="list-group-item text-center text-muted">Loading...</li>
                 </ul>
             </div>
-
             <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-info btn-sm px-4" data-dismiss="modal">Close</button>
             </div>
@@ -185,11 +131,6 @@ function get_user_photo_src($photoBlob)
         font-size: 0.75rem;
     }
 </style>
-
-
-
-
-
 <?php if (user_login_status() == true) { ?>
     <nav id="sidebar" class="navbar-light bg-info">
         <ul class="nav navbar-nav w-100 flex-column align-self-start">
@@ -278,22 +219,81 @@ function get_user_photo_src($photoBlob)
         color: #030303ff;
     }
 </style>
-
 <script>
 $(document).ready(function(){
-    $('#notificationsModal').on('shown.bs.modal', function () {
-        $.post('<?php echo SITE_ADDR; ?>/notifications/mark_all', {
-            csrf_token: "<?php echo Csrf::$token; ?>"
-        }, function(res){
-            if(res.success){
-                // 🔹 Actualizamos el contador
-                $("#notif-count")
-                    .text("0")
-                    .removeClass("badge-danger")
-                    .addClass("badge-secondary");
+
+    // 🔄 Función para refrescar contador de notificaciones
+    function refreshNotificationCount() {
+        $.ajax({
+            url: "<?php echo SITE_ADDR; ?>notifications/unread_count",
+            method: "GET",
+            dataType: "json",
+            success: function(data){
+                let count = data.count || 0;
+
+                // Actualizar badge
+                $("#notif-count").text(count);
+
+                if(count > 0){
+                    $("#notif-count")
+                        .removeClass("badge-secondary")
+                        .addClass("badge-danger");
+                } else {
+                    $("#notif-count")
+                        .removeClass("badge-danger")
+                        .addClass("badge-secondary");
+                }
+            },
+            error: function(xhr){
+                console.error("⚠️ Error cargando contador:", xhr.responseText);
             }
+        });
+    }
+
+    // ▶️ Al abrir el modal de notificaciones
+    $('#notificationsModal').on('shown.bs.modal', function () {
+        $.post('<?php echo SITE_ADDR; ?>notifications/mark_all', {
+            csrf_token: "<?php echo Csrf::$token; ?>"
+        }, function(){
+            // Resetear badge a 0
+            $("#notif-count").text("0")
+                .removeClass("badge-danger")
+                .addClass("badge-secondary");
+
+            // 🔄 Recargar listado de notificaciones (👉 usar get_all)
+            $.get('<?php echo SITE_ADDR; ?>notifications/get_all', function(data){
+                let html = "";
+
+                if (data.length > 0) {
+                    data.forEach(function(n){
+                        html += `
+                            <li class="list-group-item d-flex flex-column" style="font-size:0.85rem;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <i class="fa ${n.is_read == 1 ? 'fa-envelope-open text-secondary' : 'fa-envelope text-info'} mr-2"></i>
+                                        <strong>${n.title}</strong>
+                                    </span>
+                                    <small class="text-muted">${n.created_at}</small>
+                                </div>
+                                <div class="mt-1 text-muted">${n.message}</div>
+                            </li>
+                        `;
+                    });
+                } else {
+                    html = `<li class="list-group-item text-center text-muted">No notifications yet</li>`;
+                }
+
+                $("#notificationsList").html(html);
+            }, 'json');
         }, 'json');
     });
+
+    // ▶️ Llamada inicial al cargar página
+    refreshNotificationCount();
+
+    // ⏱ Refrescar cada 30 segundos
+    setInterval(refreshNotificationCount, 30000);
 });
 </script>
+
 

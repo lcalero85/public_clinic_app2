@@ -673,6 +673,33 @@ class Appointment_newController extends SecureController
 
 				if ($exec) {
 					// ✅ Usar email del paciente desde clinic_patients
+					if ($exec) {
+						// ✅ Email
+						$notifier = new AppointmentNotification();
+						$notifier->notifyPatientDenied($patient['email'], [
+							'patient' => $patient,
+							'appointment' => $appointment,
+							'admin_response' => $update['admin_response']
+						]);
+
+						// ✅ Notificación interna al paciente
+						require_once APP_DIR . "../helpers/NotificationHelper.php";
+						NotificationHelper::sendNotification("appointment_denied_patient", [
+							"patient_name"     => $patient['full_names'],
+							"id_user"          => $patient['id_user'],  // mapea clinic_patients.id_user
+							"appointment_date" => $appointment['requested_date'],
+							"admin_response"   => $update['admin_response']
+						]);
+
+						// ✅ Notificación interna a admin y assistant
+						NotificationHelper::sendNotification("appointment_denied_admin", [
+							"patient_name"     => $patient['full_names'],
+							"appointment_date" => $appointment['requested_date']
+						]);
+
+						$this->set_flash_msg("The appointment has been denied successfully", "success");
+					}
+
 					$notifier = new AppointmentNotification();
 					$notifier->notifyPatientDenied($patient['email'], [
 						'patient' => $patient,
@@ -770,32 +797,58 @@ class Appointment_newController extends SecureController
 			return $this->redirect("appointment_new/request_manage");
 		}
 
-		// Buscar el paciente
+		// Buscar el paciente con id_user
 		$db->where("id_patient", $appointment['id_patient']);
-		$patient = $db->getOne("clinic_patients");
+		$patient = $db->getOne("clinic_patients", ["id_patient", "id_user", "full_names", "email"]);
 
-		$data = array(
+		$data = [
 			"id_doc" => $_POST['id_doc'] ?? null,
 			"appointment_date" => $_POST['appointment_date'] ?? null,
 			"admin_response" => $_POST['notes'] ?? '',
 			"id_status_appointment" => 1, // ✅ Approved
 			"approved_date" => $db->now(),
 			"updated_by" => USER_ID
-		);
+		];
 
 		$db->where("id_appointment", $id);
 		$result = $db->update($tablename, $data);
 
-		// Buscar el doctor asignado
+		// Buscar el doctor asignado con id_user y specialty
 		// Buscar el doctor asignado
 		$doctor = [];
 		if (!empty($data['id_doc'])) {
 			$db->where("id", $data['id_doc']);
-			$doctor = $db->getOne("doc", ["id", "full_names"]);
+			$doctor = $db->getOne("doc", ["id", "full_names", "Speciality", "id_user"]);
 		}
 
-
 		if (!empty($patient['email'])) {
+			require_once APP_DIR . "../helpers/NotificationHelper.php";
+
+			NotificationHelper::sendNotification("appointment_approved_patient", [
+				"patient_name"     => $patient['full_names'],
+				"id_user"          => $patient['id_user'],
+				"appointment_date" => $data['appointment_date'],
+				"doctor_name"      => $doctor['full_names'] ?? '',
+				"doctor_specialty" => $doctor['Speciality'] ?? ''  // 👈 aquí correcto
+			]);
+
+
+			// 🔹 Notificación interna: Admin y Assistant
+			NotificationHelper::sendNotification("appointment_approved_admin", [
+				"patient_name"     => $patient['full_names'],
+				"appointment_date" => $data['appointment_date']
+			]);
+
+			// 🔹 Notificación interna: Doctor
+			if (!empty($doctor['id'])) {
+				NotificationHelper::sendNotification("appointment_approved_doctor", [
+					"patient_name"     => $patient['full_names'],
+					"id_user"          => $doctor['id_user'],
+					"appointment_date" => $data['appointment_date']
+				]);
+			}
+
+			// 🔹 Notificación por correo al paciente
 			$notifier = new AppointmentNotification();
 			$notifier->notifyPatientApproved($patient['email'], [
 				'patient' => $patient,
@@ -806,6 +859,7 @@ class Appointment_newController extends SecureController
 				'doctor' => $doctor,
 				'admin_response' => $data['admin_response']
 			]);
+
 			$this->set_flash_msg("Appointment approved successfully", "success");
 		} else {
 			$this->set_flash_msg("Error approving appointment", "danger");

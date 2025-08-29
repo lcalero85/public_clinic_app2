@@ -84,7 +84,8 @@ class ACL
         array(
             'my_appointment'   => array('list'),
             'appointment_new'  => array('request', 'request_submit'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one'),
+            'report' => array('index', 'show', 'clinical_historial')
         ),
        
 

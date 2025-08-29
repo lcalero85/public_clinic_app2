@@ -184,73 +184,73 @@ class Appointment_newController extends SecureController
 	 * @param $formdata array() from $_POST
 	 * @return BaseView
 	 */
-function add($formdata = null)
-{
-    if ($formdata) {
-        $db = $this->GetModel();
-        $tablename = $this->tablename;
-        $request = $this->request;
+	function add($formdata = null)
+	{
+		if ($formdata) {
+			$db = $this->GetModel();
+			$tablename = $this->tablename;
+			$request = $this->request;
 
-        // Campos permitidos
-        $fields = $this->fields = array(
-            "id_patient",
-            "id_doc",
-            "motive",
-            "description",
-            "appointment_date",
-            "register_date",
-            "id_user",
-            "id_appointment_type",
-            "id_status_appointment",
-            "priority",
-            "reminder_preference",
-            "follow_up_required",
-        );
+			// Campos permitidos
+			$fields = $this->fields = array(
+				"id_patient",
+				"id_doc",
+				"motive",
+				"description",
+				"appointment_date",
+				"register_date",
+				"id_user",
+				"id_appointment_type",
+				"id_status_appointment",
+				"priority",
+				"reminder_preference",
+				"follow_up_required",
+			);
 
-        $postdata = $this->format_request_data($formdata);
+			$postdata = $this->format_request_data($formdata);
 
-        // Validaciones
-        $this->rules_array = array(
-            'id_patient' => 'required',
-            'id_doc' => 'required',
-            'motive' => 'required',
-            'description' => 'required',
-            'appointment_date' => 'required',
-            'id_status_appointment' => '',
-            'id_appointment_type' => 'required',
-            'priority' => 'required',
-            'reminder_preference' => 'required',
-            'follow_up_required' => 'required',
-        );
+			// Validaciones
+			$this->rules_array = array(
+				'id_patient' => 'required',
+				'id_doc' => 'required',
+				'motive' => 'required',
+				'description' => 'required',
+				'appointment_date' => 'required',
+				'id_status_appointment' => '',
+				'id_appointment_type' => 'required',
+				'priority' => 'required',
+				'reminder_preference' => 'required',
+				'follow_up_required' => 'required',
+			);
 
-        // Sanitización
-        $this->sanitize_array = array(
-            'id_patient' => 'sanitize_string',
-            'id_doc' => 'sanitize_string',
-            'motive' => 'sanitize_string',
-            'description' => 'sanitize_string',
-            'appointment_date' => 'sanitize_string',
-            'id_status_appointment' => 'sanitize_string',
-            'id_appointment_type' => 'sanitize_string',
-            'priority' => 'sanitize_string',
-            'reminder_preference' => 'sanitize_string',
-            'follow_up_required' => 'sanitize_string',
-        );
+			// Sanitización
+			$this->sanitize_array = array(
+				'id_patient' => 'sanitize_string',
+				'id_doc' => 'sanitize_string',
+				'motive' => 'sanitize_string',
+				'description' => 'sanitize_string',
+				'appointment_date' => 'sanitize_string',
+				'id_status_appointment' => 'sanitize_string',
+				'id_appointment_type' => 'sanitize_string',
+				'priority' => 'sanitize_string',
+				'reminder_preference' => 'sanitize_string',
+				'follow_up_required' => 'sanitize_string',
+			);
 
-        $this->filter_vals = true;
+			$this->filter_vals = true;
 
-        // Validar datos
-        $modeldata = $this->modeldata = $this->validate_form($postdata);
-        $modeldata['register_date'] = datetime_now();
-        $modeldata['id_user'] = USER_ID;
-        $modeldata['id_status_appointment'] = "1";
+			// Validar datos
+			$modeldata = $this->modeldata = $this->validate_form($postdata);
+			$modeldata['register_date'] = datetime_now();
+			$modeldata['id_user'] = USER_ID;
+			$modeldata['id_status_appointment'] = "1";
 
-        if ($this->validated()) {
-            $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+			if ($this->validated()) {
+				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 
-            if ($rec_id) {
-                // Traer info de la cita
-                $appointment = $db->rawQueryOne("
+				if ($rec_id) {
+					// Traer info de la cita
+					$appointment = $db->rawQueryOne("
                     SELECT an.id_appointment, an.appointment_date, an.motive, an.description, an.id_status_appointment,
                            cp.full_names AS patient_name, cp.email AS patient_email,
                            dc.full_names AS doctor_name, dc.work_email AS doctor_email
@@ -260,53 +260,53 @@ function add($formdata = null)
                     WHERE an.id_appointment = ?
                 ", [$rec_id]);
 
-                $appointmentData = [
-                    "patient" => [
-                        "full_names" => $appointment['patient_name'],
-                        "email" => $appointment['patient_email'],
-                    ],
-                    "doctor" => [
-                        "full_names" => $appointment['doctor_name'],
-                        "email" => $appointment['doctor_email'],
-                    ],
-                    "appointment" => [
-                        "appointment_date" => $appointment['appointment_date'],
-                        "motive" => $appointment['motive'],
-                        "description" => $appointment['description'],
-                    ],
-                    "status" => "Scheduled",
-                ];
+					$appointmentData = [
+						"patient" => [
+							"full_names" => $appointment['patient_name'],
+							"email" => $appointment['patient_email'],
+						],
+						"doctor" => [
+							"full_names" => $appointment['doctor_name'],
+							"email" => $appointment['doctor_email'],
+						],
+						"appointment" => [
+							"appointment_date" => $appointment['appointment_date'],
+							"motive" => $appointment['motive'],
+							"description" => $appointment['description'],
+						],
+						"status" => "Scheduled",
+					];
 
-                // Enviar notificaciones con try/catch
-                try {
-                    $notifier = new AppointmentNotification();
+					// Enviar notificaciones con try/catch
+					try {
+						$notifier = new AppointmentNotification();
 
-                    if (!$notifier->notifyPatientCreated($appointmentData['patient']['email'], $appointmentData)) {
-                        $this->write_to_log("email_patient", "failed");
-                    }
+						if (!$notifier->notifyPatientCreated($appointmentData['patient']['email'], $appointmentData)) {
+							$this->write_to_log("email_patient", "failed");
+						}
 
-                    if (!$notifier->notifyDoctorCreated($appointmentData['doctor']['email'], $appointmentData)) {
-                        $this->write_to_log("email_doctor", "failed");
-                    }
-                } catch (Exception $e) {
-                    // Registrar error de notificación en logs
-                    $this->write_to_log("email_exception", $e->getMessage());
-                }
+						if (!$notifier->notifyDoctorCreated($appointmentData['doctor']['email'], $appointmentData)) {
+							$this->write_to_log("email_doctor", "failed");
+						}
+					} catch (Exception $e) {
+						// Registrar error de notificación en logs
+						$this->write_to_log("email_exception", $e->getMessage());
+					}
 
-                // Logs y redirección
-                $this->write_to_log("add", "true");
-                $this->set_flash_msg("Record added successfully", "success");
-                return $this->redirect("appointment_new");
-            } else {
-                $this->set_page_error();
-                $this->write_to_log("add", "false");
-            }
-        }
-    }
+					// Logs y redirección
+					$this->write_to_log("add", "true");
+					$this->set_flash_msg("Record added successfully", "success");
+					return $this->redirect("appointment_new");
+				} else {
+					$this->set_page_error();
+					$this->write_to_log("add", "false");
+				}
+			}
+		}
 
-    $page_title = $this->view->page_title = "Add New Appointment ";
-    $this->render_view("appointment_new/add.php");
-}
+		$page_title = $this->view->page_title = "Add New Appointment ";
+		$this->render_view("appointment_new/add.php");
+	}
 
 
 	/**
@@ -476,86 +476,103 @@ function add($formdata = null)
 		return $this->render_view("my_appointment/request.php");
 	}
 
-	public function request_submit($formdata = null): bool 
-{
-    if ($formdata) {
-        $db = $this->GetModel();
-        $tablename = "appointment_new";
+	public function request_submit($formdata = null): bool
+	{
+		if ($formdata) {
+			$db = $this->GetModel();
+			$tablename = "appointment_new";
 
-        $postdata = $this->format_request_data($formdata);
+			$postdata = $this->format_request_data($formdata);
 
-        // 🔹 Buscar el id_patient real a partir del usuario logueado
-        $patient = $db->rawQueryOne("SELECT id_patient, full_names, email 
+			// 🔹 Buscar el id_patient real a partir del usuario logueado
+			$patient = $db->rawQueryOne("SELECT id_patient, full_names, email 
                                      FROM clinic_patients 
                                      WHERE id_user = ?", [USER_ID]);
 
-        if (!$patient) {
-            $this->set_flash_msg("No patient record found for this user", "danger");
-            return false;
-        }
+			if (!$patient) {
+				$this->set_flash_msg("No patient record found for this user", "danger");
+				return false;
+			}
 
-        $modeldata = [];
-        $modeldata['id_patient'] = $patient['id_patient']; 
-        $modeldata['id_doc'] = !empty($postdata['id_doc']) ? $postdata['id_doc'] : null;
-        $modeldata['motive'] = $postdata['motive'];
-        $modeldata['description'] = $postdata['description'];
-        $modeldata['requested_date'] = $postdata['requested_date'];
-        $modeldata['register_date'] = date("Y-m-d");
-        $modeldata['update_date'] = date("Y-m-d");
-        $modeldata['id_status_appointment'] = 2; // Pending Confirmation
-        $modeldata['created_by'] = USER_ID;
+			$modeldata = [];
+			$modeldata['id_patient'] = $patient['id_patient'];
+			$modeldata['id_doc'] = !empty($postdata['id_doc']) ? $postdata['id_doc'] : null;
+			$modeldata['motive'] = $postdata['motive'];
+			$modeldata['description'] = $postdata['description'];
+			$modeldata['requested_date'] = $postdata['requested_date'];
+			$modeldata['register_date'] = date("Y-m-d");
+			$modeldata['update_date'] = date("Y-m-d");
+			$modeldata['id_status_appointment'] = 2; // Pending Confirmation
+			$modeldata['created_by'] = USER_ID;
 
-        $rec_id = $db->insert($tablename, $modeldata);
+			$rec_id = $db->insert($tablename, $modeldata);
 
-        if ($rec_id) {
-            // 🔹 Datos del paciente
-            $patientData = [
-                'id' => $patient['id_patient'],
-                'full_names' => $patient['full_names'],
-                'email' => $patient['email']
-            ];
+			if ($rec_id) {
+				// 🔹 Datos del paciente
+				$patientData = [
+					'id' => $patient['id_patient'],
+					'full_names' => $patient['full_names'],
+					'email' => $patient['email']
+				];
 
-            // 🔹 Datos del doctor
-            $doctor = $db->rawQueryOne("SELECT full_names, work_email
+				// 🔹 Datos del doctor
+				$doctor = $db->rawQueryOne("SELECT full_names, work_email
                                         FROM doc 
                                         WHERE id = ?", [$modeldata['id_doc']]);
 
-            // 🔹 Datos de la cita
-            $appointmentInfo = [
-                'id' => $rec_id,
-                'requested_date' => $modeldata['requested_date'],
-                'motive' => $modeldata['motive'],
-                'description' => $modeldata['description'],
-                'request_link' => SITE_ADDR . "/appointment_requests/view/$rec_id"
-            ];
+				// 🔹 Datos de la cita
+				$appointmentInfo = [
+					'id' => $rec_id,
+					'requested_date' => $modeldata['requested_date'],
+					'motive' => $modeldata['motive'],
+					'description' => $modeldata['description'],
+					'request_link' => SITE_ADDR . "/appointment_requests/view/$rec_id"
+				];
 
-            // 🔹 Estructura completa
-            $appointmentData = [
-                'patient' => $patientData,
-                'doctor' => $doctor,
-                'appointment' => $appointmentInfo,
-                'status' => "Pending"
-            ];
+				// 🔹 Estructura completa
+				$appointmentData = [
+					'patient' => $patientData,
+					'doctor' => $doctor,
+					'appointment' => $appointmentInfo,
+					'status' => "Pending"
+				];
 
-            // Inicializar notificador
-            $notifier = new AppointmentNotification();
+				// ================================================
+				// 📢 ENVIAR NOTIFICACIONES INTERNAS (via notify_event)
+				// ================================================
 
-            // Notificar paciente
-            $notifier->notifyPatient($patientData['email'], $appointmentData);
+				// Notificación para el paciente (confirmación de recepción)
+				$db->rawQuery("CALL notify_event('appointment_request_patient', ?)", [json_encode([
+					"id_user"      => USER_ID,
+					"patient_name" => $patient['full_names'],
+					"appointment_date" => $modeldata['requested_date']
+				])]);
 
-            // Notificar admin
-            $notifier->notifyAdmin($appointmentData);
+				// Notificación para admin y assistant
+				$db->rawQuery("CALL notify_event('appointment_request_admin', ?)", [json_encode([
+					"patient_name"    => $patient['full_names'],
+					"appointment_date" => $modeldata['requested_date']
+				])]);
 
-            // ✅ Notificar doctor (usando tu función existente)
-            if (!empty($doctor['work_email'])) {
-                $notifier->notifyDoctorCreated($doctor['work_email'], $appointmentData);
-            }
+				// Inicializar notificador
+				$notifier = new AppointmentNotification();
 
-            $this->set_flash_msg("Appointment request submitted successfully", "success");
-            return $this->redirect("my_appointment");
-        }
-    }
-}
+				// Notificar paciente
+				$notifier->notifyPatient($patientData['email'], $appointmentData);
+
+				// Notificar admin
+				$notifier->notifyAdmin($appointmentData);
+
+				// ✅ Notificar doctor (usando tu función existente)
+				if (!empty($doctor['work_email'])) {
+					$notifier->notifyDoctorCreated($doctor['work_email'], $appointmentData);
+				}
+
+				$this->set_flash_msg("Appointment request submitted successfully", "success");
+				return $this->redirect("my_appointment");
+			}
+		}
+	}
 
 
 	/**

@@ -1,4 +1,4 @@
-<?php
+<?php 
 $comp_model = new SharedController;
 $page_element_id = "request-page-" . random_str();
 $current_page = $this->set_current_page_link();
@@ -19,23 +19,34 @@ $csrf_token = Csrf::$token;
             <div class="col-md-7 comp-grid">
                 <?php $this :: display_page_errors(); ?>
                 <div class="bg-light p-3 animated fadeIn page-content">
-                    <form id="appointment-request-form" role="form" novalidate enctype="multipart/form-data" 
+                    <form id="appointment-request-form" role="form" enctype="multipart/form-data" 
                           class="form page-form form-horizontal needs-validation" 
                           action="<?php print_link("appointment_new/request_submit?csrf_token=$csrf_token") ?>" 
-                          method="post">
+                          method="post" novalidate>
+                        
+                        <!-- Motive -->
                         <div class="form-group">
-                            <label class="control-label">Motive</label>
+                            <label class="control-label">Motive <span class="text-danger">*</span></label>
                             <input type="text" name="motive" class="form-control" required />
+                            <div class="invalid-feedback">Please provide the appointment motive.</div>
                         </div>
+
+                        <!-- Description -->
                         <div class="form-group">
-                            <label class="control-label">Description</label>
-                            <textarea name="description" class="form-control"></textarea>
+                            <label class="control-label">Description <span class="text-danger">*</span></label>
+                            <textarea name="description" class="form-control" required></textarea>
+                            <div class="invalid-feedback">Please provide a description.</div>
                         </div>
+
+                        <!-- Requested Date -->
                         <div class="form-group">
-                            <label class="control-label">Requested Date</label>
+                            <label class="control-label">Requested Date <span class="text-danger">*</span></label>
                             <input class="form-control datepicker" name="requested_date" required type="datetime" 
                                    data-enable-time="true" data-date-format="Y-m-d H:i:S" />
+                            <div class="invalid-feedback">Please select a valid date and time.</div>
                         </div>
+
+                        <!-- Submit -->
                         <div class="form-group text-center">
                             <button id="submit-btn" class="btn btn-primary" type="submit">
                                 <i class="fa fa-paper-plane"></i> Submit Request
@@ -66,12 +77,17 @@ $csrf_token = Csrf::$token;
 </div>
 
 <script>
-document.getElementById("appointment-request-form").addEventListener("submit", function(){
-    // Mostrar overlay
+document.getElementById("appointment-request-form").addEventListener("submit", function(e){
+    if (!this.checkValidity()) {
+        e.preventDefault();
+        this.classList.add('was-validated'); // activa invalid-feedback
+        return false;
+    }
+    // Si es válido → mostrar overlay
     document.getElementById("form-preloader").style.display = "block";
-    
-    // Deshabilitar botón (solo este, no los inputs para no afectar validaciones)
     document.getElementById("submit-btn").disabled = true;
 });
 </script>
+
+
 

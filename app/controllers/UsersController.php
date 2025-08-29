@@ -603,7 +603,7 @@ class UsersController extends SecureController
                         ]
                     );
 
-                    $this->set_flash_msg("Grabar agregado exitosamente", "success");
+                    $this->set_flash_msg("Record added successfully", "success");
                     return $this->redirect("home");
                 } else {
                     $this->set_page_error();

@@ -6,6 +6,7 @@
  */
 class Clinic_patientsController extends SecureController
 {
+	
 	function __construct()
 	{
 		parent::__construct();
@@ -17,8 +18,9 @@ class Clinic_patientsController extends SecureController
 	 * @param $fieldvalue (filter field value)
 	 * @return BaseView
 	 */
-	function index($fieldname = null, $fieldvalue = null)
+	public function index($fieldname = null, $fieldvalue = null)
 {
+    require_once __DIR__ . "/../../helpers/logger.php";
     $request = $this->request;
     $db = $this->GetModel();
     $tablename = $this->tablename;
@@ -62,6 +64,9 @@ class Clinic_patientsController extends SecureController
         $this->view->search_template = "clinic_patients/search.php";
     }
 
+    // 🔹 mostrar solo pacientes activos
+    $db->where("clinic_patients.id_status", 1);
+
     // joins
     $db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
     $db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
@@ -80,7 +85,7 @@ class Clinic_patientsController extends SecureController
         $db->where($fieldname, $fieldvalue);
     }
 
-    // 🔹 forzar que no haya duplicados por los joins
+    // 🔹 evitar duplicados
     $db->groupBy("clinic_patients.id_patient");
 
     // consulta principal
@@ -112,6 +117,7 @@ class Clinic_patientsController extends SecureController
 
     $this->render_view("clinic_patients/list.php", $data);
 }
+
 
 	/**
 	 * View record detail 
@@ -188,120 +194,141 @@ class Clinic_patientsController extends SecureController
 	 * @param $formdata array() from $_POST
 	 * @return BaseView
 	 */
-	function add($formdata = null)
-	{
-		if ($formdata) {
-			$db = $this->GetModel();
-			$tablename = $this->tablename;
-			$request = $this->request;
-			//fillable fields
-			$fields = $this->fields = array(
-				"full_names",
-				"address",
-				"gender",
-				"birthdate",
-				"register_observations",
-				"referred",
-				"diseases",
-				"phone_patient",
-				"manager",
-				"register_date",
-				"update_date",
-				"id_user",
-				"id_status",
-				"email",
-				"id_document_type",
-				"document_number",
-				"occupation",
-				"allergies",
-				"emergency_contact_phone",
-				"id_blood_type",
-				'photo',
-				"id_marital_status",
-				"workplace"
-			);
-			$postdata = $this->format_request_data($formdata);
-			$this->rules_array = array(
-				'full_names' => 'required|max_len,200',
-				'address' => 'required',
-				'gender' => 'required',
-				'birthdate' => 'required',
-				'register_observations' => 'required',
-				'referred' => 'required|max_len,100',
-				'diseases' => 'required',
-				'phone_patient' => 'required|max_len,20',
-				'manager' => 'required|max_len,100',
-				'id_status' => 'required',
-				'email' => 'required|valid_email',
-				'id_document_type' => 'required',
-				'document_number' => 'required',
-				'occupation' => 'required',
-				'allergies' => 'required',
-				'emergency_contact_phone' => 'required',
-				'id_blood_type' => 'required',
-				'photo' => '',
-				'id_marital_status' => 'required',
-				'workplace' => 'required',
+	function add($formdata = null) 
+{
+    if ($formdata) {
+        $db = $this->GetModel();
+        $tablename = $this->tablename;
+        $request = $this->request;
 
-			);
-			$this->sanitize_array = array(
-				'full_names' => 'sanitize_string',
-				'address' => 'sanitize_string',
-				'gender' => 'sanitize_string',
-				'birthdate' => 'sanitize_string',
-				'register_observations' => 'sanitize_string',
-				'referred' => 'sanitize_string',
-				'diseases' => 'sanitize_string',
-				'phone_patient' => 'sanitize_string',
-				'manager' => 'sanitize_string',
-				'id_status' => 'sanitize_string',
-				'email' => 'sanitize_string',
-				'id_document_type' => 'sanitize_string',
-				'document_number' => 'sanitize_string',
-				'occupation' => 'sanitize_string',
-				'allergies' => 'sanitize_string',
-				'emergency_contact_phone' => 'sanitize_string',
-				'id_blood_type' => 'sanitize_string',
-				'photo' => '',
-				'id_marital_status' => 'sanitize_string',
-				'workplace' => 'sanitize_string',
+        //fillable fields
+        $fields = $this->fields = array(
+            "full_names",
+            "address",
+            "gender",
+            "birthdate",
+            "register_observations",
+            "referred",
+            "diseases",
+            "phone_patient",
+            "manager",
+            "register_date",
+            "update_date",
+            "id_user",
+            "id_status",
+            "email",
+            "id_document_type",
+            "document_number",
+            "occupation",
+            "allergies",
+            "emergency_contact_phone",
+            "id_blood_type",
+            'photo',
+            "id_marital_status",
+            "workplace"
+        );
 
-			);
-			$this->filter_vals = true; //set whether to remove empty fields
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$modeldata['register_date'] = date_now();
-			$modeldata['update_date'] = date_now();
-			$modeldata['id_user'] = USER_ID;
-			// --- Foto: archivo O webcam O nada (NULL) ---
-			$photoData = null;
+        $postdata = $this->format_request_data($formdata);
 
-			if (!empty($_FILES['photo_file']['tmp_name'])) {
-				// 1) Imagen desde el selector de archivos
-				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
-			} elseif (!empty($_POST['photo_webcam'])) {
-				// 2) Imagen tomada con webcam (dataURL base64)
-				$base64 = $_POST['photo_webcam'];
-				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
-			}
+        $this->rules_array = array(
+            'full_names' => 'required|max_len,200',
+            'address' => 'required',
+            'gender' => 'required',
+            'birthdate' => 'required',
+            'register_observations' => 'required',
+            'referred' => 'required|max_len,100',
+            'diseases' => 'required',
+            'phone_patient' => 'required|max_len,20',
+            'manager' => 'required|max_len,100',
+            'id_status' => 'required',
+            'email' => 'required|valid_email',
+            'id_document_type' => 'required',
+            'document_number' => 'required',
+            'occupation' => 'required',
+            'allergies' => 'required',
+            'emergency_contact_phone' => 'required',
+            'id_blood_type' => 'required',
+            'photo' => '',
+            'id_marital_status' => 'required',
+            'workplace' => 'required',
+        );
 
-			// Asignar al campo real de la tabla
-			$modeldata['photo'] = $photoData ?: null;
+        $this->sanitize_array = array(
+            'full_names' => 'sanitize_string',
+            'address' => 'sanitize_string',
+            'gender' => 'sanitize_string',
+            'birthdate' => 'sanitize_string',
+            'register_observations' => 'sanitize_string',
+            'referred' => 'sanitize_string',
+            'diseases' => 'sanitize_string',
+            'phone_patient' => 'sanitize_string',
+            'manager' => 'sanitize_string',
+            'id_status' => 'sanitize_string',
+            'email' => 'sanitize_string',
+            'id_document_type' => 'sanitize_string',
+            'document_number' => 'sanitize_string',
+            'occupation' => 'sanitize_string',
+            'allergies' => 'sanitize_string',
+            'emergency_contact_phone' => 'sanitize_string',
+            'id_blood_type' => 'sanitize_string',
+            'photo' => '',
+            'id_marital_status' => 'sanitize_string',
+            'workplace' => 'sanitize_string',
+        );
 
-			if ($this->validated()) {
-				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
-				if ($rec_id) {
-					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
-					return $this->redirect("clinic_patients");
-				} else {
-					$this->set_page_error();
-					$this->write_to_log("add", "false");
-				}
-			}
-		}
-		$page_title = $this->view->page_title = "Add New Clinic Patients";
-		$this->render_view("clinic_patients/add.php");
-	}
+        $this->filter_vals = true; //set whether to remove empty fields
+        $modeldata = $this->modeldata = $this->validate_form($postdata);
+
+        $modeldata['register_date'] = date_now();
+        $modeldata['update_date'] = date_now();
+        $modeldata['id_user'] = USER_ID;
+
+        // --- Foto: archivo O webcam O nada (NULL) ---
+        $photoData = null;
+        if (!empty($_FILES['photo_file']['tmp_name'])) {
+            $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+        } elseif (!empty($_POST['photo_webcam'])) {
+            $base64 = $_POST['photo_webcam'];
+            $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+        }
+        $modeldata['photo'] = $photoData ?: null;
+
+        if ($this->validated()) {
+            $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+
+            if ($rec_id) {
+                // 🔹 Log normal del sistema
+                $this->write_to_log("add", "true");
+
+                // 🔹 Registrar en activity_log (solo nivel INFO para dashboard)
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "patient",
+                    "action"  => "New patient registered: " . $modeldata['full_names'],
+                    "level"   => "info"
+                ]);
+
+                $this->set_flash_msg("Record added successfully", "success");
+                return $this->redirect("clinic_patients");
+            } else {
+                $this->set_page_error();
+                $this->write_to_log("add", "false");
+
+                // 🔹 También podemos guardar un error en el log de auditoría
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "patient",
+                    "action"  => "Error registering new patient",
+                    "level"   => "error"
+                ]);
+            }
+        }
+    }
+
+    $page_title = $this->view->page_title = "Add New Clinic Patients";
+    $this->render_view("clinic_patients/add.php");
+}
+
 	/**
 	 * Update table record with formdata
 	 * @param $rec_id (select record by table primary key)
@@ -315,6 +342,9 @@ class Clinic_patientsController extends SecureController
     $this->rec_id = $rec_id;
     $tablename = $this->tablename;
 
+    // ✅ Cargar el logger correcto
+    require_once __DIR__ . "/../../helpers/logger.php";
+
     // Verificar si este paciente está asociado a un user creado por admin
     $allow_edit_id_user = false;
     $db->where("id_patient", $rec_id);
@@ -324,7 +354,7 @@ class Clinic_patientsController extends SecureController
         $db->where("id_user", $id_user);
         $created_by = $db->getValue("users", "created_by");
         if (!empty($created_by)) {
-            $allow_edit_id_user = true; // ✅ Solo editable si created_by no es NULL
+            $allow_edit_id_user = true; 
         }
     }
 
@@ -353,7 +383,6 @@ class Clinic_patientsController extends SecureController
         "document_number"
     );
 
-    // incluir id_user solo si aplica
     if ($allow_edit_id_user) {
         $fields[] = "id_user";
     }
@@ -409,12 +438,11 @@ class Clinic_patientsController extends SecureController
         $modeldata['register_date'] = date_now();
         $modeldata['update_date'] = date_now();
 
-        // ⚠️ Solo incluir id_user si está permitido
         if (!$allow_edit_id_user) {
             unset($modeldata['id_user']);
         }
 
-        // --- Foto: archivo O webcam O nada (NO modificar si no se envía) ---
+        // --- Foto ---
         $photoData = null;
         if (!empty($_FILES['photo_file']['tmp_name'])) {
             $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
@@ -433,19 +461,30 @@ class Clinic_patientsController extends SecureController
             $db->where("clinic_patients.id_patient", $rec_id);
             $bool = $db->update($tablename, $modeldata);
             $numRows = $db->getRowCount();
+
             if ($bool && $numRows) {
                 $this->write_to_log("edit", "true");
                 $this->set_flash_msg("Record updated successfully", "success");
+
+                // 📌 Registrar en activity_log y logs/app_logs.txt
+                app_logger("info", "patient", "Patient updated: " . $modeldata['full_names'], USER_ID);
+
                 return $this->redirect("clinic_patients");
             } else {
                 if ($db->getLastError()) {
                     $this->set_page_error();
                     $this->write_to_log("edit", "false");
+
+                    app_logger("error", "patient", "DB error updating patient ID: $rec_id (" . $db->getLastError() . ")", USER_ID);
+
                 } elseif (!$numRows) {
                     $page_error = "No record updated";
                     $this->set_page_error($page_error);
                     $this->set_flash_msg($page_error, "warning");
                     $this->write_to_log("edit", "false");
+
+                    app_logger("warning", "patient", "No changes detected for patient ID: $rec_id", USER_ID);
+
                     return $this->redirect("clinic_patients");
                 }
             }
@@ -545,25 +584,52 @@ class Clinic_patientsController extends SecureController
 	 * Support multi delete by separating record id by comma.
 	 * @return BaseView
 	 */
-	function delete($rec_id = null)
-	{
-		Csrf::cross_check();
-		$request = $this->request;
-		$db = $this->GetModel();
-		$tablename = $this->tablename;
-		$this->rec_id = $rec_id;
-		//form multiple delete, split record id separated by comma into array
-		$arr_rec_id = array_map('trim', explode(",", $rec_id));
-		$db->where("clinic_patients.id_patient", $arr_rec_id, "in");
-		$bool = $db->delete($tablename);
-		if ($bool) {
-			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
-		} elseif ($db->getLastError()) {
-			$page_error = $db->getLastError();
-			$this->set_flash_msg($page_error, "danger");
-			$this->write_to_log("delete", "false");
-		}
-		return $this->redirect("clinic_patients");
-	}
+	public function delete($rec_id = null): mixed
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // incluir logger correctamente
+
+    Csrf::cross_check();
+    $request = $this->request;
+    $db = $this->GetModel();
+    $tablename = $this->tablename;
+    $this->rec_id = $rec_id;
+
+    // múltiples ids separados por coma
+    $arr_rec_id = array_map('trim', explode(",", $rec_id));
+
+    // Recuperar nombres de los pacientes antes de marcar como eliminados
+    $db->where("id_patient", $arr_rec_id, "in");
+    $patients = $db->get("clinic_patients", null, ["id_patient", "full_names"]);
+
+    // Actualizar id_status = 3 (Deleted)
+    $db->where("clinic_patients.id_patient", $arr_rec_id, "in");
+    $data = [
+        "id_status"  => 3,
+        "update_date" => date_now()
+    ];
+    $bool = $db->update($tablename, $data);
+
+    if ($bool) {
+        $this->write_to_log("delete", "true");
+        $this->set_flash_msg("Record(s) marked as deleted successfully", "success");
+
+        foreach ($patients as $patient) {
+            app_logger("warning", "patient", "Patient deleted: " . $patient['full_names'], USER_ID);
+        }
+
+    } elseif ($db->getLastError()) {
+        $page_error = $db->getLastError();
+        $this->set_flash_msg($page_error, "danger");
+        $this->write_to_log("delete", "false");
+
+        app_logger("error", "patient", "Error deleting patients ($rec_id): $page_error", USER_ID);
+    }
+
+    return $this->redirect("clinic_patients");
 }
+
+
+}
+
+
+

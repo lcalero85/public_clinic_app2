@@ -10,7 +10,7 @@ $total_records = $view_data->total_records;
 $field_name = $this->route->field_name;
 $field_value = $this->route->field_value;
 ?>
-<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/movil_card.css">
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list" data-display-type="table"
     data-page-url="<?php print_link($current_page); ?>">
     <div class="bg-light p-3 mb-3">

@@ -46,7 +46,8 @@ class ACL
             'appointment_status' => array('list', 'view', 'add', 'edit', 'editfield', 'delete'),
             'appointments' => array('list', 'view'),
             'report' => array('index', 'show', 'clinical_historial'),
-            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one')
+            'notifications'  => array('index', 'mark_read','mark_all','unread_count','get_all','clear_all','clear_one'),
+            'api' => array('activity_feed')
         ),
 
         3 => // Doctor

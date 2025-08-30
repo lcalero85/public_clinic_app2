@@ -31,7 +31,6 @@ $currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
                             <th>Actions</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <?php foreach ($records as $record) { ?>
                         <tr>
@@ -66,7 +65,7 @@ $currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
         <div class="modal-content">
             <div class="modal-header" style="background-color:#006680; color:white;">
                 <h5 class="modal-title">Patient Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">x</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" id="patientDetails"></div>
         </div>
@@ -77,6 +76,7 @@ $currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -84,7 +84,7 @@ $currentUser = defined("USER_NAME") ? USER_NAME : "Unknown";
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
@@ -114,14 +114,16 @@ $(document).ready(function() {
               }
             }
         ],
-        responsive: true,  // ✅ Responsivo activado
+        responsive: true,
         pageLength: 5,
-        language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/en-GB.json" },
+        language: { 
+            url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/en-GB.json" // ✅ cambiado a HTTPS
+        },
         columnDefs: [
             { targets: -1, orderable: false, searchable: false, responsivePriority: 1 },
-            { targets: 0, responsivePriority: 2 }, // Clinical File
-            { targets: 1, responsivePriority: 3 }, // Patient Name
-            { targets: [3,5,7,8], visible: false } // Ocultar campos secundarios
+            { targets: 0, responsivePriority: 2 },
+            { targets: 1, responsivePriority: 3 },
+            { targets: [3,5,7,8], visible: false }
         ]
     });
 

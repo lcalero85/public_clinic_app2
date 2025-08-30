@@ -64,15 +64,13 @@ class Clinic_patientsController extends SecureController
         $this->view->search_template = "clinic_patients/search.php";
     }
 
-    // 🔹 mostrar solo pacientes activos
-    $db->where("clinic_patients.id_status", 1);
+ 
 
     // joins
     $db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
     $db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
 
-    // 🔹 filtro SOLO pacientes activos (id_status = 1)
-    //$db->where("clinic_patients.id_status", 1);
+   
 
     // ordenar
     if (!empty($request->orderby)) {
@@ -87,12 +85,8 @@ class Clinic_patientsController extends SecureController
     if ($fieldname) {
         $db->where($fieldname, $fieldvalue);
     }
-
-<<<<<<< Updated upstream
-    // 🔹 evitar duplicados
-=======
     // evitar duplicados
->>>>>>> Stashed changes
+
     $db->groupBy("clinic_patients.id_patient");
 
     // consulta principal

@@ -23,10 +23,10 @@ $records = $view_data->records;
     <div class="container-fluid">
         <div class="card card-body">
             <div class="table-responsive">
-                <table id="activesPatientsTable" class="table table-striped table-bordered table-hover">
+                <table id="activesPatientsTable" class="table table-striped table-bordered table-hover nowrap" style="width:100%">
                     <thead style="background-color:#006680; color:white;">
                         <tr>
-                            <th>ID</th> <!-- 🔹 Nueva columna -->
+                            <th>ID</th>
                             <th>Clinical File</th>
                             <th>Patient Name</th>
                             <th>Gender</th>
@@ -40,10 +40,10 @@ $records = $view_data->records;
                     <tbody>
                         <?php 
                         if(!empty($records)){ 
-                            $i = 1; // 🔹 contador para ID
+                            $i = 1; 
                             foreach($records as $data){ ?>
                             <tr>
-                                <td><?php echo $i++; ?></td> <!-- 🔹 Mostrar valor incremental -->
+                                <td><?php echo $i++; ?></td>
                                 <td><?php echo htmlspecialchars($data['clinical_file']); ?></td>
                                 <td><?php echo htmlspecialchars($data['full_names']); ?></td>
                                 <td><?php echo htmlspecialchars($data['gender']); ?></td>
@@ -64,6 +64,7 @@ $records = $view_data->records;
 <!-- DataTables styles & scripts -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css"> <!-- 🔹 Responsive CSS -->
 
 <style>
 /* 🔹 Botones personalizados */
@@ -112,10 +113,12 @@ $records = $view_data->records;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script> <!-- 🔹 Responsive JS -->
 
 <script>
 $(document).ready(function() {
     $('#activesPatientsTable').DataTable({
+        responsive: true, // 🔹 Activa modo responsive
         dom: 'Bfrtip',
         buttons: [
             {

@@ -130,24 +130,6 @@ $current_page = $this->set_current_page_link();
                 </div>
             </div>
         </div>
-
-        <!-- Finanzas -->
-        <div class="mb-4">
-            <h5 class="section-title">💵 Finances</h5>
-            <div class="row">
-                <div class="col-md-3 col-sm-4 comp-grid">
-                    <?php $rec_count = $comp_model->getcount_invoices();  ?>
-                    <a class="animated zoomIn record-count card bg-light text-dark" href="<?php print_link("invoices/") ?>">
-                        <div class="row">
-                            <div class="col-2"><i class="fa fa-calculator"></i></div>
-                            <div class="col-10"><div class="title">Invoices</div><small>Total generated</small></div>
-                            <h4 class="value"><strong><?php echo $rec_count; ?></strong></h4>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <!-- Doctores -->
         <div class="mb-4">
             <h5 class="section-title">🧑‍⚕️ Doctors</h5>

@@ -64,14 +64,9 @@ class Clinic_patientsController extends SecureController
         $this->view->search_template = "clinic_patients/search.php";
     }
 
- 
-
     // joins
     $db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
     $db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
-
-   
-
     // ordenar
     if (!empty($request->orderby)) {
         $orderby = $request->orderby;

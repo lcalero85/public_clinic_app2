@@ -71,6 +71,9 @@ class Clinic_patientsController extends SecureController
     $db->join("users", "clinic_patients.id_user = users.id_user", "INNER");
     $db->join("patients_status", "clinic_patients.id_status = patients_status.id", "INNER");
 
+    // 🔹 filtro SOLO pacientes activos (id_status = 1)
+    //$db->where("clinic_patients.id_status", 1);
+
     // ordenar
     if (!empty($request->orderby)) {
         $orderby = $request->orderby;
@@ -85,18 +88,23 @@ class Clinic_patientsController extends SecureController
         $db->where($fieldname, $fieldvalue);
     }
 
+<<<<<<< Updated upstream
     // 🔹 evitar duplicados
+=======
+    // evitar duplicados
+>>>>>>> Stashed changes
     $db->groupBy("clinic_patients.id_patient");
 
     // consulta principal
     $tc = $db->withTotalCount();
     $records = $db->get($tablename, $pagination, $fields);
+
+    // datos de la vista
     $records_count = count($records);
     $total_records = intval($tc->totalCount);
     $page_limit = $pagination[1];
     $total_pages = ceil($total_records / $page_limit);
 
-    // preparar datos para la vista
     $data = new stdClass;
     $data->records = $records;
     $data->record_count = $records_count;

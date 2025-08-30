@@ -40,12 +40,13 @@ function get_user_photo_src($photoBlob)
         </a>
 
         <?php if (user_login_status() == true) { ?>
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
             <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            </button>
             <button type="button" id="sidebarCollapse" class="btn btn-info">
-            <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
-            </button>
+            <div class="navbar-collapse collapse navbar-responsive-collapse">
+            
                 <ul class="navbar-nav ml-auto align-items-center">
                     <!-- 🔔 Notificaciones -->
                     <li class="nav-item">

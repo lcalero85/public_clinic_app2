@@ -7,8 +7,8 @@ $csrf_token = Csrf::$token;
 //Page Data From Controller
 $view_data = $this->view_data;
 $records = $view_data->records;
-
 ?>
+
 <section class="page">
     <div class="bg-light p-3 mb-3">
         <div class="container-fluid">
@@ -26,6 +26,7 @@ $records = $view_data->records;
                 <table id="activesPatientsTable" class="table table-striped table-bordered table-hover">
                     <thead style="background-color:#006680; color:white;">
                         <tr>
+                            <th>ID</th> <!-- 🔹 Nueva columna -->
                             <th>Clinical File</th>
                             <th>Patient Name</th>
                             <th>Gender</th>
@@ -37,9 +38,12 @@ $records = $view_data->records;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(!empty($records)){ 
+                        <?php 
+                        if(!empty($records)){ 
+                            $i = 1; // 🔹 contador para ID
                             foreach($records as $data){ ?>
                             <tr>
+                                <td><?php echo $i++; ?></td> <!-- 🔹 Mostrar valor incremental -->
                                 <td><?php echo htmlspecialchars($data['clinical_file']); ?></td>
                                 <td><?php echo htmlspecialchars($data['full_names']); ?></td>
                                 <td><?php echo htmlspecialchars($data['gender']); ?></td>
@@ -56,6 +60,7 @@ $records = $view_data->records;
         </div>
     </div>
 </section>
+
 <!-- DataTables styles & scripts -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
@@ -149,3 +154,4 @@ $(document).ready(function() {
     });
 });
 </script>
+

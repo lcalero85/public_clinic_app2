@@ -954,3 +954,19 @@ footer {
     100% { transform: scale(1); opacity: 1; }
 }
 
+/* 🔹 Mantener la tabla normal en pantallas grandes */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.quick-actions .btn {
+    margin-bottom: 10px;   /* espacio entre botones */
+    padding: 12px 15px;    /* más altura interna */
+    font-size: 14px;       /* texto legible */
+    font-weight: 600;      /* un poco más de grosor */
+    border-radius: 8px;    /* esquinas suaves */
+}
+
+.quick-actions .btn i {
+    margin-right: 6px;     /* espacio entre ícono y texto */
+}

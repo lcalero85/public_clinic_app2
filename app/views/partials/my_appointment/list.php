@@ -10,6 +10,7 @@ $total_records = $view_data->total_records;
 $field_name = $this->route->field_name;
 $field_value = $this->route->field_value;
 ?>
+<link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/movil_card.css">
 <section class="page" id="<?php echo $page_element_id; ?>" data-page-type="list" data-display-type="table"
     data-page-url="<?php print_link($current_page); ?>">
     <div class="bg-light p-3 mb-3">
@@ -45,59 +46,51 @@ $field_value = $this->route->field_value;
                 <?php $this::display_page_errors(); ?>
                 <div class=" animated fadeIn page-content">
                     <div id="my_appointment-list-records">
-                        <div id="page-report-body" class="table-responsive">
-                            <table class="table table-striped table-sm text-left">
-                                <thead class="table-header bg-light">
-                                    <tr>
-                                        <th>#ID</th>
-                                        <th>Patient Name</th>
-                                        <th>Motive</th>
-                                        <th>Description</th>
-                                        <th>Comments</th>
-                                        <th>Appointment Date</th>
-                                        <th>Requested Date</th> <!-- 🔹 Nueva columna -->
-                                        <th>Register Date</th>
-                                        <th>Doctor</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($records)) {
-                                        // Obtener número de página actual de forma segura
-                                        $page_number = isset($this->route->page_number) ? $this->route->page_number : 1;
-                                        $limit = isset($this->limit_count) ? $this->limit_count : count($records);
+                        <div id="page-report-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-sm text-left">
+                                    <thead class="table-header bg-light">
+                                        <tr>
+                                            <th>#ID</th>
+                                            <th>Patient Name</th>
+                                            <th>Motive</th>
+                                            <th>Description</th>
+                                            <th>Comments</th>
+                                            <th>Appointment Date</th>
+                                            <th>Requested Date</th>
+                                            <th>Register Date</th>
+                                            <th>Doctor</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if (!empty($records)) {
+                                            $page_number = isset($this->route->page_number) ? $this->route->page_number : 1;
+                                            $limit = isset($this->limit_count) ? $this->limit_count : count($records);
+                                            $counter = ($page_number - 1) * $limit + 1;
 
-                                        // Calcular correlativo inicial
-                                        $counter = ($page_number - 1) * $limit + 1;
-
-                                        foreach ($records as $data) { ?>
-                                            <tr>
-                                                <td><?php echo $counter++; ?></td>
-                                                <td><?php echo $data['full_names']; ?></td>
-                                                <td><?php echo $data['motive']; ?></td>
-                                                <td><?php echo $data['description']; ?></td>
-                                                <td><?php echo $data['historial']; ?></td>
-                                                <td><?php echo $data['appointment_date']; ?></td>
-
-                                                <!-- 🔹 Requested Date con validación -->
-                                                <td>
-                                                    <?php
-                                                    echo !empty($data['requested_date'])
-                                                        ? $data['requested_date']
-                                                        : "Not provided";
-                                                    ?>
-                                                </td>
-
-                                                <td><?php echo $data['register_date']; ?></td>
-                                                <td><?php echo $data['doctor_name']; ?></td>
-                                                <td><?php echo $data['status']; ?></td>
-                                            </tr>
-                                    <?php }
-                                    } ?>
-                                </tbody>
-                            </table>
-
+                                            foreach ($records as $data) { ?>
+                                                <tr>
+                                                    <td data-label="#ID"><?php echo $counter++; ?></td>
+                                                    <td data-label="Patient Name"><?php echo $data['full_names']; ?></td>
+                                                    <td data-label="Motive"><?php echo $data['motive']; ?></td>
+                                                    <td data-label="Description"><?php echo $data['description']; ?></td>
+                                                    <td data-label="Comments"><?php echo $data['historial']; ?></td>
+                                                    <td data-label="Appointment Date"><?php echo $data['appointment_date']; ?>
+                                                    </td>
+                                                    <td data-label="Requested Date">
+                                                        <?php echo !empty($data['requested_date']) ? $data['requested_date'] : "Not provided"; ?>
+                                                    </td>
+                                                    <td data-label="Register Date"><?php echo $data['register_date']; ?></td>
+                                                    <td data-label="Doctor"><?php echo $data['doctor_name']; ?></td>
+                                                    <td data-label="Status"><?php echo $data['status']; ?></td>
+                                                </tr>
+                                        <?php }
+                                        } ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class=" border-top mt-2">
                             <div class="row justify-content-center">

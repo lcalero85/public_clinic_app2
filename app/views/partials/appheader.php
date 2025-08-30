@@ -171,6 +171,7 @@ function get_user_photo_src($photoBlob)
     </nav>
 <?php } ?>
 
+</script>
 <style>
     /* Estilo general del menú */
     .custom-dropdown {
@@ -222,6 +223,8 @@ function get_user_photo_src($photoBlob)
         background: #c82333;
         color: #030303ff;
     }
+
+
 </style>
 <?php if(user_login_status()): ?>
 <script>

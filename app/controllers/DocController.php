@@ -179,223 +179,285 @@ class DocController extends SecureController
 	 * @param $formdata array() from $_POST
 	 * @return BaseView
 	 */
-	function add($formdata = null)
-	{
-		if ($formdata) {
-			$db = $this->GetModel();
-			$tablename = $this->tablename;
-			$request = $this->request;
-			//fillable fields
-			$fields = $this->fields = array(
-				"full_names",
-				"address",
-				"birthdate",
-				"gender",
-				"Speciality",
-				"register_date",
-				"update_date",
-				"id_user",
-				"license_number",
-				"license_issuer",
-				"license_issue_date",
-				"license_expiry_date",
-				"university",
-				"years_experience",
-				"office_phone",
-				"work_email",
-				"working_hours",
-				"status",
-				"dni",
-				"photo",
-			);
+	function add($formdata = null) 
+{
+    if ($formdata) {
+        $db = $this->GetModel();
+        $tablename = $this->tablename;
+        $request = $this->request;
 
-			$postdata = $this->format_request_data($formdata);
-			$this->rules_array = array(
-				'full_names' => 'required|max_len,200',
-				'address' => 'required',
-				'birthdate' => 'required',
-				'gender' => 'required',
-				'Speciality' => 'required',
-				'license_number' => 'required',
-				'license_issuer' => 'required',
-				'license_issue_date' => 'required',
-				'license_expiry_date' => 'required',
-				'university' => 'required',
-				'years_experience' => 'required',
-				'office_phone' => 'required',
-				'work_email' => 'required',
-				'working_hours' => 'required',
-				'status' => 'required',
-				'dni' => 'required',
-				'photo' => '',
+        // Campos permitidos
+        $fields = $this->fields = array(
+            "full_names",
+            "address",
+            "birthdate",
+            "gender",
+            "Speciality",
+            "register_date",
+            "update_date",
+            "id_user",
+            "license_number",
+            "license_issuer",
+            "license_issue_date",
+            "license_expiry_date",
+            "university",
+            "years_experience",
+            "office_phone",
+            "work_email",
+            "working_hours",
+            "status",
+            "dni",
+            "photo",
+        );
+
+        $postdata = $this->format_request_data($formdata);
+
+        // Reglas de validación
+        $this->rules_array = array(
+            'full_names' => 'required|max_len,200',
+            'address' => 'required',
+            'birthdate' => 'required',
+            'gender' => 'required',
+            'Speciality' => 'required',
+            'license_number' => 'required',
+            'license_issuer' => 'required',
+            'license_issue_date' => 'required',
+            'license_expiry_date' => 'required',
+            'university' => 'required',
+            'years_experience' => 'required',
+            'office_phone' => 'required',
+            'work_email' => 'required',
+            'working_hours' => 'required',
+            'status' => 'required',
+            'dni' => 'required',
+            'photo' => '',
+        );
+
+        // Sanitización
+        $this->sanitize_array = array(
+            'full_names' => 'sanitize_string',
+            'address' => 'sanitize_string',
+            'birthdate' => 'sanitize_string',
+            'gender' => 'sanitize_string',
+            'Speciality' => 'sanitize_string',
+            'license_number' => 'sanitize_string',
+            'license_issuer' => 'sanitize_string',
+            'license_issue_date' => 'sanitize_string',
+            'license_expiry_date' => 'sanitize_string',
+            'university' => 'sanitize_string',
+            'years_experience' => 'sanitize_string',
+            'office_phone' => 'sanitize_string',
+            'work_email' => 'sanitize_string',
+            'working_hours' => 'sanitize_string',
+            'status' => 'sanitize_string',
+            'dni' => 'sanitize_string',
+            'photo' => '',
+        );
+
+        $this->filter_vals = true;
+        $modeldata = $this->modeldata = $this->validate_form($postdata);
+
+        // Asignaciones automáticas
+        $modeldata['register_date'] = datetime_now();
+        $modeldata['update_date']   = datetime_now();
+        $modeldata['id_user']       = USER_ID;
+
+        // Foto (archivo o webcam)
+        $photoData = null;
+        if (!empty($_FILES['photo_file']['tmp_name'])) {
+            $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+        } elseif (!empty($_POST['photo_webcam'])) {
+            $base64    = $_POST['photo_webcam'];
+            $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+        }
+        $modeldata['photo'] = $photoData ?: null;
+
+        if ($this->validated()) {
+            $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+
+            if ($rec_id) {
+                // --- LOG NORMAL ---
+                $this->write_to_log("add", "true");
+
+                // --- ACTIVITY LOG ---
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "doctor",
+                    "action"  => "New doctor registered: " . $modeldata['full_names'],
+                    "level"   => "info",
+                ]);
+
+                // Aquí si envías correos o notificaciones internas, 
+                // también registra en activity_log:
+                /*
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "notification",
+                    "action"  => "Notification sent for doctor " . $modeldata['full_names'],
+                    "level"   => "info",
+                ]);
+                */
+
+                $this->set_flash_msg("Doctor added successfully", "success");
+                return $this->redirect("doc");
+            } else {
+                $this->set_page_error();
+                $this->write_to_log("add", "false");
+
+                // --- ACTIVITY LOG (Error) ---
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "doctor",
+                    "action"  => "Error registering doctor",
+                    "level"   => "error",
+                ]);
+            }
+        }
+    }
+
+    $page_title = $this->view->page_title = "Add New Doctor";
+    $this->render_view("doc/add.php");
+}
 
 
-			);
-			$this->sanitize_array = array(
-				'full_names' => 'sanitize_string',
-				'address' => 'sanitize_string',
-				'birthdate' => 'sanitize_string',
-				'gender' => 'sanitize_string',
-				'age' => 'sanitize_string',
-				'Speciality' => 'sanitize_string',
-				'license_number' => 'sanitize_string',
-				'license_issuer' => 'sanitize_string',
-				'license_issue_date' => 'sanitize_string',
-				'license_expiry_date' => 'sanitize_string',
-				'university' => 'sanitize_string',
-				'years_experience' => 'sanitize_string',
-				'office_phone' => 'sanitize_string',
-				'work_email' => 'sanitize_string',
-				'working_hours' => 'sanitize_string',
-				'status' => 'sanitize_string',
-				'dni' => 'sanitize_string',
-				'photo' => '',
-			);
-			$this->filter_vals = true; //set whether to remove empty fields
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$modeldata['register_date'] = datetime_now();
-			$modeldata['update_date'] = datetime_now();
-			$modeldata['id_user'] = USER_ID;
-			// --- Foto: archivo O webcam O nada (NULL) ---
-			$photoData = null;
-
-			if (!empty($_FILES['photo_file']['tmp_name'])) {
-				// 1) Imagen desde el selector de archivos
-				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
-			} elseif (!empty($_POST['photo_webcam'])) {
-				// 2) Imagen tomada con webcam (dataURL base64)
-				$base64 = $_POST['photo_webcam'];
-				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
-			}
-
-			// Asignar al campo real de la tabla
-			$modeldata['photo'] = $photoData ?: null;
-			if ($this->validated()) {
-				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
-				if ($rec_id) {
-					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
-					return $this->redirect("doc");
-				} else {
-					$this->set_page_error();
-					$this->write_to_log("add", "false");
-				}
-			}
-		}
-		$page_title = $this->view->page_title = "Add New Doctors";
-		$this->render_view("doc/add.php");
-	}
 	/**
 	 * Update table record with formdata
 	 * @param $rec_id (select record by table primary key)
 	 * @param $formdata array() from $_POST
 	 * @return array
 	 */
-	function edit($rec_id = null, $formdata = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$this->rec_id = $rec_id;
-		$tablename = $this->tablename;
+	function edit($rec_id = null, $formdata = null) 
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $this->rec_id = $rec_id;
+    $tablename = $this->tablename;
 
-		// editable fields (SIN id_user)
-		$fields = $this->fields = array(
-			"id",
-			"full_names",
-			"address",
-			"birthdate",
-			"gender",
-			"Speciality",
-			"register_date",
-			"update_date",
-			"dni",
-			"office_phone",
-			"work_email",
-			"status",
-			"photo"
-		);
+    // editable fields (SIN id_user)
+    $fields = $this->fields = array(
+        "id",
+        "full_names",
+        "address",
+        "birthdate",
+        "gender",
+        "Speciality",
+        "register_date",
+        "update_date",
+        "dni",
+        "office_phone",
+        "work_email",
+        "status",
+        "photo"
+    );
 
-		if ($formdata) {
-			$postdata = $this->format_request_data($formdata);
+    if ($formdata) {
+        $postdata = $this->format_request_data($formdata);
 
-			$this->rules_array = array(
-				'full_names' => 'required|max_len,200',
-				'address' => 'required',
-				'birthdate' => 'required',
-				'gender' => 'required',
-				'Speciality' => 'required',
-				'dni' => 'required',
-				'office_phone' => 'required',
-				'work_email' => 'required',
-				'status' => 'required',
-				'photo' => '',
-			);
+        $this->rules_array = array(
+            'full_names' => 'required|max_len,200',
+            'address' => 'required',
+            'birthdate' => 'required',
+            'gender' => 'required',
+            'Speciality' => 'required',
+            'dni' => 'required',
+            'office_phone' => 'required',
+            'work_email' => 'required',
+            'status' => 'required',
+            'photo' => '',
+        );
 
-			$this->sanitize_array = array(
-				'full_names' => 'sanitize_string',
-				'address' => 'sanitize_string',
-				'birthdate' => 'sanitize_string',
-				'gender' => 'sanitize_string',
-				'Speciality' => 'sanitize_string',
-				'dni' => 'sanitize_string',
-				'office_phone' => 'sanitize_string',
-				'work_email' => 'sanitize_string',
-				'status' => 'sanitize_string',
-				'photo' => '',
-			);
+        $this->sanitize_array = array(
+            'full_names' => 'sanitize_string',
+            'address' => 'sanitize_string',
+            'birthdate' => 'sanitize_string',
+            'gender' => 'sanitize_string',
+            'Speciality' => 'sanitize_string',
+            'dni' => 'sanitize_string',
+            'office_phone' => 'sanitize_string',
+            'work_email' => 'sanitize_string',
+            'status' => 'sanitize_string',
+            'photo' => '',
+        );
 
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$modeldata['register_date'] = datetime_now();
-			$modeldata['update_date'] = datetime_now();
+        $modeldata = $this->modeldata = $this->validate_form($postdata);
+        $modeldata['update_date'] = datetime_now();
 
-			// ❌ NO tocar id_user → se mantiene íntegro en la BD
+        // --- Foto: archivo O webcam O nada ---
+        $photoData = null;
+        if (!empty($_FILES['photo_file']['tmp_name'])) {
+            $photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
+        } elseif (!empty($_POST['photo_webcam'])) {
+            $base64 = $_POST['photo_webcam'];
+            $photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
+        }
 
-			// --- Foto: archivo O webcam O nada ---
-			$photoData = null;
-			if (!empty($_FILES['photo_file']['tmp_name'])) {
-				$photoData = file_get_contents($_FILES['photo_file']['tmp_name']);
-			} elseif (!empty($_POST['photo_webcam'])) {
-				$base64 = $_POST['photo_webcam'];
-				$photoData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64));
-			}
+        if ($photoData !== null) {
+            $modeldata['photo'] = $photoData;
+        } else {
+            unset($modeldata['photo']); // 🚀 no modificar si no se envía
+        }
 
-			if ($photoData !== null) {
-				$modeldata['photo'] = $photoData;
-			} else {
-				unset($modeldata['photo']); // 🚀 no modificar si no se envía
-			}
+        if ($this->validated()) {
+            $db->where("doc.id", $rec_id);
+            $bool = $db->update($tablename, $modeldata);
+            $numRows = $db->getRowCount();
 
-			if ($this->validated()) {
-				$db->where("doc.id", $rec_id);
-				$bool = $db->update($tablename, $modeldata);
-				$numRows = $db->getRowCount();
-				if ($bool && $numRows) {
-					$this->write_to_log("edit", "true");
-					$this->set_flash_msg("Record updated successfully", "success");
-					return $this->redirect("doc");
-				} else {
-					if ($db->getLastError()) {
-						$this->set_page_error();
-						$this->write_to_log("edit", "false");
-					} elseif (!$numRows) {
-						$page_error = "No record updated";
-						$this->set_page_error($page_error);
-						$this->set_flash_msg($page_error, "warning");
-						$this->write_to_log("edit", "false");
-						return $this->redirect("doc");
-					}
-				}
-			}
-		}
+            if ($bool && $numRows) {
+                // ✅ Log normal
+                $this->write_to_log("edit", "true");
 
-		$db->where("doc.id", $rec_id);
-		$data = $db->getOne($tablename, $fields);
-		$page_title = $this->view->page_title = "Edit Doctors";
-		if (!$data) {
-			$this->set_page_error();
-		}
-		return $this->render_view("doc/edit.php", $data);
-	}
+                // ✅ Activity log
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "doctor",
+                    "action"  => "Doctor updated: " . $modeldata['full_names'],
+                    "level"   => "info",
+                ]);
+
+                $this->set_flash_msg("Doctor updated successfully", "success");
+                return $this->redirect("doc");
+            } else {
+                if ($db->getLastError()) {
+                    $this->set_page_error();
+                    $this->write_to_log("edit", "false");
+
+                    // ❌ Activity log error
+                    $db->insert("activity_log", [
+                        "user_id" => USER_ID,
+                        "type"    => "doctor",
+                        "action"  => "Error updating doctor (ID: $rec_id)",
+                        "level"   => "error",
+                    ]);
+                } elseif (!$numRows) {
+                    $page_error = "No record updated";
+                    $this->set_page_error($page_error);
+                    $this->set_flash_msg($page_error, "warning");
+                    $this->write_to_log("edit", "false");
+
+                    // ⚠️ Activity log advertencia
+                    $db->insert("activity_log", [
+                        "user_id" => USER_ID,
+                        "type"    => "doctor",
+                        "action"  => "No changes detected for doctor (ID: $rec_id)",
+                        "level"   => "warning",
+                    ]);
+
+                    return $this->redirect("doc");
+                }
+            }
+        }
+    }
+
+    $db->where("doc.id", $rec_id);
+    $data = $db->getOne($tablename, $fields);
+    $page_title = $this->view->page_title = "Edit Doctor";
+
+    if (!$data) {
+        $this->set_page_error();
+    }
+
+    return $this->render_view("doc/edit.php", $data);
+}
 
 
 	/**

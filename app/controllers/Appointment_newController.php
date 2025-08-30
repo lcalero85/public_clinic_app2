@@ -18,105 +18,116 @@ class Appointment_newController extends SecureController
 	 * @param $fieldvalue (filter field value)
 	 * @return BaseView
 	 */
-	function index($fieldname = null, $fieldvalue = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$tablename = $this->tablename;
-		$fields = array(
-			"appointment_new.id_appointment",
-			"appointment_new.id_patient",
-			"clinic_patients.full_names AS clinic_patients_full_names",
-			"appointment_new.id_doc",
-			"doc.full_names AS doc_full_names",
-			"CONCAT(appointment_new.motive,' - ',IFNULL(appointment_new.description,'')) AS motive_summary",
-			"appointment_new.historial",
-			"appointment_new.appointment_date",
-			"appointment_new.register_date",
-			"appointment_new.nex_appointment_date",
-			"appointment_new.id_status_appointment",
-			"appointment_new.id_appointment_type",
-			"appointment_status.status AS status",
-			"appointment_new.priority",
-			"appointment_new.id_user",
-			"users.full_names AS users_full_names",
-		);
+function index($fieldname = null, $fieldvalue = null)
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $tablename = $this->tablename;
+    $fields = array(
+        "appointment_new.id_appointment",
+        "appointment_new.id_patient",
+        "clinic_patients.full_names AS clinic_patients_full_names",
+        "appointment_new.id_doc",
+        "doc.full_names AS doc_full_names",
+        "CONCAT(appointment_new.motive,' - ',IFNULL(appointment_new.description,'')) AS motive_summary",
+        "appointment_new.historial",
+        "appointment_new.appointment_date",
+        "appointment_new.register_date",
+        "appointment_new.nex_appointment_date",
+        "appointment_new.id_status_appointment",
+        "appointment_new.id_appointment_type",
+        "appointment_status.status AS status",
+        "appointment_new.priority",
+        "appointment_new.id_user",
+        "users.full_names AS users_full_names",
+    );
 
-		$pagination = $this->get_pagination(MAX_RECORD_COUNT); // get current pagination e.g array(page_number, page_limit)
-		//search table record
-		if (!empty($request->search)) {
-			$text = trim($request->search);
+    $pagination = $this->get_pagination(MAX_RECORD_COUNT);
 
-			$search_condition = "
-      (
-        appointment_new.id_appointment LIKE ? OR
-        appointment_new.id_patient LIKE ? OR
-        appointment_new.id_doc LIKE ? OR
-        CONCAT(appointment_new.motive,' ',IFNULL(appointment_new.description,'')) LIKE ? OR
-        appointment_new.historial LIKE ? OR
-        appointment_new.appointment_date LIKE ? OR
-        appointment_new.register_date LIKE ? OR
-        appointment_new.nex_appointment_date LIKE ? OR
-        appointment_new.id_status_appointment LIKE ? OR
-		appointment_status.status LIKE ? OR
-		appointment_new.priority LIKE ? OR
-		appointment_new.id_appointment_type LIKE ? OR
-        appointment_new.id_user LIKE ? OR
-        clinic_patients.full_names LIKE ? OR
-        doc.full_names LIKE ? OR
-        users.full_names LIKE ?
-      )
-    ";
+    // búsqueda
+    if (!empty($request->search)) {
+        $text = trim($request->search);
 
-			// Genera la cantidad exacta de parámetros según los "?" del string
-			$placeholders = substr_count($search_condition, '?');
-			$search_params = array_fill(0, $placeholders, "%{$text}%");
-			//setting search conditions
-			$db->where($search_condition, $search_params);
-			//template to use when ajax search
-			$this->view->search_template = "appointment_new/search.php";
-		}
-		$db->join("clinic_patients", "appointment_new.id_patient = clinic_patients.id_patient", "INNER");
-		$db->join("doc", "appointment_new.id_doc = doc.id", "INNER");
-		$db->join("appointment_status", "appointment_new.id_status_appointment = appointment_status.id", "INNER");
-		$db->join("users", "appointment_new.id_user = users.id_user", "INNER");
-		if (!empty($request->orderby)) {
-			$orderby = $request->orderby;
-			$ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
-			$db->orderBy($orderby, $ordertype);
-		} else {
-			$db->orderBy("appointment_new.id_appointment", ORDER_TYPE);
-		}
-		if ($fieldname) {
-			$db->where($fieldname, $fieldvalue); //filter by a single field name
-		}
-		$tc = $db->withTotalCount();
-		$records = $db->get($tablename, $pagination, $fields);
-		$records_count = count($records);
-		$total_records = intval($tc->totalCount);
-		$page_limit = $pagination[1];
-		$total_pages = ceil($total_records / $page_limit);
-		if (!empty($records)) {
-			foreach ($records as &$record) {
-				$record['register_date'] = human_date($record['register_date']);
-			}
-		}
-		$data = new stdClass;
-		$data->records = $records;
-		$data->record_count = $records_count;
-		$data->total_records = $total_records;
-		$data->total_page = $total_pages;
-		if ($db->getLastError()) {
-			$this->set_page_error();
-		}
-		$page_title = $this->view->page_title = "Appointment ";
-		$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
-		$this->view->report_title = $page_title;
-		$this->view->report_layout = "report_layout.php";
-		$this->view->report_paper_size = "A4";
-		$this->view->report_orientation = "portrait";
-		$this->render_view("appointment_new/list.php", $data); //render the full page
-	}
+        $search_condition = "
+          (
+            appointment_new.id_appointment LIKE ? OR
+            appointment_new.id_patient LIKE ? OR
+            appointment_new.id_doc LIKE ? OR
+            CONCAT(appointment_new.motive,' ',IFNULL(appointment_new.description,'')) LIKE ? OR
+            appointment_new.historial LIKE ? OR
+            appointment_new.appointment_date LIKE ? OR
+            appointment_new.register_date LIKE ? OR
+            appointment_new.nex_appointment_date LIKE ? OR
+            appointment_new.id_status_appointment LIKE ? OR
+            appointment_status.status LIKE ? OR
+            appointment_new.priority LIKE ? OR
+            appointment_new.id_appointment_type LIKE ? OR
+            appointment_new.id_user LIKE ? OR
+            clinic_patients.full_names LIKE ? OR
+            doc.full_names LIKE ? OR
+            users.full_names LIKE ?
+          )
+        ";
+
+        $placeholders = substr_count($search_condition, '?');
+        $search_params = array_fill(0, $placeholders, "%{$text}%");
+
+        $db->where($search_condition, $search_params);
+        $this->view->search_template = "appointment_new/search.php";
+    }
+
+    // 🔄 Cambié los INNER a LEFT JOIN
+    $db->join("clinic_patients", "appointment_new.id_patient = clinic_patients.id_patient", "LEFT");
+    $db->join("doc", "appointment_new.id_doc = doc.id", "LEFT");
+    $db->join("appointment_status", "appointment_new.id_status_appointment = appointment_status.id", "LEFT");
+    $db->join("users", "appointment_new.id_user = users.id_user", "LEFT");
+
+    if (!empty($request->orderby)) {
+        $orderby = $request->orderby;
+        $ordertype = (!empty($request->ordertype) ? $request->ordertype : ORDER_TYPE);
+        $db->orderBy($orderby, $ordertype);
+    } else {
+        $db->orderBy("appointment_new.id_appointment", ORDER_TYPE);
+    }
+
+    if ($fieldname) {
+        $db->where($fieldname, $fieldvalue);
+    }
+
+    $tc = $db->withTotalCount();
+    $records = $db->get($tablename, $pagination, $fields);
+    $records_count = count($records);
+    $total_records = intval($tc->totalCount);
+    $page_limit = $pagination[1];
+    $total_pages = ceil($total_records / $page_limit);
+
+    if (!empty($records)) {
+        foreach ($records as &$record) {
+            $record['register_date'] = human_date($record['register_date']);
+        }
+    }
+
+    $data = new stdClass;
+    $data->records = $records;
+    $data->record_count = $records_count;
+    $data->total_records = $total_records;
+    $data->total_page = $total_pages;
+
+    if ($db->getLastError()) {
+        $this->set_page_error();
+    }
+
+    $page_title = $this->view->page_title = "Appointment ";
+    $this->view->report_filename = date('Y-m-d') . '-' . $page_title;
+    $this->view->report_title = $page_title;
+    $this->view->report_layout = "report_layout.php";
+    $this->view->report_paper_size = "A4";
+    $this->view->report_orientation = "portrait";
+    $this->render_view("appointment_new/list.php", $data);
+}
+
+
+
 	/**
 	 * View record detail 
 	 * @param $rec_id (select record by table primary key) 
@@ -184,73 +195,75 @@ class Appointment_newController extends SecureController
 	 * @param $formdata array() from $_POST
 	 * @return BaseView
 	 */
-	function add($formdata = null)
-	{
-		if ($formdata) {
-			$db = $this->GetModel();
-			$tablename = $this->tablename;
-			$request = $this->request;
+	public function add($formdata = null)
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // incluir logger
 
-			// Campos permitidos
-			$fields = $this->fields = array(
-				"id_patient",
-				"id_doc",
-				"motive",
-				"description",
-				"appointment_date",
-				"register_date",
-				"id_user",
-				"id_appointment_type",
-				"id_status_appointment",
-				"priority",
-				"reminder_preference",
-				"follow_up_required",
-			);
+    if ($formdata) {
+        $db = $this->GetModel();
+        $tablename = $this->tablename;
+        $request = $this->request;
 
-			$postdata = $this->format_request_data($formdata);
+        // Campos permitidos
+        $fields = $this->fields = array(
+            "id_patient",
+            "id_doc",
+            "motive",
+            "description",
+            "appointment_date",
+            "register_date",
+            "id_user",
+            "id_appointment_type",
+            "id_status_appointment",
+            "priority",
+            "reminder_preference",
+            "follow_up_required",
+        );
 
-			// Validaciones
-			$this->rules_array = array(
-				'id_patient' => 'required',
-				'id_doc' => 'required',
-				'motive' => 'required',
-				'description' => 'required',
-				'appointment_date' => 'required',
-				'id_status_appointment' => '',
-				'id_appointment_type' => 'required',
-				'priority' => 'required',
-				'reminder_preference' => 'required',
-				'follow_up_required' => 'required',
-			);
+        $postdata = $this->format_request_data($formdata);
 
-			// Sanitización
-			$this->sanitize_array = array(
-				'id_patient' => 'sanitize_string',
-				'id_doc' => 'sanitize_string',
-				'motive' => 'sanitize_string',
-				'description' => 'sanitize_string',
-				'appointment_date' => 'sanitize_string',
-				'id_status_appointment' => 'sanitize_string',
-				'id_appointment_type' => 'sanitize_string',
-				'priority' => 'sanitize_string',
-				'reminder_preference' => 'sanitize_string',
-				'follow_up_required' => 'sanitize_string',
-			);
+        // Validaciones
+        $this->rules_array = array(
+            'id_patient' => 'required',
+            'id_doc' => 'required',
+            'motive' => 'required',
+            'description' => 'required',
+            'appointment_date' => 'required',
+            'id_status_appointment' => '',
+            'id_appointment_type' => 'required',
+            'priority' => 'required',
+            'reminder_preference' => 'required',
+            'follow_up_required' => 'required',
+        );
 
-			$this->filter_vals = true;
+        // Sanitización
+        $this->sanitize_array = array(
+            'id_patient' => 'sanitize_string',
+            'id_doc' => 'sanitize_string',
+            'motive' => 'sanitize_string',
+            'description' => 'sanitize_string',
+            'appointment_date' => 'sanitize_string',
+            'id_status_appointment' => 'sanitize_string',
+            'id_appointment_type' => 'sanitize_string',
+            'priority' => 'sanitize_string',
+            'reminder_preference' => 'sanitize_string',
+            'follow_up_required' => 'sanitize_string',
+        );
 
-			// Validar datos
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			$modeldata['register_date'] = datetime_now();
-			$modeldata['id_user'] = USER_ID;
-			$modeldata['id_status_appointment'] = "1";
+        $this->filter_vals = true;
 
-			if ($this->validated()) {
-				$rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+        // Validar datos
+        $modeldata = $this->modeldata = $this->validate_form($postdata);
+        $modeldata['register_date'] = datetime_now();
+        $modeldata['id_user'] = USER_ID;
+        $modeldata['id_status_appointment'] = "1";
 
-				if ($rec_id) {
-					// Traer info de la cita
-					$appointment = $db->rawQueryOne("
+        if ($this->validated()) {
+            $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
+
+            if ($rec_id) {
+                // Traer info de la cita
+                $appointment = $db->rawQueryOne("
                     SELECT an.id_appointment, an.appointment_date, an.motive, an.description, an.id_status_appointment,
                            cp.full_names AS patient_name, cp.email AS patient_email,
                            dc.full_names AS doctor_name, dc.work_email AS doctor_email
@@ -260,53 +273,81 @@ class Appointment_newController extends SecureController
                     WHERE an.id_appointment = ?
                 ", [$rec_id]);
 
-					$appointmentData = [
-						"patient" => [
-							"full_names" => $appointment['patient_name'],
-							"email" => $appointment['patient_email'],
-						],
-						"doctor" => [
-							"full_names" => $appointment['doctor_name'],
-							"email" => $appointment['doctor_email'],
-						],
-						"appointment" => [
-							"appointment_date" => $appointment['appointment_date'],
-							"motive" => $appointment['motive'],
-							"description" => $appointment['description'],
-						],
-						"status" => "Scheduled",
-					];
+                $appointmentData = [
+                    "patient" => [
+                        "full_names" => $appointment['patient_name'],
+                        "email" => $appointment['patient_email'],
+                    ],
+                    "doctor" => [
+                        "full_names" => $appointment['doctor_name'],
+                        "email" => $appointment['doctor_email'],
+                    ],
+                    "appointment" => [
+                        "appointment_date" => $appointment['appointment_date'],
+                        "motive" => $appointment['motive'],
+                        "description" => $appointment['description'],
+                    ],
+                    "status" => "Scheduled",
+                ];
 
-					// Enviar notificaciones con try/catch
-					try {
-						$notifier = new AppointmentNotification();
+                // Enviar notificaciones con try/catch
+                try {
+                    $notifier = new AppointmentNotification();
 
-						if (!$notifier->notifyPatientCreated($appointmentData['patient']['email'], $appointmentData)) {
-							$this->write_to_log("email_patient", "failed");
-						}
+                    if (!$notifier->notifyPatientCreated($appointmentData['patient']['email'], $appointmentData)) {
+                        $this->write_to_log("email_patient", "failed");
+                    }
 
-						if (!$notifier->notifyDoctorCreated($appointmentData['doctor']['email'], $appointmentData)) {
-							$this->write_to_log("email_doctor", "failed");
-						}
-					} catch (Exception $e) {
-						// Registrar error de notificación en logs
-						$this->write_to_log("email_exception", $e->getMessage());
-					}
+                    if (!$notifier->notifyDoctorCreated($appointmentData['doctor']['email'], $appointmentData)) {
+                        $this->write_to_log("email_doctor", "failed");
+                    }
+                } catch (Exception $e) {
+                    // Registrar error de notificación en logs
+                    $this->write_to_log("email_exception", $e->getMessage());
+                }
 
-					// Logs y redirección
-					$this->write_to_log("add", "true");
-					$this->set_flash_msg("Record added successfully", "success");
-					return $this->redirect("appointment_new");
-				} else {
-					$this->set_page_error();
-					$this->write_to_log("add", "false");
-				}
-			}
-		}
+                // ✅ Registrar en activity_log
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "appointment",
+                    "action"  => "New appointment created for patient: " . $appointment['patient_name'] .
+                                 " with doctor: " . $appointment['doctor_name'] .
+                                 " on " . $appointment['appointment_date'],
+                    "level"   => "info"
+                ]);
 
-		$page_title = $this->view->page_title = "Add New Appointment ";
-		$this->render_view("appointment_new/add.php");
-	}
+                // ✅ Logger extendido
+                app_logger(
+                    "info",
+                    "appointment",
+                    "Appointment created: Patient " . $appointment['patient_name'] .
+                    " - Doctor " . $appointment['doctor_name'] .
+                    " (Date: " . $appointment['appointment_date'] . ")",
+                    USER_ID
+                );
+
+                // Logs y redirección
+                $this->write_to_log("add", "true");
+                $this->set_flash_msg("Record added successfully", "success");
+                return $this->redirect("appointment_new");
+            } else {
+                $this->set_page_error();
+                $this->write_to_log("add", "false");
+
+                // Registrar error en activity_log
+                $db->insert("activity_log", [
+                    "user_id" => USER_ID,
+                    "type"    => "appointment",
+                    "action"  => "Error creating appointment",
+                    "level"   => "error"
+                ]);
+            }
+        }
+    }
+
+    $page_title = $this->view->page_title = "Add New Appointment ";
+    $this->render_view("appointment_new/add.php");
+}
 
 
 	/**

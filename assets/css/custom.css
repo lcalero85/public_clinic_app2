@@ -954,3 +954,43 @@ footer {
     100% { transform: scale(1); opacity: 1; }
 }
 
+/* 🔹 Mantener la tabla normal en pantallas grandes */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* 🔹 Vista tipo "card" en móviles */
+@media (max-width: 768px) {
+  .table thead {
+    display: none; /* Ocultar cabecera */
+  }
+
+  .table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .table td {
+    display: block;
+    text-align: right; /* Valor alineado a la derecha */
+    font-size: 14px;
+    border: none;
+    padding: 6px 10px;
+    position: relative;
+  }
+
+  /* 🔹 Poner la etiqueta del campo antes del valor */
+  .table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    position: absolute;
+    left: 10px;
+    text-align: left;
+    color: #006680; /* Azul corporativo */
+  }
+}

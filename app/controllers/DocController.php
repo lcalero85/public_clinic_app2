@@ -532,25 +532,70 @@ class DocController extends SecureController
 	 * Support multi delete by separating record id by comma.
 	 * @return BaseView
 	 */
-	function delete($rec_id = null)
-	{
-		Csrf::cross_check();
-		$request = $this->request;
-		$db = $this->GetModel();
-		$tablename = $this->tablename;
-		$this->rec_id = $rec_id;
-		//form multiple delete, split record id separated by comma into array
-		$arr_rec_id = array_map('trim', explode(",", $rec_id));
-		$db->where("doc.id", $arr_rec_id, "in");
-		$bool = $db->delete($tablename);
-		if ($bool) {
-			$this->write_to_log("delete", "true");
-			$this->set_flash_msg("Record deleted successfully", "success");
-		} elseif ($db->getLastError()) {
-			$page_error = $db->getLastError();
-			$this->set_flash_msg($page_error, "danger");
-			$this->write_to_log("delete", "false");
-		}
-		return $this->redirect("doc");
-	}
+public function delete($rec_id = null): mixed
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // incluir logger correctamente
+
+    Csrf::cross_check();
+    $request   = $this->request;
+    $db        = $this->GetModel();
+    $tablename = $this->tablename;
+    $this->rec_id = $rec_id;
+
+    // múltiples ids separados por coma
+    $arr_rec_id = array_map('trim', explode(",", $rec_id));
+
+    // Recuperar nombres de los doctores antes de marcar como eliminados
+    $db->where("id", $arr_rec_id, "in");
+    $doctors = $db->get("doc", null, ["id", "full_names"]);
+
+    // Actualizar status = Inactive (borrado lógico)
+    $db->where("doc.id", $arr_rec_id, "in");
+    $data = [
+        "status"      => "Inactive",
+        "update_date" => date_now()
+    ];
+    $bool = $db->update($tablename, $data);
+
+    if ($bool) {
+        $this->write_to_log("delete", "true");
+        $this->set_flash_msg("Doctor(s) set to Inactive successfully", "success");
+
+        foreach ($doctors as $doctor) {
+            $doctorName = !empty($doctor['full_names']) ? $doctor['full_names'] : "(No name)";
+
+            // Guardar en activity_log
+            $db->insert("activity_log", [
+                "user_id" => USER_ID,
+                "type"    => "doctor",
+                "action"  => "Doctor set to Inactive (logical delete): " . $doctorName . " (ID: " . $doctor['id'] . ")",
+                "level"   => "info"
+            ]);
+
+            // Logger helper (archivo / registro extendido)
+            app_logger(
+                "warning",
+                "doctor",
+                "Doctor set to Inactive (logical delete): " . $doctorName . " (ID: " . $doctor['id'] . ")",
+                USER_ID
+            );
+        }
+    } elseif ($db->getLastError()) {
+        $page_error = $db->getLastError();
+        $this->set_flash_msg($page_error, "danger");
+        $this->write_to_log("delete", "false");
+
+        app_logger("error", "doctor", "Error setting doctor(s) Inactive ($rec_id): $page_error", USER_ID);
+    }
+
+    return $this->redirect("doc");
 }
+
+
+
+
+}
+
+
+
+

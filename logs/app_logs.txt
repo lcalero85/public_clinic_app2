@@ -1,3 +1,6 @@
 [2025-08-30 06:31:51] [info] [patient] UserID:1 - Patient updated: Jhon Matheus
 [2025-08-30 07:06:43] [warning] [patient] UserID:1 - Patient ID 14 marked as Deleted
 [2025-08-30 07:08:49] [warning] [patient] UserID:1 - Patient deleted: Jhon Matheus
+[2025-08-30 19:52:50] [warning] [doctor] UserID:1 - Doctor set to Inactive (logical delete): James Jamson (ID: 5)
+[2025-08-30 19:53:44] [warning] [patient] UserID:1 - Patient deleted: Robert Patrick
+[2025-08-30 20:01:48] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-12-25)

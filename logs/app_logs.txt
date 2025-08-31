@@ -11,3 +11,10 @@
 [2025-08-31 05:25:34] [success] [appointment] UserID:11 - Appointment request ID 17 submitted and notifications sent
 [2025-08-31 18:04:58] [info] [appointment] UserID:11 - Appointment request submitted (ID: 18) by patient Daniel Brown
 [2025-08-31 18:05:02] [success] [appointment] UserID:11 - Appointment request ID 18 submitted and notifications sent
+[2025-08-31 18:28:19] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-09-10)
+[2025-08-31 18:38:50] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-10-15)
+[2025-08-31 18:56:00] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2026-01-24)
+[2025-08-31 19:17:37] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-12-12)
+[2025-08-31 19:32:26] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-10-17)
+[2025-08-31 19:36:05] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-08-15)
+[2025-08-31 19:43:52] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-10-16)

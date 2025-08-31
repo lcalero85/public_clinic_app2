@@ -19,46 +19,47 @@ $current_page = $this->set_current_page_link();
                 </small>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white border-0">
-                    <h5 class="mb-0 text-primary"><i class="fa fa-bolt me-2"></i> Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2 justify-content-center"> 
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php print_link("clinic_patients/list") ?>">
-                                <i class="fa fa-user-plus me-2"></i> New Patient
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php print_link("doc/list") ?>">
-                                <i class="fa fa-user-md me-2"></i> New Doctor
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php print_link("appointment_new/list") ?>">
-                                <i class="fa fa-calendar-plus-o me-2"></i> New Appointment
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php print_link("clinic_prescription/list") ?>">
-                                <i class="fa fa-file-medical me-2"></i> New Prescriptions
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php print_link("invoices/list") ?>">
-                                <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-auto">
-                            <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
-                                <i class="fa fa-notes-medical me-2"></i> See Clinic Historial
-                            </a>
-                        </div>
-                    </div>
-                </div>
+           <!-- Quick Actions -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white border-0">
+        <h5 class="mb-0 text-primary"><i class="fa fa-bolt me-2"></i> Quick Actions</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-center"> 
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php print_link("clinic_patients/list") ?>">
+                    <i class="fa fa-user-plus me-2"></i> New Patient
+                </a>
             </div>
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php print_link("doc/list") ?>">
+                    <i class="fa fa-user-md me-2"></i> New Doctor
+                </a>
+            </div>
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php print_link("appointment_new/list") ?>">
+                    <i class="fa fa-calendar-plus-o me-2"></i> New Appointment
+                </a>
+            </div>
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php print_link("clinic_prescription/list") ?>">
+                    <i class="fa fa-file-medical me-2"></i> New Prescriptions
+                </a>
+            </div>
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php print_link("invoices/list") ?>">
+                    <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
+                </a>
+            </div>
+            <div class="col-12 col-sm-6 col-md-auto">
+                <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
+                    <i class="fa fa-notes-medical me-2"></i> See Clinic Historial
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 
             <!-- General Dashboard -->
 <div class="py-4"> 
@@ -130,6 +131,8 @@ $current_page = $this->set_current_page_link();
                 </div>
             </div>
         </div>
+
+
         <!-- Doctores -->
         <div class="mb-4">
             <h5 class="section-title">🧑‍⚕️ Doctors</h5>

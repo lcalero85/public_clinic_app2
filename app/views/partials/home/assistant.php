@@ -12,14 +12,12 @@ $current_page = $this->set_current_page_link();
         <div class="container">
             <!-- Encabezado -->
             <div class="page-header mb-3">
-                <h4 class="fw-bold">
-                    👋 Welcome back, <span class="text-primary"><?php echo USER_NAME ?></span>
-                </h4>
-                <small class="text-muted">
-                    Role: <?php echo USER_ROLE_NAME ?> | Last access: <?php echo date_now(); ?>
-                </small>
+                <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
+                <div class="text-muted d-flex flex-wrap gap-3">
+                    <small>Role: <?php echo USER_ROLE_NAME ?></small>
+                   &nbsp<small>Last access: <?php echo date_now(); ?></small>
+                </div>
             </div>
-
             <!-- Quick Actions -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white border-0">
@@ -36,10 +34,12 @@ $current_page = $this->set_current_page_link();
                         <a class="btn btn-success btn-sm mx-2 my-1" href="<?php print_link("appointment_new/list") ?>">
                             <i class="fa fa-calendar-check"></i> New Appointment
                         </a>
-                        <a class="btn btn-warning btn-sm mx-2 my-1" href="<?php print_link("clinic_prescription/list") ?>">
+                        <a class="btn btn-warning btn-sm mx-2 my-1"
+                            href="<?php print_link("clinic_prescription/list") ?>">
                             <i class="fa fa-file-prescription"></i> New Prescriptions
                         </a>
-                        <a class="btn btn-secondary btn-sm mx-2 my-1" href="<?php echo print_link("report/clinical_historial"); ?>">
+                        <a class="btn btn-secondary btn-sm mx-2 my-1"
+                            href="<?php echo print_link("report/clinical_historial"); ?>">
                             <i class="fa fa-notes-medical"></i> See Clinic Historial
                         </a>
                     </div>
@@ -61,7 +61,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-user-plus fa-2x text-primary mb-2"></i>
                                     <h6 class="fw-bold">Patients</h6>
                                     <h4 class="fw-bold text-primary"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("clinic_patients/") ?>" class="btn btn-outline-primary btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("clinic_patients/") ?>"
+                                        class="btn btn-outline-primary btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +75,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-user-times fa-2x text-danger mb-2"></i>
                                     <h6 class="fw-bold">Inactive Patients</h6>
                                     <h4 class="fw-bold text-danger"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("inactives_patients/") ?>" class="btn btn-outline-danger btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("inactives_patients/") ?>"
+                                        class="btn btn-outline-danger btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +89,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-users fa-2x text-success mb-2"></i>
                                     <h6 class="fw-bold">Active Patients</h6>
                                     <h4 class="fw-bold text-success"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("actives_patients/") ?>" class="btn btn-outline-success btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("actives_patients/") ?>"
+                                        class="btn btn-outline-success btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +103,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-calendar-check fa-2x text-info mb-2"></i>
                                     <h6 class="fw-bold">Appointments</h6>
                                     <h4 class="fw-bold text-info"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("appointments/") ?>" class="btn btn-outline-info btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("appointments/") ?>"
+                                        class="btn btn-outline-info btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +117,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-calculator fa-2x text-secondary mb-2"></i>
                                     <h6 class="fw-bold">Invoices</h6>
                                     <h4 class="fw-bold text-secondary"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("invoices/") ?>" class="btn btn-outline-secondary btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("invoices/") ?>"
+                                        class="btn btn-outline-secondary btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +131,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-user-md fa-2x text-dark mb-2"></i>
                                     <h6 class="fw-bold">Doctors</h6>
                                     <h4 class="fw-bold text-dark"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("doc/") ?>" class="btn btn-outline-dark btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("doc/") ?>"
+                                        class="btn btn-outline-dark btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +145,8 @@ $current_page = $this->set_current_page_link();
                                     <i class="fa fa-file-prescription fa-2x text-warning mb-2"></i>
                                     <h6 class="fw-bold">Prescriptions</h6>
                                     <h4 class="fw-bold text-warning"><?php echo $rec_count; ?></h4>
-                                    <a href="<?php print_link("clinic_prescription/") ?>" class="btn btn-outline-warning btn-sm mt-2">View</a>
+                                    <a href="<?php print_link("clinic_prescription/") ?>"
+                                        class="btn btn-outline-warning btn-sm mt-2">View</a>
                                 </div>
                             </div>
                         </div>

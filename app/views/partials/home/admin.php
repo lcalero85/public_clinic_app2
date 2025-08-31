@@ -49,7 +49,7 @@ $current_page = $this->set_current_page_link();
             </div>
             <div class="col-12 col-sm-6 col-md-auto">
                 <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
-                    <i class="fa fa-notes-medical me-2"></i> See Historial Clinic
+                    <i class="fa fa-notes-medical me-2"></i> See Historical Clinic
                 </a>
             </div>
         </div>

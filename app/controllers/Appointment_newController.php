@@ -195,7 +195,7 @@ function index($fieldname = null, $fieldvalue = null)
 	 * @param $formdata array() from $_POST
 	 * @return BaseView
 	 */
-	public function add($formdata = null)
+public function add($formdata = null)
 {
     require_once __DIR__ . "/../../helpers/logger.php"; // incluir logger
 
@@ -256,55 +256,37 @@ function index($fieldname = null, $fieldvalue = null)
         $modeldata = $this->modeldata = $this->validate_form($postdata);
         $modeldata['register_date'] = datetime_now();
         $modeldata['id_user'] = USER_ID;
-        $modeldata['id_status_appointment'] = "1";
+        $modeldata['id_status_appointment'] = "1"; // estado inicial: Scheduled
 
         if ($this->validated()) {
             $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 
             if ($rec_id) {
-                // Traer info de la cita
+                // Traer info de la cita incluyendo id_user del paciente
                 $appointment = $db->rawQueryOne("
                     SELECT an.id_appointment, an.appointment_date, an.motive, an.description, an.id_status_appointment,
-                           cp.full_names AS patient_name, cp.email AS patient_email,
-                           dc.full_names AS doctor_name, dc.work_email AS doctor_email
+                           cp.full_names AS patient_name, cp.email AS patient_email, cp.id_user AS id_patient_user,
+                           dc.full_names AS doctor_name, dc.Speciality AS doctor_specialty
                     FROM appointment_new AS an
                     INNER JOIN clinic_patients AS cp ON an.id_patient = cp.id_patient
                     INNER JOIN doc AS dc ON an.id_doc = dc.id
                     WHERE an.id_appointment = ?
                 ", [$rec_id]);
 
-                $appointmentData = [
-                    "patient" => [
-                        "full_names" => $appointment['patient_name'],
-                        "email" => $appointment['patient_email'],
-                    ],
-                    "doctor" => [
-                        "full_names" => $appointment['doctor_name'],
-                        "email" => $appointment['doctor_email'],
-                    ],
-                    "appointment" => [
-                        "appointment_date" => $appointment['appointment_date'],
-                        "motive" => $appointment['motive'],
-                        "description" => $appointment['description'],
-                    ],
-                    "status" => "Scheduled",
-                ];
+                // Construir JSON para notify_event
+                $jsonData = json_encode([
+                    "patient_name"     => $appointment['patient_name'],
+                    "doctor_name"      => $appointment['doctor_name'],
+                    "doctor_specialty" => $appointment['doctor_specialty'],
+                    "appointment_date" => $appointment['appointment_date'],
+                    "id_patient_user"  => $appointment['id_patient_user'], // 🔹 usuario real del paciente
+                    "id_doc"           => $modeldata['id_doc']             // para doctor
+                ]);
 
-                // Enviar notificaciones con try/catch
-                try {
-                    $notifier = new AppointmentNotification();
-
-                    if (!$notifier->notifyPatientCreated($appointmentData['patient']['email'], $appointmentData)) {
-                        $this->write_to_log("email_patient", "failed");
-                    }
-
-                    if (!$notifier->notifyDoctorCreated($appointmentData['doctor']['email'], $appointmentData)) {
-                        $this->write_to_log("email_doctor", "failed");
-                    }
-                } catch (Exception $e) {
-                    // Registrar error de notificación en logs
-                    $this->write_to_log("email_exception", $e->getMessage());
-                }
+                // 🔹 Disparar notificaciones internas
+                $db->rawQuery("CALL notify_event('appointment_request_admin', ?)", [$jsonData]);   // Admin / Asistente
+                $db->rawQuery("CALL notify_event('appointment_request_patient', ?)", [$jsonData]); // Paciente
+                $db->rawQuery("CALL notify_event('appointment_approved_doctor', ?)", [$jsonData]); // Doctor
 
                 // ✅ Registrar en activity_log
                 $db->insert("activity_log", [
@@ -348,7 +330,6 @@ function index($fieldname = null, $fieldvalue = null)
     $page_title = $this->view->page_title = "Add New Appointment ";
     $this->render_view("appointment_new/add.php");
 }
-
 
 	/**
 	 * Update table record with formdata

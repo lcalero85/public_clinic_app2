@@ -518,102 +518,121 @@ function index($fieldname = null, $fieldvalue = null)
 	}
 
 	public function request_submit($formdata = null): bool
-	{
-		if ($formdata) {
-			$db = $this->GetModel();
-			$tablename = "appointment_new";
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // ✅ incluir logger
+    if ($formdata) {
+        $db = $this->GetModel();
+        $tablename = "appointment_new";
 
-			$postdata = $this->format_request_data($formdata);
+        $postdata = $this->format_request_data($formdata);
 
-			// 🔹 Buscar el id_patient real a partir del usuario logueado
-			$patient = $db->rawQueryOne("SELECT id_patient, full_names, email 
+        // 🔹 Buscar el id_patient real a partir del usuario logueado
+        $patient = $db->rawQueryOne("SELECT id_patient, full_names, email 
                                      FROM clinic_patients 
                                      WHERE id_user = ?", [USER_ID]);
 
-			if (!$patient) {
-				$this->set_flash_msg("No patient record found for this user", "danger");
-				return false;
-			}
+        if (!$patient) {
+            $this->set_flash_msg("No patient record found for this user", "danger");
+            $this->write_to_log("request_submit", "false");
+            app_logger("error", "appointment", "No patient record found for USER_ID " . USER_ID, USER_ID);
 
-			$modeldata = [];
-			$modeldata['id_patient'] = $patient['id_patient'];
-			$modeldata['id_doc'] = !empty($postdata['id_doc']) ? $postdata['id_doc'] : null;
-			$modeldata['motive'] = $postdata['motive'];
-			$modeldata['description'] = $postdata['description'];
-			$modeldata['requested_date'] = $postdata['requested_date'];
-			$modeldata['register_date'] = date("Y-m-d");
-			$modeldata['update_date'] = date("Y-m-d");
-			$modeldata['id_status_appointment'] = 2; // Pending Confirmation
-			$modeldata['created_by'] = USER_ID;
+            return false;
+        }
 
-			$rec_id = $db->insert($tablename, $modeldata);
+        $modeldata = [];
+        $modeldata['id_patient'] = $patient['id_patient'];
+        $modeldata['id_doc'] = !empty($postdata['id_doc']) ? $postdata['id_doc'] : null;
+        $modeldata['motive'] = $postdata['motive'];
+        $modeldata['description'] = $postdata['description'];
+        $modeldata['requested_date'] = $postdata['requested_date'];
+        $modeldata['register_date'] = date("Y-m-d");
+        $modeldata['update_date'] = date("Y-m-d");
+        $modeldata['id_status_appointment'] = 2; // Pending Confirmation
+        $modeldata['created_by'] = USER_ID;
 
-			if ($rec_id) {
-				// 🔹 Datos del paciente
-				$patientData = [
-					'id' => $patient['id_patient'],
-					'full_names' => $patient['full_names'],
-					'email' => $patient['email']
-				];
+        $rec_id = $db->insert($tablename, $modeldata);
 
-				// 🔹 Datos del doctor
-				$doctor = $db->rawQueryOne("SELECT full_names, work_email
+        if ($rec_id) {
+            // 📌 Logs de éxito
+            $this->write_to_log("request_submit", "true");
+            app_logger("info", "appointment", "Appointment request submitted (ID: $rec_id) by patient {$patient['full_names']}", USER_ID);
+
+            // 🔹 Datos del paciente
+            $patientData = [
+                'id' => $patient['id_patient'],
+                'full_names' => $patient['full_names'],
+                'email' => $patient['email']
+            ];
+
+            // 🔹 Datos del doctor
+            $doctor = $db->rawQueryOne("SELECT full_names, work_email
                                         FROM doc 
                                         WHERE id = ?", [$modeldata['id_doc']]);
 
-				// 🔹 Datos de la cita
-				$appointmentInfo = [
-					'id' => $rec_id,
-					'requested_date' => $modeldata['requested_date'],
-					'motive' => $modeldata['motive'],
-					'description' => $modeldata['description'],
-					'request_link' => SITE_ADDR . "/appointment_requests/view/$rec_id"
-				];
+            // 🔹 Datos de la cita
+            $appointmentInfo = [
+                'id' => $rec_id,
+                'requested_date' => $modeldata['requested_date'],
+                'motive' => $modeldata['motive'],
+                'description' => $modeldata['description'],
+                'request_link' => SITE_ADDR . "/appointment_requests/view/$rec_id"
+            ];
 
-				// 🔹 Estructura completa
-				$appointmentData = [
-					'patient' => $patientData,
-					'doctor' => $doctor,
-					'appointment' => $appointmentInfo,
-					'status' => "Pending"
-				];
+            // 🔹 Estructura completa
+            $appointmentData = [
+                'patient' => $patientData,
+                'doctor' => $doctor,
+                'appointment' => $appointmentInfo,
+                'status' => "Pending"
+            ];
 
-				// ================================================
-				// 📢 ENVIAR NOTIFICACIONES INTERNAS (via notify_event)
-				// ================================================
+            // ================================================
+            // 📢 ENVIAR NOTIFICACIONES INTERNAS (via notify_event)
+            // ================================================
 
-				// Notificación para el paciente (confirmación de recepción)
-				$db->rawQuery("CALL notify_event('appointment_request_patient', ?)", [json_encode([
-					"id_user"      => USER_ID,
-					"patient_name" => $patient['full_names'],
-					"appointment_date" => $modeldata['requested_date']
-				])]);
+            // Notificación para el paciente (confirmación de recepción)
+            $db->rawQuery("CALL notify_event('appointment_request_patient', ?)", [json_encode([
+                "id_user"      => USER_ID,
+                "patient_name" => $patient['full_names'],
+                "appointment_date" => $modeldata['requested_date']
+            ])]);
 
-				// Notificación para admin y assistant
-				$db->rawQuery("CALL notify_event('appointment_request_admin', ?)", [json_encode([
-					"patient_name"    => $patient['full_names'],
-					"appointment_date" => $modeldata['requested_date']
-				])]);
+            // Notificación para admin y assistant
+            $db->rawQuery("CALL notify_event('appointment_request_admin', ?)", [json_encode([
+                "patient_name"    => $patient['full_names'],
+                "appointment_date" => $modeldata['requested_date']
+            ])]);
 
-				// Inicializar notificador
-				$notifier = new AppointmentNotification();
+            // Inicializar notificador
+            $notifier = new AppointmentNotification();
 
-				// Notificar paciente
-				$notifier->notifyPatient($patientData['email'], $appointmentData);
+            // Notificar paciente
+            $notifier->notifyPatient($patientData['email'], $appointmentData);
 
-				// Notificar admin
-				$notifier->notifyAdmin($appointmentData);
+            // Notificar admin
+            $notifier->notifyAdmin($appointmentData);
 
-				// ✅ Notificar doctor (usando tu función existente)
-				if (!empty($doctor['work_email'])) {
-					$notifier->notifyDoctorCreated($doctor['work_email'], $appointmentData);
-				}
+            // ✅ Notificar doctor
+            if (!empty($doctor['work_email'])) {
+                $notifier->notifyDoctorCreated($doctor['work_email'], $appointmentData);
+            }
 
-				$this->set_flash_msg("Appointment request submitted successfully", "success");
-				return $this->redirect("my_appointment");
-			}
-		}
-	}
+            $this->set_flash_msg("Appointment request submitted successfully", "success");
+
+            // 📌 Log de éxito final con notificaciones
+            app_logger("success", "appointment", "Appointment request ID $rec_id submitted and notifications sent", USER_ID);
+
+            return $this->redirect("my_appointment");
+        } else {
+            $this->set_flash_msg("Failed to submit appointment request", "danger");
+            $this->write_to_log("request_submit", "false");
+            app_logger("error", "appointment", "Failed to insert appointment request (DB error: " . $db->getLastError() . ")", USER_ID);
+
+            return false;
+        }
+    }
+}
+
 
 
 	/**
@@ -679,88 +698,93 @@ function index($fieldname = null, $fieldvalue = null)
 	 * Deny appointment with comment and notify patient
 	 */
 	public function deny($id = null)
-	{
-		$db = $this->GetModel();
-		$tablename = "appointment_new";
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // ✅ incluir logger
+    $db = $this->GetModel();
+    $tablename = "appointment_new";
 
-		if ($id) {
-			// Buscar cita y paciente
-			$db->where("id_appointment", $id);
-			$appointment = $db->getOne($tablename);
+    if ($id) {
+        // Buscar cita y paciente
+        $db->where("id_appointment", $id);
+        $appointment = $db->getOne($tablename);
 
-			if ($appointment) {
-				// Obtener datos del paciente
-				$db->where("id_patient", $appointment['id_patient']);
-				$patient = $db->getOne("clinic_patients");
+        if ($appointment) {
+            // Obtener datos del paciente
+            $db->where("id_patient", $appointment['id_patient']);
+            $patient = $db->getOne("clinic_patients");
 
-				if (!$patient) {
-					$this->set_flash_msg("Patient not found", "danger");
-					return $this->redirect("appointment_new/request_manage");
-				}
+            if (!$patient) {
+                $this->set_flash_msg("Patient not found", "danger");
+                $this->write_to_log("deny", "false");
+                app_logger("error", "appointment", "Patient not found when denying appointment ID $id", USER_ID);
 
-				// Comentario del administrador
-				$adminResponse = "For capacity reasons, your appointment request has been denied by the administration.";
+                return $this->redirect("appointment_new/request_manage");
+            }
 
-				// Actualizar estado en la base
-				$update = array(
-					"id_status_appointment" => 7, // Denied
-					"admin_response" => $adminResponse,
-					"updated_by" => USER_ID,
-					"update_date" => date("Y-m-d H:i:s")
-				);
+            // Comentario del administrador
+            $adminResponse = "For capacity reasons, your appointment request has been denied by the administration.";
 
-				$db->where("id_appointment", $id);
-				$exec = $db->update($tablename, $update);
+            // Actualizar estado en la base
+            $update = array(
+                "id_status_appointment" => 7, // ❌ Denied
+                "admin_response" => $adminResponse,
+                "updated_by" => USER_ID,
+                "update_date" => date("Y-m-d H:i:s")
+            );
 
-				if ($exec) {
-					// ✅ Usar email del paciente desde clinic_patients
-					if ($exec) {
-						// ✅ Email
-						$notifier = new AppointmentNotification();
-						$notifier->notifyPatientDenied($patient['email'], [
-							'patient' => $patient,
-							'appointment' => $appointment,
-							'admin_response' => $update['admin_response']
-						]);
+            $db->where("id_appointment", $id);
+            $exec = $db->update($tablename, $update);
 
-						// ✅ Notificación interna al paciente
-						require_once APP_DIR . "../helpers/NotificationHelper.php";
-						NotificationHelper::sendNotification("appointment_denied_patient", [
-							"patient_name"     => $patient['full_names'],
-							"id_user"          => $patient['id_user'],  // mapea clinic_patients.id_user
-							"appointment_date" => $appointment['requested_date'],
-							"admin_response"   => $update['admin_response']
-						]);
+            if ($exec) {
+                // 📌 Log de éxito
+                $this->write_to_log("deny", "true");
+                app_logger("warning", "appointment", "Appointment ID $id denied for patient {$patient['full_names']}", USER_ID);
 
-						// ✅ Notificación interna a admin y assistant
-						NotificationHelper::sendNotification("appointment_denied_admin", [
-							"patient_name"     => $patient['full_names'],
-							"appointment_date" => $appointment['requested_date']
-						]);
+                // ✅ Notificación por email
+                $notifier = new AppointmentNotification();
+                $notifier->notifyPatientDenied($patient['email'], [
+                    'patient' => $patient,
+                    'appointment' => $appointment,
+                    'admin_response' => $update['admin_response']
+                ]);
 
-						$this->set_flash_msg("The appointment has been denied successfully", "success");
-					}
+                // ✅ Notificación interna al paciente
+                require_once APP_DIR . "../helpers/NotificationHelper.php";
+                NotificationHelper::sendNotification("appointment_denied_patient", [
+                    "patient_name"     => $patient['full_names'],
+                    "id_user"          => $patient['id_user'],
+                    "appointment_date" => $appointment['requested_date'],
+                    "admin_response"   => $update['admin_response']
+                ]);
 
-					$notifier = new AppointmentNotification();
-					$notifier->notifyPatientDenied($patient['email'], [
-						'patient' => $patient,
-						'appointment' => $appointment,
-						'admin_response' => $update['admin_response']
-					]);
+                // ✅ Notificación interna a admin y assistant
+                NotificationHelper::sendNotification("appointment_denied_admin", [
+                    "patient_name"     => $patient['full_names'],
+                    "appointment_date" => $appointment['requested_date']
+                ]);
 
-					$this->set_flash_msg("The appointment has been denied successfully", "success");
-				} else {
-					$this->set_flash_msg("Failed to deny the appointment", "danger");
-				}
-			} else {
-				$this->set_flash_msg("Appointment not found", "danger");
-			}
-		} else {
-			$this->set_flash_msg("Invalid appointment ID", "danger");
-		}
+                $this->set_flash_msg("The appointment has been denied successfully", "success");
+            } else {
+                // 📌 Log de fallo al actualizar DB
+                $this->write_to_log("deny", "false");
+                app_logger("error", "appointment", "Failed to deny appointment ID $id - DB error: " . $db->getLastError(), USER_ID);
 
-		return $this->redirect("appointment_new/request_manage");
-	}
+                $this->set_flash_msg("Failed to deny the appointment", "danger");
+            }
+        } else {
+            $this->set_flash_msg("Appointment not found", "danger");
+            $this->write_to_log("deny", "false");
+            app_logger("error", "appointment", "Appointment ID $id not found when trying to deny", USER_ID);
+        }
+    } else {
+        $this->set_flash_msg("Invalid appointment ID", "danger");
+        $this->write_to_log("deny", "false");
+        app_logger("error", "appointment", "Invalid appointment ID parameter on deny()", USER_ID);
+    }
+
+    return $this->redirect("appointment_new/request_manage");
+}
+
 
 
 	/**
@@ -819,93 +843,114 @@ function index($fieldname = null, $fieldvalue = null)
 	}
 
 	// Guarda los cambios
-	public function save_approval($id = null): bool
-	{
-		$db = $this->GetModel();
-		$tablename = "appointment_new";
+public function save_approval($id = null): bool
+{
+    require_once __DIR__ . "/../../helpers/logger.php"; // ✅ incluir logger
+    $db = $this->GetModel();
+    $tablename = "appointment_new";
 
-		if (!$id) {
-			$this->set_flash_msg("Missing appointment ID", "danger");
-			return $this->redirect("appointment_new/request_manage");
-		}
+    if (!$id) {
+        $this->set_flash_msg("Missing appointment ID", "danger");
+        $this->write_to_log("save_approval", "false");
+        app_logger("error", "appointment", "Missing appointment ID on approval", USER_ID);
 
-		// Buscar la cita
-		$db->where("id_appointment", $id);
-		$appointment = $db->getOne($tablename);
+        return $this->redirect("appointment_new/request_manage");
+    }
 
-		if (!$appointment) {
-			$this->set_flash_msg("Appointment not found", "danger");
-			return $this->redirect("appointment_new/request_manage");
-		}
+    // Buscar la cita
+    $db->where("id_appointment", $id);
+    $appointment = $db->getOne($tablename);
 
-		// Buscar el paciente con id_user
-		$db->where("id_patient", $appointment['id_patient']);
-		$patient = $db->getOne("clinic_patients", ["id_patient", "id_user", "full_names", "email"]);
+    if (!$appointment) {
+        $this->set_flash_msg("Appointment not found", "danger");
+        $this->write_to_log("save_approval", "false");
+        app_logger("error", "appointment", "Appointment ID $id not found (save_approval)", USER_ID);
 
-		$data = [
-			"id_doc" => $_POST['id_doc'] ?? null,
-			"appointment_date" => $_POST['appointment_date'] ?? null,
-			"admin_response" => $_POST['notes'] ?? '',
-			"id_status_appointment" => 1, // ✅ Approved
-			"approved_date" => $db->now(),
-			"updated_by" => USER_ID
-		];
+        return $this->redirect("appointment_new/request_manage");
+    }
 
-		$db->where("id_appointment", $id);
-		$result = $db->update($tablename, $data);
+    // Buscar el paciente con id_user
+    $db->where("id_patient", $appointment['id_patient']);
+    $patient = $db->getOne("clinic_patients", ["id_patient", "id_user", "full_names", "email"]);
 
-		// Buscar el doctor asignado con id_user y specialty
-		// Buscar el doctor asignado
-		$doctor = [];
-		if (!empty($data['id_doc'])) {
-			$db->where("id", $data['id_doc']);
-			$doctor = $db->getOne("doc", ["id", "full_names", "Speciality", "id_user"]);
-		}
+    $data = [
+        "id_doc" => $_POST['id_doc'] ?? null,
+        "appointment_date" => $_POST['appointment_date'] ?? null,
+        "admin_response" => $_POST['notes'] ?? '',
+        "id_status_appointment" => 1, // ✅ Approved
+        "approved_date" => $db->now(),
+        "updated_by" => USER_ID
+    ];
 
-		if (!empty($patient['email'])) {
-			require_once APP_DIR . "../helpers/NotificationHelper.php";
+    $db->where("id_appointment", $id);
+    $result = $db->update($tablename, $data);
 
-			NotificationHelper::sendNotification("appointment_approved_patient", [
-				"patient_name"     => $patient['full_names'],
-				"id_user"          => $patient['id_user'],
-				"appointment_date" => $data['appointment_date'],
-				"doctor_name"      => $doctor['full_names'] ?? '',
-				"doctor_specialty" => $doctor['Speciality'] ?? ''  // 👈 aquí correcto
-			]);
+    // Buscar el doctor asignado
+    $doctor = [];
+    if (!empty($data['id_doc'])) {
+        $db->where("id", $data['id_doc']);
+        $doctor = $db->getOne("doc", ["id", "full_names", "Speciality", "id_user"]);
+    }
 
+    if ($result) {
+        $this->write_to_log("save_approval", "true");
+        app_logger("info", "appointment", "Appointment ID $id approved for patient {$patient['full_names']}", USER_ID);
+    } else {
+        $this->write_to_log("save_approval", "false");
+        app_logger("error", "appointment", "DB error approving appointment ID $id: " . $db->getLastError(), USER_ID);
 
-			// 🔹 Notificación interna: Admin y Assistant
-			NotificationHelper::sendNotification("appointment_approved_admin", [
-				"patient_name"     => $patient['full_names'],
-				"appointment_date" => $data['appointment_date']
-			]);
+        $this->set_flash_msg("Error approving appointment", "danger");
+        return $this->redirect("appointment_new/request_manage");
+    }
 
-			// 🔹 Notificación interna: Doctor
-			if (!empty($doctor['id'])) {
-				NotificationHelper::sendNotification("appointment_approved_doctor", [
-					"patient_name"     => $patient['full_names'],
-					"id_user"          => $doctor['id_user'],
-					"appointment_date" => $data['appointment_date']
-				]);
-			}
+    // 🔹 Notificaciones
+    if (!empty($patient['email'])) {
+        require_once APP_DIR . "../helpers/NotificationHelper.php";
 
-			// 🔹 Notificación por correo al paciente
-			$notifier = new AppointmentNotification();
-			$notifier->notifyPatientApproved($patient['email'], [
-				'patient' => $patient,
-				'appointment' => array_merge($appointment, [
-					'appointment_date' => $data['appointment_date'],
-					'id_doc' => $data['id_doc']
-				]),
-				'doctor' => $doctor,
-				'admin_response' => $data['admin_response']
-			]);
+        NotificationHelper::sendNotification("appointment_approved_patient", [
+            "patient_name"     => $patient['full_names'],
+            "id_user"          => $patient['id_user'],
+            "appointment_date" => $data['appointment_date'],
+            "doctor_name"      => $doctor['full_names'] ?? '',
+            "doctor_specialty" => $doctor['Speciality'] ?? ''
+        ]);
 
-			$this->set_flash_msg("Appointment approved successfully", "success");
-		} else {
-			$this->set_flash_msg("Error approving appointment", "danger");
-		}
+        NotificationHelper::sendNotification("appointment_approved_admin", [
+            "patient_name"     => $patient['full_names'],
+            "appointment_date" => $data['appointment_date']
+        ]);
 
-		return $this->redirect("appointment_new/request_manage");
-	}
+        if (!empty($doctor['id'])) {
+            NotificationHelper::sendNotification("appointment_approved_doctor", [
+                "patient_name"     => $patient['full_names'],
+                "id_user"          => $doctor['id_user'],
+                "appointment_date" => $data['appointment_date']
+            ]);
+        }
+
+        $notifier = new AppointmentNotification();
+        $notifier->notifyPatientApproved($patient['email'], [
+            'patient' => $patient,
+            'appointment' => array_merge($appointment, [
+                'appointment_date' => $data['appointment_date'],
+                'id_doc' => $data['id_doc']
+            ]),
+            'doctor' => $doctor,
+            'admin_response' => $data['admin_response']
+        ]);
+
+        $this->set_flash_msg("Appointment approved successfully", "success");
+
+        // 🔹 Log éxito con email/notificación
+        app_logger("success", "appointment", "Notifications sent for Appointment ID $id - Patient {$patient['full_names']}", USER_ID);
+    } else {
+        $this->set_flash_msg("Error approving appointment - missing patient email", "danger");
+
+        // 🔹 Log warning si falta email
+        app_logger("warning", "appointment", "Appointment ID $id approved but no email sent (missing patient email)", USER_ID);
+    }
+
+    return $this->redirect("appointment_new/request_manage");
+}
+
 }

@@ -4,3 +4,8 @@
 [2025-08-30 19:52:50] [warning] [doctor] UserID:1 - Doctor set to Inactive (logical delete): James Jamson (ID: 5)
 [2025-08-30 19:53:44] [warning] [patient] UserID:1 - Patient deleted: Robert Patrick
 [2025-08-30 20:01:48] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-12-25)
+[2025-08-31 05:17:16] [info] [appointment] UserID:1 - Appointment ID 15 approved for patient Daniel Brown
+[2025-08-31 05:17:18] [success] [appointment] UserID:1 - Notifications sent for Appointment ID 15 - Patient Daniel Brown
+[2025-08-31 05:21:59] [warning] [appointment] UserID:1 - Appointment ID 16 denied for patient Daniel Brown
+[2025-08-31 05:25:31] [info] [appointment] UserID:11 - Appointment request submitted (ID: 17) by patient Daniel Brown
+[2025-08-31 05:25:34] [success] [appointment] UserID:11 - Appointment request ID 17 submitted and notifications sent

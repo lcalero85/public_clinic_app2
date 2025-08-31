@@ -9,3 +9,5 @@
 [2025-08-31 05:21:59] [warning] [appointment] UserID:1 - Appointment ID 16 denied for patient Daniel Brown
 [2025-08-31 05:25:31] [info] [appointment] UserID:11 - Appointment request submitted (ID: 17) by patient Daniel Brown
 [2025-08-31 05:25:34] [success] [appointment] UserID:11 - Appointment request ID 17 submitted and notifications sent
+[2025-08-31 18:04:58] [info] [appointment] UserID:11 - Appointment request submitted (ID: 18) by patient Daniel Brown
+[2025-08-31 18:05:02] [success] [appointment] UserID:11 - Appointment request ID 18 submitted and notifications sent

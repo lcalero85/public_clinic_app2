@@ -1,4 +1,4 @@
-<?php
+<?php 
 $page_element_id = "approve-appointment-" . random_str();
 $comp_model = new SharedController;
 $current_page = $this->set_current_page_link();
@@ -33,10 +33,11 @@ $data = $this->view_data['data'] ?? [];
                 <div class="col-md-7 comp-grid">
                     <?php $this::display_page_errors(); ?>
                     <div class="bg-light p-3 animated fadeIn page-content">
-                        <form id="appointment-approve-form" role="form" novalidate enctype="multipart/form-data"
+                        <form id="appointment-approve-form" role="form" 
+                            enctype="multipart/form-data"
                             class="form page-form form-horizontal needs-validation"
                             action="<?php print_link("appointment_new/save_approval/" . $data['id_appointment'] . "?csrf_token=$csrf_token"); ?>"
-                            method="post">
+                            method="post" novalidate>
                             <div>
 
                                 <!-- Assigned Doctor -->
@@ -63,6 +64,7 @@ $data = $this->view_data['data'] ?? [];
                                                     }
                                                     ?>
                                                 </select>
+                                                <div class="invalid-feedback">Please select a doctor</div>
                                             </div>
                                         </div>
                                     </div>
@@ -78,25 +80,20 @@ $data = $this->view_data['data'] ?? [];
                                         <div class="col-sm-8">
                                             <div class="input-group">
                                                 <?php
-                                                // Preparar fecha para input type="datetime-local"
                                                 $appointment_date = '';
-
                                                 if (!empty($_GET['date']) && $_GET['date'] != 'Not scheduled' && $_GET['date'] != '0000-00-00') {
                                                     $appointment_date = date("Y-m-d\TH:i", strtotime($_GET['date']));
                                                 } elseif (!empty($data['appointment_date'])) {
                                                     $appointment_date = date("Y-m-d\TH:i", strtotime($data['appointment_date']));
                                                 } else {
-                                                    $appointment_date = date("Y-m-d\TH:i"); // fecha/hora actual
+                                                    $appointment_date = date("Y-m-d\TH:i");
                                                 }
                                                 ?>
-                                                <!-- Input visible, solo lectura -->
                                                 <input id="ctrl-appointment_date"
                                                     class="form-control"
                                                     value="<?php echo $appointment_date; ?>"
                                                     type="datetime-local"
-                                                    readonly />
-
-                                                <!-- Input hidden que se envía al controlador -->
+                                                    readonly required />
                                                 <input type="hidden"
                                                     name="appointment_date"
                                                     value="<?php echo $appointment_date; ?>" />
@@ -108,12 +105,12 @@ $data = $this->view_data['data'] ?? [];
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-sm-4">
-                                            <label class="control-label" for="notes">Notes</label>
+                                            <label class="control-label" for="notes">Notes <span class="text-danger">*</span></label>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="">
-                                                <textarea id="ctrl-notes" name="notes"
-                                                    class="form-control"><?php echo $data['notes'] ?? ''; ?></textarea>
+                                                <textarea id="ctrl-notes" name="notes" class="form-control" required><?php echo $data['notes'] ?? ''; ?></textarea>
+                                                <div class="invalid-feedback">Please enter notes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -124,11 +121,11 @@ $data = $this->view_data['data'] ?? [];
                             <!-- Submit Buttons -->
                             <div class="form-group form-submit-btn-holder text-center mt-3">
                                 <div class="form-ajax-status"></div>
-                                <button class="btn btn-success" type="submit">
+                                <button class="btn btn-success" type="submit" id="submitBtn">
                                     Confirm Approval <i class="fa fa-check"></i>
                                 </button>
                                 <a href="<?php print_link("appointment_new/request_manage") ?>"
-                                    class="btn btn-secondary">
+                                    class="btn btn-secondary" id="cancelBtn">
                                     Cancel <i class="fa fa-times"></i>
                                 </a>
                             </div>
@@ -139,3 +136,58 @@ $data = $this->view_data['data'] ?? [];
         </div>
     </div>
 </section>
+
+<!-- Overlay de carga -->
+<div id="form-preloader" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:9999;
+    text-align:center;
+    padding-top:20%;
+    color:#fff;
+    font-family:Arial, sans-serif;
+">
+    <div class="spinner-border text-light" role="status" style="width:3rem; height:3rem;"></div>
+    <h5 class="mt-3">Please wait, operation in progress...</h5>
+</div>
+
+<!-- Script de validación y overlay -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("appointment-approve-form");
+    const submitBtn = document.getElementById("submitBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const overlay = document.getElementById("form-preloader");
+
+    form.addEventListener("submit", function (e) {
+        // Validar campos requeridos
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            form.classList.add("was-validated");
+            return false;
+        }
+
+        // Mostrar overlay
+        overlay.style.display = "block";
+
+        // Bloquear botones
+        submitBtn.disabled = true;
+        cancelBtn.classList.add("disabled"); 
+    }, false);
+});
+</script>
+
+<style>
+.was-validated .form-control:invalid,
+.was-validated .custom-select:invalid {
+    border-color: #dc3545;
+}
+.was-validated .form-control:invalid:focus,
+.was-validated .custom-select:invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
+</style>

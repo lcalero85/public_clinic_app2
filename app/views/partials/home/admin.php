@@ -11,13 +11,14 @@ $current_page = $this->set_current_page_link();
     <div class="bg-light py-4 mb-4">
         <div class="container">
 
-            <!-- Encabezado de bienvenida -->
-            <div class="page-header mb-3">
-                <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
-                <small class="text-muted">
-                    Role: <?php echo USER_ROLE_NAME ?> | Last access: <?php echo date_now(); ?>
-                </small>
-            </div>
+           <!-- Encabezado de bienvenida -->
+<div class="page-header mb-3">
+    <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
+    <div class="text-muted d-flex flex-wrap gap-3">
+        <small>Role: <?php echo USER_ROLE_NAME ?></small>
+       &nbsp<small>Last access: <?php echo date_now(); ?></small>
+    </div>
+</div>
 
            <!-- Quick Actions -->
 <div class="card shadow-sm mb-4">

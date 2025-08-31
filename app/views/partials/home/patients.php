@@ -6,20 +6,16 @@ $current_page = $this->set_current_page_link();
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo SITE_ADDR; ?>/assets/css/custom.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 <div>
     <div class="bg-light py-4 mb-4 shadow-sm border-bottom">
         <div class="container">
-            <!-- Encabezado de bienvenida -->
-            <div class="page-header mb-3">
-                <h4 class="fw-bold">
-                    👋 Welcome back, <span class="text-primary"><?php echo USER_NAME ?></span>
-                </h4>
-                <small class="text-muted">
-                    Role: <?php echo USER_ROLE_NAME ?> | Last access: <?php echo date_now(); ?>
-                </small>
+               <div class="page-header mb-3">
+                <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
+                <div class="text-muted d-flex flex-wrap gap-3">
+                    <small>Role: <?php echo USER_ROLE_NAME ?></small>
+               &nbsp<small>Last access: <?php echo date_now(); ?></small>
+                </div>
             </div>
-
             <!-- Quick Actions -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white border-0">
@@ -31,7 +27,6 @@ $current_page = $this->set_current_page_link();
                         class="btn btn-success btn-sm">
                         <i class="fa fa-plus-circle"></i> Request Appointment
                     </a>
-
                     <a href="<?php print_link('my_appointment?today=1'); ?>"
                         class="btn btn-success btn-sm">
                         <i class="fa fa-clock"></i> View Today’s Appointments

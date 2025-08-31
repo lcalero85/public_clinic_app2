@@ -131,3 +131,30 @@ $current_page = $this->set_current_page_link();
         </div>
     </div>
 </div>
+<style>
+
+/* ✅ Botones de Quick Actions */
+.quick-actions .btn {
+    background-color: #006680 !important;
+    border-color: #006680 !important;
+    color: #fff !important;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Hover efecto */
+.quick-actions .btn:hover {
+    background-color: #004d59 !important;
+    border-color: #004d59 !important;
+    color: #fff !important;
+}
+
+/* ✅ Focus (cuando se selecciona con teclado) */
+.quick-actions .btn:focus,
+.quick-actions .btn:active {
+    background-color: #004050 !important;
+    border-color: #004050 !important;
+    color: #fff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 128, 0.4) !important;
+}
+</style>

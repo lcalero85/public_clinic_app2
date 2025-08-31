@@ -9,11 +9,11 @@ $current_page = $this->set_current_page_link();
 <div>
     <div class="bg-light py-4 mb-4 shadow-sm border-bottom">
         <div class="container">
-               <div class="page-header mb-3">
+            <div class="page-header mb-3">
                 <h4 class="section-title">👋 Welcome back, <?php echo USER_NAME ?></h4>
                 <div class="text-muted d-flex flex-wrap gap-3">
                     <small>Role: <?php echo USER_ROLE_NAME ?></small>
-               &nbsp<small>Last access: <?php echo date_now(); ?></small>
+                    &nbsp<small>Last access: <?php echo date_now(); ?></small>
                 </div>
             </div>
             <!-- Quick Actions -->
@@ -23,7 +23,7 @@ $current_page = $this->set_current_page_link();
                 </div>
                 <div class="quick-actions-container">
 
-                     <a href="<?php print_link('appointment_new/request'); ?>"
+                    <a href="<?php print_link('appointment_new/request'); ?>"
                         class="btn btn-success btn-sm">
                         <i class="fa fa-plus-circle"></i> Request Appointment
                     </a>
@@ -63,8 +63,28 @@ $current_page = $this->set_current_page_link();
                     text-align: center;
                     padding: 12px;
                     font-weight: 600;
+                    background-color: #006680 !important;
+                    border-color: #006680 !important;
+                    color: #fff !important;
+                    font-weight: 500;
+                    transition: all 0.3s ease-in-out;
                 }
 
+                /* 🌊 Hover */
+                .quick-actions-container .btn:hover {
+                    background-color: #004d59 !important;
+                    border-color: #004d59 !important;
+                    color: #fff !important;
+                }
+
+                /* ✨ Focus / Active */
+                .quick-actions-container .btn:focus,
+                .quick-actions-container .btn:active {
+                    background-color: #004050 !important;
+                    border-color: #004050 !important;
+                    color: #fff !important;
+                    box-shadow: 0 0 0 0.2rem rgba(0, 102, 128, 0.4) !important;
+                }
                 /* Vista móvil */
                 @media (max-width: 768px) {
                     .quick-actions-container {
@@ -81,6 +101,8 @@ $current_page = $this->set_current_page_link();
                         margin-bottom: 0;
                         /* evita que se duplique con gap */
                     }
+
+
                 }
             </style>
 

@@ -55,8 +55,6 @@ $current_page = $this->set_current_page_link();
         </div>
     </div>
 </div>
-
-
             <!-- General Dashboard -->
 <div class="py-4"> 
     <div class="container">

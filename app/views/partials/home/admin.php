@@ -48,13 +48,8 @@ $current_page = $this->set_current_page_link();
                 </a>
             </div>
             <div class="col-12 col-sm-6 col-md-auto">
-                <a class="btn btn-primary w-100" href="<?php print_link("invoices/list") ?>">
-                    <i class="fa fa-file-invoice-dollar me-2"></i> New Invoice
-                </a>
-            </div>
-            <div class="col-12 col-sm-6 col-md-auto">
                 <a class="btn btn-primary w-100" href="<?php echo print_link("report/clinical_historial"); ?>">
-                    <i class="fa fa-notes-medical me-2"></i> See Clinic Historial
+                    <i class="fa fa-notes-medical me-2"></i> See Historial Clinic
                 </a>
             </div>
         </div>

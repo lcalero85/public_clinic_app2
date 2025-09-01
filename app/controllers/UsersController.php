@@ -255,14 +255,14 @@ class UsersController extends SecureController
 
             $new_doc_id     = null;
             $new_patient_id = null;
-            $doctor         = null;
-            $patient        = null;
 
             // ✅ Guardar usuario si pasó validaciones
             if ($this->validated() && empty($this->view->page_error)) {
                 $rec_id = $this->rec_id = $db->insert($tablename, $modeldata);
 
                 if ($rec_id) {
+                    require_once APP_DIR . "../helpers/NotificationHelper.php";
+
                     // Doctor = 3
                     if ($id_role === 3) {
                         $db->where("LOWER(full_names)", $full_name);
@@ -283,24 +283,36 @@ class UsersController extends SecureController
                                 'full_names'    => ucwords($full_name),
                                 'work_email'    => $email,
                                 'photo'         => $modeldata['photo'] ?: null,
+                                'address'       => 'N/A',
+                                'birthdate'     => '1985-01-03',
+                                'Age'           => 'N/A',
+                                'gender'        => 'N/A',
+                                'Speciality'    => 'N/A',
+                                'license_number'  =>'45454454545',
+                                'license_issuer' => 'N/A',
+                                'license_issue_date' => 'N/A',
+                                'license_expiry_date'=> 'N/A',
+                                'university'=> 'N/A',
+                                'years_experience' => '15',
+                                'office_phone' => '+5175555555555',
+                                'working_hours' => 'N/A',
+                                'status' => 'Active',
+                                'dni' => 'N/A',
                                 'register_date' => datetime_now(),
                                 'update_date'   => datetime_now(),
                                 'id_user'       => $rec_id
                             ]);
-
-                            require_once APP_DIR . "../helpers/NotificationHelper.php";
-
-                            // 1) Notificación a Admin y Asistente
-                            NotificationHelper::sendNotification("doctor_registered", [
-                                "doctor_name" => $formdata['full_names']
-                            ]);
-
-                            // 2) Notificación de bienvenida solo para el Doctor
-                            NotificationHelper::sendNotification("doctor_welcome", [
-                                "doctor_name" => $formdata['full_names'],
-                                "id_user"     => $rec_id   // 👈 se asegura que llegue SOLO al nuevo doctor
-                            ]);
                         }
+
+                        // 🔹 Siempre notificar (nuevo o actualizado)
+                        NotificationHelper::sendNotification("doctor_registered", [
+                            "doctor_name" => $formdata['full_names']
+                        ]);
+
+                        NotificationHelper::sendNotification("doctor_welcome", [
+                            "doctor_name" => $formdata['full_names'],
+                            "id_user"     => $rec_id
+                        ]);
                     }
 
                     // Patients = 4
@@ -323,11 +335,38 @@ class UsersController extends SecureController
                                 'full_names'    => ucwords($full_name),
                                 'email'         => $email,
                                 'photo'         => $modeldata['photo'] ?: null,
+                                "address"                => "N/A",
+                                "referred"               => "N/A",
+                                "gender"                 => "Male",
+                                "register_observations"  => "N/A",
+                                "id_status"              => 1,
+                                "id_document_type"       => 1,
+                                "document_number"        => "N/A",
+                                "birthdate"              => "1985-01-03",
+                                "id_marital_status"      => 1,
+                                "phone_patient"          => "N/A",
+                                "occupation"             => "N/A",
+                                "diseases"               => "N/A",
+                                "allergies"              => "N/A",
+                                "age"                    => "N/A",
+                                "id_blood_type"          => 1,
+                                "emergency_contact_phone" => "N/A",
+                                "workplace"              => "N/A",
                                 'register_date' => datetime_now(),
                                 'update_date'   => datetime_now(),
                                 'id_user'       => $rec_id
                             ]);
                         }
+
+                        // 🔹 Notificación para el paciente y admin
+                        NotificationHelper::sendNotification("patient_registered_self", [
+                            "patient_name" => $formdata['full_names'],
+                            "id_user"      => $rec_id
+                        ]);
+
+                        NotificationHelper::sendNotification("patient_registered_admin", [
+                            "patient_name" => $formdata['full_names']
+                        ]);
                     }
 
                     $this->write_to_log("add", "true");

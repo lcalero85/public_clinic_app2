@@ -330,7 +330,6 @@ public function add($formdata = null)
     $page_title = $this->view->page_title = "Add New Appointment ";
     $this->render_view("appointment_new/add.php");
 }
-
 	/**
 	 * Update table record with formdata
 	 * @param $rec_id (select record by table primary key)
@@ -397,74 +396,7 @@ public function add($formdata = null)
 			$this->set_page_error();
 		}
 		return $this->render_view("appointment_new/edit.php", $data);
-	}
-	/**
-	 * Update single field
-	 * @param $rec_id (select record by table primary key)
-	 * @param $formdata array() from $_POST
-	 * @return array
-	 */
-	function editfield($rec_id = null, $formdata = null)
-	{
-		$db = $this->GetModel();
-		$this->rec_id = $rec_id;
-		$tablename = $this->tablename;
-		//editable fields
-		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "description", "historial", "appointment_date", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
-		$page_error = null;
-		if ($formdata) {
-			$postdata = array();
-			$fieldname = $formdata['name'];
-			$fieldvalue = $formdata['value'];
-			$postdata[$fieldname] = $fieldvalue;
-			$postdata = $this->format_request_data($postdata);
-			$this->rules_array = array(
-				'id_patient' => 'required',
-				'id_doc' => 'required',
-				'motive' => 'required',
-				'description' => 'required',
-				'historial' => 'required',
-				'appointment_date' => 'required',
-				'nex_appointment_date' => 'required',
-			);
-			$this->sanitize_array = array(
-				'id_patient' => 'sanitize_string',
-				'id_doc' => 'sanitize_string',
-				'motive' => 'sanitize_string',
-				'descritption' => 'sanitize_string',
-				'historial' => 'sanitize_string',
-				'appointment_date' => 'sanitize_string',
-				'nex_appointment_date' => 'sanitize_string',
-			);
-			$this->filter_rules = true; //filter validation rules by excluding fields not in the formdata
-			$modeldata = $this->modeldata = $this->validate_form($postdata);
-			if ($this->validated()) {
-				$db->where("appointment_new.id_appointment", $rec_id);;
-				$bool = $db->update($tablename, $modeldata);
-				$numRows = $db->getRowCount();
-				if ($bool && $numRows) {
-					$this->write_to_log("edit", "true");
-					return render_json(
-						array(
-							'num_rows' => $numRows,
-							'rec_id' => $rec_id,
-						)
-					);
-				} else {
-					if ($db->getLastError()) {
-						$page_error = $db->getLastError();
-					} elseif (!$numRows) {
-						$page_error = "No record updated";
-					}
-					$this->write_to_log("edit", "false");
-					render_error($page_error);
-				}
-			} else {
-				render_error($this->view->page_error);
-			}
-		}
-		return null;
-	}
+	}	
 	/**
 	 * Delete record from the database
 	 * Support multi delete by separating record id by comma.
@@ -613,9 +545,6 @@ public function add($formdata = null)
         }
     }
 }
-
-
-
 	/**
 	 * Mostrar solicitudes pendientes (solo admin)
 	 */
@@ -646,10 +575,6 @@ public function add($formdata = null)
 			"records" => $records
 		]);
 	}
-
-
-
-
 	/**
 	 * Aprobar cita (fecha solicitada = fecha aprobada)
 	 */
@@ -765,9 +690,6 @@ public function add($formdata = null)
 
     return $this->redirect("appointment_new/request_manage");
 }
-
-
-
 	/**
 	 * Reprogramar cita con nueva fecha
 	 */

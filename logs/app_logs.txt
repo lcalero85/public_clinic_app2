@@ -18,3 +18,4 @@
 [2025-08-31 19:32:26] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-10-17)
 [2025-08-31 19:36:05] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-08-15)
 [2025-08-31 19:43:52] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-10-16)
+[2025-09-01 04:34:24] [info] [appointment] UserID:1 - Appointment created: Patient Daniel Brown - Doctor William Walace (Date: 2025-08-23)

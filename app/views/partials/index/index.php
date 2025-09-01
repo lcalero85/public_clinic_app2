@@ -18,7 +18,7 @@
                 <div class="text-dark animated fadeIn page-content">
                     <div class="login-card">
 
-                        <h2>Welcome to My ClinicSystem</h2>
+                      <h2>Welcome to <strong>Health Track</strong></h2>
                         <p >Access your account to manage your clinic</p>
                         <!-- Aquí tus inputs y botones -->
 

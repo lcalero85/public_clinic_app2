@@ -12,7 +12,7 @@ define("ROOT", str_replace("\\", "/", dirname(__FILE__)) . "/");
 // return the application directory name.
 define("ROOT_DIR_NAME", basename(ROOT));
 
-define("SITE_NAME", "My ClinicSystem ");
+define("SITE_NAME", "HealthTrack");
 
 
 // Get Site Address Dynamically
@@ -96,7 +96,7 @@ define("SMTP_SECURE", "tls"); // STARTTLS
 
 // Default Email Sender Details
 define("DEFAULT_EMAIL", SMTP_USERNAME);
-define("DEFAULT_EMAIL_ACCOUNT_NAME", "MyClinicSystem - Notifications");
+define("DEFAULT_EMAIL_ACCOUNT_NAME", "HealthTrack - Notifications");
 
 // Database Configuration Settings
 define("DB_HOST", "localhost");

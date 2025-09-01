@@ -971,3 +971,21 @@ footer {
     margin-right: 6px;     /* espacio entre ícono y texto */
 }
 
+/* Estilo del nombre del sistema sin neón ni animaciones */
+.navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;   /* Todo en mayúsculas */
+    background: linear-gradient(90deg, #ffffff, #cce7ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Ajuste del logo */
+.navbar-brand img {
+    max-height: 40px;
+    margin-right: 8px;
+}

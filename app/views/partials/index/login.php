@@ -9,7 +9,7 @@
 
                  <div>
                      <div class="login-card">
-                         <h2>Welcome to My ClinicSystem</h2>
+                       <h2>Welcome to <strong>Health Track</strong></h2>
                          <p>Access your account to manage your clinic</p>
                          <img src="<?php echo set_img_src('uploads/files/docts.png'); ?>" width="220" height="130" />
                          <h4><i class="fa fa-key"></i> User Login</h4>

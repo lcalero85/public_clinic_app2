@@ -989,3 +989,23 @@ footer {
     max-height: 40px;
     margin-right: 8px;
 }
+/* Que el body ocupe toda la altura */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* El contenedor principal debe crecer y empujar al footer */
+#main-content {
+    flex: 3; /* se expande para ocupar el espacio disponible */
+}
+
+/* El footer queda al final */
+footer {
+    background: #006680; /* o tu color */
+    color: white;
+    text-align: center;
+    padding: 10px;
+}

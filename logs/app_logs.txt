@@ -23,3 +23,4 @@
 [2025-09-02 00:49:44] [success] [appointment] UserID:6 - Appointment request ID 1 submitted and notifications sent
 [2025-09-02 00:51:23] [info] [appointment] UserID:1 - Appointment ID 1 approved for patient Ryan  Reynolds
 [2025-09-02 00:51:55] [success] [appointment] UserID:1 - Notifications sent for Appointment ID 1 - Patient Ryan  Reynolds
+[2025-09-03 17:19:17] [info] [appointment] UserID:1 - Appointment created: Patient William Walace - Doctor Gordon Hayes (Date: 2025-09-30)

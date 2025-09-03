@@ -132,7 +132,6 @@ $show_pagination = $this->show_pagination;
                                             <th class="td-id_status_appointment">Priority</th>
                                             <th class="td-id_status_appointment">Type</th>
                                             <th class="td-id_status_appointment">Status</th>
-                                            <th class="td-id_status_appointment">Next Appointment Date</th>
                                             <th class="td-id_status_appointment">Actions </th>
                                             <th class="td-btn"></th>
                                         </tr>
@@ -211,13 +210,6 @@ $show_pagination = $this->show_pagination;
                                                             <?php echo $data['status']; ?>
                                                         </span>
                                                     </td>
-                                                    <td class="td-clinic_doc_full_names">
-                                                        <span>
-                                                            <?php echo $data['nex_appointment_date']; ?>
-                                                        </span>
-                                                    </td>
-
-
                                                     <td class="page-list-action td-btn">
                                                         <div class="dropdown">
                                                             <button data-toggle="dropdown" class="dropdown-toggle btn btn-primary btn-sm">

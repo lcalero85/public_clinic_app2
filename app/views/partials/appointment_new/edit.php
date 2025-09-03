@@ -107,44 +107,8 @@ $redirect_to = $this->redirect_to;
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group ">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <label class="control-label" for="nex_appointment_date">
-                                                Next Appointment Date <span class="text-danger">*</span>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="input-group">
-                                                <?php
-                                                // Si la fecha es inválida o vacía, no mostrar valor
-                                                $nex_date_value = !empty($data['nex_appointment_date']) && $data['nex_appointment_date'] != '0000-00-00'
-                                                    ? $data['nex_appointment_date']
-                                                    : '';
-                                                ?>
-                                                <input id="ctrl-nex_appointment_date"
-                                                    class="form-control datepicker"
-                                                    required
-                                                    value="<?php echo $nex_date_value; ?>"
-                                                    type="text"
-                                                    name="nex_appointment_date"
-                                                    placeholder="Enter Next Appointment Date"
-                                                    data-enable-time="false"
-                                                    data-min-date=""
-                                                    data-max-date=""
-                                                    data-date-format="Y-m-d"
-                                                    data-alt-format="F j, Y"
-                                                    data-inline="false"
-                                                    data-no-calendar="false"
-                                                    data-mode="single" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php if (USER_ROLE == 'Admin') { ?>
+                            
+                                <?php if (USER_ROLE_NAME == 'admin') { ?>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-4">

@@ -135,61 +135,68 @@ function index($fieldname = null, $fieldvalue = null)
 	 * @return BaseView
 	 */
 	function view($rec_id = null, $value = null)
-	{
-		$request = $this->request;
-		$db = $this->GetModel();
-		$rec_id = $this->rec_id = urldecode($rec_id);
-		$tablename = $this->tablename;
-		$fields = array(
-			"appointment_new.id_appointment",
-			"appointment_new.id_patient",
-			"clinic_patients.full_names AS clinic_patients_full_names",
-			"appointment_new.motive",
-			"appointment_new.description",
-			"appointment_new.historial",
-			"appointment_new.appointment_date",
-			"appointment_new.register_date",
-			"appointment_new.nex_appointment_date",
-			"appointment_new.id_user",
-			"users.full_names AS users_full_names",
-			"appointment_new.id_doc",
-			"doc.full_names AS doc_full_names",
-			"doc.Speciality AS Speciality",
-			"appointment_new.priority",
-			"reminder_preference",
-			"follow_up_required",
-			"appointment_new.id_status_appointment",
-			"appointment_status.status AS appointment_status_status"
-		);
-		if ($value) {
-			$db->where($rec_id, urldecode($value)); //select record based on field name
-		} else {
-			$db->where("appointment_new.id_appointment", $rec_id);; //select record based on primary key
-		}
-		$db->join("clinic_patients", "appointment_new.id_patient = clinic_patients.id_patient", "INNER");
-		$db->join("users", "appointment_new.id_user = users.id_user", "INNER");
-		$db->join("doc", "appointment_new.id_doc = doc.id", "INNER");
-		$db->join("appointment_status", "appointment_new.id_status_appointment = appointment_status.id", "INNER");
-		$record = $db->getOne($tablename, $fields);
-		if ($record) {
-			$this->write_to_log("view", "true");
-			$record['register_date'] = human_date($record['register_date']);
-			$page_title = $this->view->page_title = "View  Appointment New";
-			$this->view->report_filename = date('Y-m-d') . '-' . $page_title;
-			$this->view->report_title = $page_title;
-			$this->view->report_layout = "report_layout.php";
-			$this->view->report_paper_size = "A4";
-			$this->view->report_orientation = "portrait";
-		} else {
-			if ($db->getLastError()) {
-				$this->set_page_error();
-			} else {
-				$this->set_page_error("No record found");
-			}
-			$this->write_to_log("view", "false");
-		}
-		return $this->render_view("appointment_new/view.php", $record);
-	}
+{
+    $request = $this->request;
+    $db = $this->GetModel();
+    $rec_id = $this->rec_id = urldecode($rec_id);
+    $tablename = $this->tablename;
+    $fields = array(
+        "appointment_new.id_appointment",
+        "appointment_new.id_patient",
+        "clinic_patients.full_names AS clinic_patients_full_names",
+        "appointment_new.motive",
+        "appointment_new.description",
+        "appointment_new.historial",
+        "appointment_new.appointment_date",
+        "appointment_new.register_date",
+        "appointment_new.nex_appointment_date",
+        "appointment_new.id_user",
+        "users.full_names AS users_full_names",
+        "appointment_new.id_doc",
+        "doc.full_names AS doc_full_names",
+        "doc.Speciality AS Speciality",
+        "appointment_new.priority",
+        "reminder_preference",
+        "follow_up_required",
+        "appointment_new.id_status_appointment",
+        "appointment_status.status AS appointment_status_status"
+    );
+
+    if ($value) {
+        $db->where($rec_id, urldecode($value)); //select record based on field name
+    } else {
+        $db->where("appointment_new.id_appointment", $rec_id); //select record based on primary key
+    }
+
+    // 🔹 Cambié todos los INNER JOIN a LEFT JOIN
+    $db->join("clinic_patients", "appointment_new.id_patient = clinic_patients.id_patient", "LEFT");
+    $db->join("users", "appointment_new.id_user = users.id_user", "LEFT");
+    $db->join("doc", "appointment_new.id_doc = doc.id", "LEFT");
+    $db->join("appointment_status", "appointment_new.id_status_appointment = appointment_status.id", "LEFT");
+
+    $record = $db->getOne($tablename, $fields);
+
+    if ($record) {
+        $this->write_to_log("view", "true");
+        $record['register_date'] = human_date($record['register_date']);
+        $page_title = $this->view->page_title = "View Appointment New";
+        $this->view->report_filename = date('Y-m-d') . '-' . $page_title;
+        $this->view->report_title = $page_title;
+        $this->view->report_layout = "report_layout.php";
+        $this->view->report_paper_size = "A4";
+        $this->view->report_orientation = "portrait";
+    } else {
+        if ($db->getLastError()) {
+            $this->set_page_error();
+        } else {
+            $this->set_page_error("No record found");
+        }
+        $this->write_to_log("view", "false");
+    }
+
+    return $this->render_view("appointment_new/view.php", $record);
+}
+
 	/**
 	 * Insert new record to the database table
 	 * @param $formdata array() from $_POST
@@ -343,14 +350,13 @@ public function add($formdata = null)
 		$this->rec_id = $rec_id;
 		$tablename = $this->tablename;
 		//editable fields
-		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "descritption", "historial", "nex_appointment_date", "register_date", "update_date", "id_user", "id_status_appointment");
+		$fields = $this->fields = array("id_appointment", "id_patient", "id_doc", "motive", "description", "historial", "register_date", "update_date", "id_user", "id_status_appointment");
 		if ($formdata) {
 			$postdata = $this->format_request_data($formdata);
 			$this->rules_array = array(
 				'id_patient' => 'required',
 				'id_doc' => 'required',
 				'motive' => 'required',
-				'nex_appointment_date' => 'required',
 				'id_status_appointment' => 'required',
 
 			);
@@ -358,7 +364,6 @@ public function add($formdata = null)
 				'id_patient' => 'sanitize_string',
 				'id_doc' => 'sanitize_string',
 				'motive' => 'sanitize_string',
-				'nex_appointment_date' => 'sanitize_string',
 				'id_status_appointment' => 'sanitize_string',
 			);
 			$modeldata = $this->modeldata = $this->validate_form($postdata);
